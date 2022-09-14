@@ -43,21 +43,6 @@ public class SquirtgunItem extends BowItem {
         return result;
     }
 
-    /**
-     * Called to trigger the item's "innate" right click behavior. To handle when this item is used on a Block, see
-     * onItemUse ??.
-     **/
-//    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
-////        CHECK AMMO AVAILABILITY and display
-//            pPlayer.startUsingItem(pHand);
-//            return InteractionResultHolder.pass(pPlayer.getItemInHand(pHand));
-//    }
-
-    /**
-     * Called when the player stops using an Item (stops holding the right mouse button).
-     *
-     * !! Modify code from BowItem
-     */
     @Override
     public void releaseUsing(ItemStack pStack, Level pLevel, LivingEntity pEntityLiving, int pTimeLeft) {
 
