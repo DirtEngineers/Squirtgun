@@ -15,7 +15,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import static net.minecraft.world.InteractionResultHolder.success;
 
-public class SquirtCartridge extends Item {
+public class SquirtMagazine extends Item {
     private final int baseCapacity = 10;
     private int fluidCapacity;
     private int fluidLevel;
@@ -23,7 +23,7 @@ public class SquirtCartridge extends Item {
     private CompoundTag nbtData = new CompoundTag();
     private FluidTank container = new FluidTank(baseCapacity);
 
-    public SquirtCartridge(Properties pProperties) {
+    public SquirtMagazine(Properties pProperties) {
         super(pProperties);
     }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

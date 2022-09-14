@@ -1,7 +1,7 @@
 package net.dirtengineers.squirtgun.common.registry;
 
 import net.dirtengineers.squirtgun.Squirtgun;
-import net.dirtengineers.squirtgun.common.item.SquirtCartridge;
+import net.dirtengineers.squirtgun.common.item.SquirtMagazine;
 import net.dirtengineers.squirtgun.common.item.SquirtSlugItem;
 import net.dirtengineers.squirtgun.common.item.SquirtgunItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -29,7 +29,7 @@ public class ItemRegistry {
             () -> new SquirtgunItem(new Item.Properties().tab(SQUIRTGUN_TAB).stacksTo(1)));
 
     public static final RegistryObject<Item> CARTRIDGE = SQUIRTGUNITEMS.register("cartridge",
-            () -> new SquirtCartridge(new Item.Properties().tab(SQUIRTGUN_TAB)));
+            () -> new SquirtMagazine(new Item.Properties().tab(SQUIRTGUN_TAB)));
 
     public static final RegistryObject<Item> SQUIRTSLUGITEM = SQUIRTGUNITEMS.register("squirtslugitem",
             () -> new SquirtSlugItem(new Item.Properties()));

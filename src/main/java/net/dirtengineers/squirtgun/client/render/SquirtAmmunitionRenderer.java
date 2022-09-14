@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class SquirtAmmunitionRenderer extends ArrowRenderer<SquirtSlug> {
 
-    public static final ResourceLocation TEXTURE = new ResourceLocation( Squirtgun.MOD_ID, "textures/entity/test.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation( Squirtgun.MOD_ID, "textures/entity/projectile/squirt_slug.png");
 
     public SquirtAmmunitionRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);

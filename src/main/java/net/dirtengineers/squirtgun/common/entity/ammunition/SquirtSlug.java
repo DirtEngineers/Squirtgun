@@ -7,6 +7,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
@@ -20,16 +22,16 @@ public class SquirtSlug extends Arrow {
         Investigate shoot() from the super class
      */
 
-    private ResourceLocation ammoType;
+    private FluidStack ammoType;
 
     public SquirtSlug(EntityType<? extends Arrow> pEntityType, Level pLevel) {
         super(pEntityType, pLevel); }
 
-    public void setAmmoType(ResourceLocation pAmmoType){
-        this.ammoType = pAmmoType;
+    public void setAmmoType(Fluid pAmmoType){
+        this.ammoType = new FluidStack(pAmmoType, 1);
     }
 
-    public ResourceLocation getAmmoType(){
+    public FluidStack getAmmoType(){
         return this.ammoType;
     }
 

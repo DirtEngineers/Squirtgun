@@ -18,6 +18,8 @@ public class EntityRegistry {
             ENTITIES.register("squirt_slug",
                     () -> EntityType.Builder.of(SquirtSlug::new, MobCategory.MISC)
                             .sized(0.5F, 0.5F).build("squirt_slug"));
+
+//    public static final EntityType<Arrow> ARROW = register("arrow", EntityType.Builder.<Arrow>of(Arrow::new, MobCategory.MISC).sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(20));
     public static void register(IEventBus eventbus) {
         ENTITIES.register(eventbus);
     }
