@@ -1,4 +1,6 @@
 {
+  "itemGroup.squirtguntab": "Squirtgun",
+
   "item.squirtgun.squirtgun": "Squirtgun",
-  "itemGroup.squirtguntab": "Squirtgun"
+  "item.squirtgun.squirtmagazine": "Magazine"
 }

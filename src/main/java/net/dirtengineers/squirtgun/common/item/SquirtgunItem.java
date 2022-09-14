@@ -1,5 +1,6 @@
 package net.dirtengineers.squirtgun.common.item;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.dirtengineers.squirtgun.common.entity.ammunition.SquirtSlug;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -7,32 +8,39 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
 
-import static net.dirtengineers.squirtgun.common.registry.EntityRegistry.SQUIRT_SLUG;
+import static net.dirtengineers.squirtgun.common.item.SquirtMagazine.EMPTY;
 
 public class SquirtgunItem extends BowItem {
 
-    private SquirtMagazine magazine;
+    private final SquirtMagazine magazine = EMPTY;
 
-    public SquirtgunItem(Properties pProperties) { super(pProperties); }
+    public SquirtgunItem(Properties pProperties) {
+        super(pProperties);
+    }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
+        InteractionResultHolder<ItemStack> result;
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
-        boolean flag = true; // temp hardcode!(magazine == null);
+        boolean pHasAmmo = true; // temp hardcodehasAmmunition();
 
-        InteractionResultHolder<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(itemstack, pLevel, pPlayer, pHand, flag);
-        if (ret != null) return ret;
+        displayAmmunitionAmount();
 
-        if (!pPlayer.getAbilities().instabuild && !flag) {
-            return InteractionResultHolder.fail(itemstack);
+        InteractionResultHolder<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(itemstack, pLevel, pPlayer, pHand, pHasAmmo);
+        if (ret != null) {
+            result = ret;
+        } else if (!pPlayer.getAbilities().instabuild && !pHasAmmo) {
+            result = InteractionResultHolder.fail(itemstack);
         } else {
             pPlayer.startUsingItem(pHand);
-            return InteractionResultHolder.consume(itemstack);
+            result = InteractionResultHolder.consume(itemstack);
         }
+
+        return result;
     }
 
     /**
@@ -52,22 +60,42 @@ public class SquirtgunItem extends BowItem {
      */
     @Override
     public void releaseUsing(ItemStack pStack, Level pLevel, LivingEntity pEntityLiving, int pTimeLeft) {
-        super.releaseUsing(pStack, pLevel, pEntityLiving, pTimeLeft);
 
+        if (pEntityLiving instanceof Player player) {
+            boolean flag = player.getAbilities().instabuild || EnchantmentHelper.getTagEnchantmentLevel(Enchantments.INFINITY_ARROWS, pStack) > 0;
+            boolean hasMagazine = magazine != EMPTY;
 
+            if(hasMagazine) {
+                // Fire the projectile, damn it!
+            }
+        }
     }
 
-//    Currently hardcoded  Later, get it from the magazine
-    private SquirtSlug getSlugItem(Level pLevel) {
 
-        return (SquirtSlug)RegistryObject.create(SQUIRT_SLUG.getId(),ForgeRegistries.ENTITY_TYPES).getHolder().get().value().create(pLevel);
-
-    }
-
+    /**
+     * returns the action that specifies what animation to play when the items is being used
+     */
+//    public UseAnim getUseAnimation(ItemStack pStack) {
+//        return UseAnim.BOW;
+//    }
+//
     /**
      * How long it takes to use or consume an item
      */
     public int getUseDuration(ItemStack pStack) {
         return 72000;
+    }
+
+    private boolean hasAmmunition(){
+        if(magazine == EMPTY)
+            return false;
+        else return magazine.getFluidLevel() >= SquirtSlug.shotSize;
+    }
+
+    private void displayAmmunitionAmount(){
+//        Format will be Shots Available/Shots Max
+        int magCapacity = (int) Math.floor(magazine.getFluidCapacity()/SquirtSlug.shotSize);
+        int magFluidLevel = (int) Math.floor(magazine.getFluidLevel()/SquirtSlug.shotSize);
+
     }
 }

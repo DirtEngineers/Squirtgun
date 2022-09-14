@@ -1,6 +1,7 @@
 package net.dirtengineers.squirtgun.common.item;
 
 import net.dirtengineers.squirtgun.Squirtgun;
+import net.dirtengineers.squirtgun.common.registry.ItemRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -16,16 +17,22 @@ import net.minecraftforge.registries.ForgeRegistries;
 import static net.minecraft.world.InteractionResultHolder.success;
 
 public class SquirtMagazine extends Item {
-    private final int baseCapacity = 10;
-    private int fluidCapacity;
-    private int fluidLevel;
-    private final String fluidLevelDataKey = Squirtgun.MOD_ID + ".fluid_cartridge_level";
-    private CompoundTag nbtData = new CompoundTag();
-    private FluidTank container = new FluidTank(baseCapacity);
 
-    public SquirtMagazine(Properties pProperties) {
-        super(pProperties);
+    public static final SquirtMagazine EMPTY = new SquirtMagazine(0);
+
+    public static final int baseCapacity = 1000;
+    private final FluidTank container;
+
+    public SquirtMagazine(){
+        super(new Item.Properties().tab(ItemRegistry.SQUIRTGUN_TAB));
+        this.container = new FluidTank(baseCapacity);
     }
+
+    public SquirtMagazine(int pCapacity) {
+        super(new Item.Properties().tab(ItemRegistry.SQUIRTGUN_TAB));
+        this.container = new FluidTank(pCapacity);
+    }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //    TANK UTILITIES
 
@@ -65,6 +72,17 @@ public class SquirtMagazine extends Item {
         container.fill(pFluidStack, IFluidHandler.FluidAction.EXECUTE);
     }
 
+    public class Builder{
+        int capacity;
+        public Builder capacity(int pCapacity){
+            capacity = pCapacity;
+            return this;
+        }
+
+        public SquirtMagazine build(){
+            return new SquirtMagazine(capacity);
+        }
+    }
 }
 
 

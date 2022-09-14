@@ -28,13 +28,10 @@ public class ItemRegistry {
     public static final RegistryObject<Item> SQUIRTGUN = SQUIRTGUNITEMS.register("squirtgun",
             () -> new SquirtgunItem(new Item.Properties().tab(SQUIRTGUN_TAB).stacksTo(1)));
 
-    public static final RegistryObject<Item> CARTRIDGE = SQUIRTGUNITEMS.register("cartridge",
-            () -> new SquirtMagazine(new Item.Properties().tab(SQUIRTGUN_TAB)));
+    public static final RegistryObject<Item> SQUIRTMAGAZINE = SQUIRTGUNITEMS.register("squirtmagazine", SquirtMagazine::new);
 
     public static final RegistryObject<Item> SQUIRTSLUGITEM = SQUIRTGUNITEMS.register("squirtslugitem",
             () -> new SquirtSlugItem(new Item.Properties()));
 
-    public static void register(IEventBus eventbus){
-        SQUIRTGUNITEMS.register(eventbus);
-    }
+    public static void register(IEventBus eventbus){ SQUIRTGUNITEMS.register(eventbus); }
 }

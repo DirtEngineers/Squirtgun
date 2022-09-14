@@ -12,15 +12,16 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+
 public class EntityRegistry {
-    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES,  Squirtgun.MOD_ID);
+    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES,  Squirtgun.MOD_ID);
+
     public static final RegistryObject<EntityType<SquirtSlug>> SQUIRT_SLUG =
-            ENTITIES.register("squirt_slug",
+            ENTITY_TYPES.register("squirt_slug",
                     () -> EntityType.Builder.of(SquirtSlug::new, MobCategory.MISC)
                             .sized(0.5F, 0.5F).build("squirt_slug"));
 
-//    public static final EntityType<Arrow> ARROW = register("arrow", EntityType.Builder.<Arrow>of(Arrow::new, MobCategory.MISC).sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(20));
     public static void register(IEventBus eventbus) {
-        ENTITIES.register(eventbus);
+        ENTITY_TYPES.register(eventbus);
     }
 }

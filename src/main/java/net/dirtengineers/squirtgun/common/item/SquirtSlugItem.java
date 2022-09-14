@@ -14,10 +14,10 @@ public class SquirtSlugItem extends Item {
         super(pProperties);
     }
 
-    public SquirtSlug createSquirtSlug(Level pLevel, ItemStack pStack, LivingEntity pShooter) {
-
-        SquirtSlug SquirtSlug = SQUIRT_SLUG.get().create(pLevel);
-
-        return SquirtSlug;
-    }
+//    public SquirtSlug createSquirtSlug(Level pLevel, ItemStack pStack, LivingEntity pShooter) {
+//
+//        SquirtSlug SquirtSlug = SQUIRT_SLUG.get().create(pLevel);
+//
+//        return SquirtSlug;
+//    }
 }
