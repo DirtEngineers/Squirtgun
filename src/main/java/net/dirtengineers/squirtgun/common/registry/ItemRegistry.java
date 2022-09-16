@@ -30,8 +30,9 @@ public class ItemRegistry {
 
     public static final RegistryObject<Item> SQUIRTMAGAZINE = SQUIRTGUNITEMS.register("squirtmagazine", SquirtMagazine::new);
 
-    public static final RegistryObject<Item> SQUIRTSLUGITEM = SQUIRTGUNITEMS.register("squirtslugitem",
-            () -> new SquirtSlugItem(new Item.Properties()));
+    public static final RegistryObject<Item> SQUIRTSLUGITEM = SQUIRTGUNITEMS.register("squirtslugitem", SquirtSlugItem::new);
 
-    public static void register(IEventBus eventbus){ SQUIRTGUNITEMS.register(eventbus); }
+    public static void register(IEventBus eventbus){
+        SQUIRTGUNITEMS.register(eventbus);
+    }
 }
