@@ -23,7 +23,7 @@ displayName="SquirtGun" #mandatory
 # A file name (in the root of the mod JAR) containing a logo for display
 #logoFile="examplemod.png" #optional
 # A text field displayed in the mod UI
-credits="Thanks for this example mod goes to Java" #optional
+credits="Metric assloads of caffiene and nicotine" #optional
 # A text field displayed in the mod UI
 authors="Dirt Engineers" #optional
 # Display Test controls the display for your mod in the server connection screen
@@ -35,7 +35,7 @@ authors="Dirt Engineers" #optional
 #displayTest="MATCH_VERSION" # MATCH_VERSION is the default if nothing is specified (#optional)
 
 # The description text for the mod (multi line!) (#mandatory)
-description='''A gun that fires a slug made of a liquid'''
+description='''A gun that fires a slug made of an arbritrary liquid'''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.squirtgun]] #optional
     # the modid of the dependency

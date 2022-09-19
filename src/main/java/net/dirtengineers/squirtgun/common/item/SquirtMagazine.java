@@ -1,7 +1,7 @@
 package net.dirtengineers.squirtgun.common.item;
 
 import net.dirtengineers.squirtgun.common.entity.ammunition.SquirtSlug;
-import net.dirtengineers.squirtgun.common.registry.ItemRegistry;
+import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -13,6 +13,7 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import static net.minecraft.world.InteractionResultHolder.success;
+import static net.minecraftforge.fluids.capability.IFluidHandler.*;
 import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction.EXECUTE;
 
 public class SquirtMagazine extends Item {
@@ -21,13 +22,19 @@ public class SquirtMagazine extends Item {
     private final FluidTank container;
 
     public SquirtMagazine(){
-        super(new Item.Properties().tab(ItemRegistry.SQUIRTGUN_TAB));
+        super(new Item.Properties().tab(ItemRegistration.SQUIRTGUN_TAB));
         this.container = new FluidTank(baseCapacity);
     }
 
     public SquirtMagazine(int pCapacity) {
-        super(new Item.Properties().tab(ItemRegistry.SQUIRTGUN_TAB));
+        super(new Item.Properties().tab(ItemRegistration.SQUIRTGUN_TAB));
         this.container = new FluidTank(pCapacity);
+    }
+
+    public SquirtMagazine(SquirtMagazine pMag){
+        super(new Item.Properties().tab(ItemRegistration.SQUIRTGUN_TAB));
+        this.container = new FluidTank(pMag.getFluidCapacity());
+//        this.setFluid(pMag.container.drain(pMag.container.getFluidAmount(), FluidAction.EXECUTE));
     }
 
     public boolean hasAmmunition(){
@@ -35,13 +42,19 @@ public class SquirtMagazine extends Item {
     }
 
      public SquirtSlug fillSlug(SquirtSlug pSlug){
-        // Commented out for development
-//        if(hasAmmunition()){
-//            pSlug.setAmmoType(this.container.getFluid().getFluid());
-//            container.drain(pSlug.shotSize, EXECUTE);
-//        }
+        if(hasAmmunition()){
+            pSlug.setAmmoType(this.container.getFluid().getFluid());
+            container.drain(SquirtSlug.shotSize, EXECUTE);
+        }
         return pSlug;
     }
+
+    public void loadFromMagazine(SquirtMagazine pMag) {
+        this.container.drain(this.container.getCapacity(), EXECUTE);
+        this.container.setCapacity(pMag.getFluidCapacity());
+        this.setFluid(pMag.container.drain(pMag.container.getFluidAmount(), EXECUTE));
+    }
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //    TANK UTILITIES
@@ -54,11 +67,18 @@ public class SquirtMagazine extends Item {
         return this.container.getCapacity();
     }
 
+    public FluidStack drainContainer(FluidAction pAction){
+        return this.container.drain(FluidStack.EMPTY, pAction);
+    }
+
+    public FluidStack drainContainer(int maxDrain, FluidAction action){
+        return this.container.drain(maxDrain, EXECUTE);
+
+    }
+
     public int getFluidLevel(){
         return this.container.getFluidAmount();
     }
-
-
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {

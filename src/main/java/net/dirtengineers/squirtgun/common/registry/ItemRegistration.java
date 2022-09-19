@@ -13,7 +13,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 
-public class ItemRegistry {
+public class ItemRegistration {
 
     public static final DeferredRegister<Item> SQUIRTGUNITEMS = DeferredRegister.create(ForgeRegistries.ITEMS,  Squirtgun.MOD_ID);
 
@@ -25,8 +25,7 @@ public class ItemRegistry {
         }
     };
 
-    public static final RegistryObject<Item> SQUIRTGUN = SQUIRTGUNITEMS.register("squirtgun",
-            () -> new SquirtgunItem(new Item.Properties().tab(SQUIRTGUN_TAB).stacksTo(1)));
+    public static final RegistryObject<Item> SQUIRTGUN = SQUIRTGUNITEMS.register("squirtgun", SquirtgunItem::new);
 
     public static final RegistryObject<Item> SQUIRTMAGAZINE = SQUIRTGUNITEMS.register("squirtmagazine", SquirtMagazine::new);
 

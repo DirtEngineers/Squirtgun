@@ -1,0 +1,6 @@
+{
+  "parent": "squirtgun:item/squirtgun",
+  "textures": {
+    "layer0": "squirtgun:item/squirtgun"
+  }
+}

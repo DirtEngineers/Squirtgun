@@ -1,9 +1,7 @@
 package net.dirtengineers.squirtgun.common.item;
 
 import net.dirtengineers.squirtgun.common.entity.ammunition.SquirtSlug;
-import net.dirtengineers.squirtgun.common.registry.ItemRegistry;
 import net.dirtengineers.squirtgun.common.util.Common;
-import net.minecraft.client.Minecraft;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -14,19 +12,24 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.ForgeHooks;
-
+import net.minecraftforge.fluids.FluidStack;
 import java.util.function.Predicate;
+
+import static net.dirtengineers.squirtgun.common.registry.ItemRegistration.*;
+import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction.EXECUTE;
 
 public class SquirtgunItem extends BowItem {
 
     private SquirtMagazine magazine;
 
-    public SquirtgunItem(Item.Properties pProperties) {
-        super(pProperties);
+    public SquirtgunItem(){
+        super(new Item.Properties().tab(SQUIRTGUN_TAB));
     }
 
     @Override
@@ -41,6 +44,10 @@ public class SquirtgunItem extends BowItem {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
+        if(magazine == null) magazine = (SquirtMagazine) SQUIRTMAGAZINE.get();
+
+        MAGAZINELOADINGTEST();
+
         displayAmmunitionAmount(pLevel);
 
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
@@ -58,10 +65,8 @@ public class SquirtgunItem extends BowItem {
     }
 
     private ItemStack getProjectileItem(ItemStack pShootable, Player pPlayer) {
-        if(pPlayer.getAbilities().instabuild) magazine = (SquirtMagazine) ItemRegistry.SQUIRTMAGAZINE.get();
-
         ItemStack itemstack = magazine.hasAmmunition() || pPlayer.getAbilities().instabuild ?
-                new ItemStack(ItemRegistry.SQUIRTSLUGITEM.get()) :
+                new ItemStack(SQUIRTSLUGITEM.get()) :
                 ItemStack.EMPTY;
 
         return ForgeHooks.getProjectile(pPlayer, pShootable, itemstack);
@@ -79,11 +84,8 @@ public class SquirtgunItem extends BowItem {
 
             boolean flag1 = player.getAbilities().instabuild || (itemstack.getItem() instanceof SquirtSlugItem && ((SquirtSlugItem)itemstack.getItem()).isInfinite(itemstack, pStack, player));
             if (!pLevel.isClientSide) {
-                SquirtSlugItem slugItem = (SquirtSlugItem)(itemstack.getItem() instanceof SquirtSlugItem ? itemstack.getItem() : ItemRegistry.SQUIRTSLUGITEM.get());
-                SquirtSlug slug  =  slugItem.createSlug(pLevel, pEntityLiving);
-                slug = magazine.fillSlug(slug);
+                SquirtSlug slug = makeSlugToFire(itemstack, pLevel, player);
                 slug.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 3.0F, 1.0F);
-
                 pLevel.addFreshEntity(slug);
             }
 
@@ -105,14 +107,50 @@ public class SquirtgunItem extends BowItem {
         }
     }
 
+    private SquirtSlug makeSlugToFire(ItemStack itemstack, Level pLevel, LivingEntity pEntityLiving){
+        SquirtSlugItem slugItem = (SquirtSlugItem)(itemstack.getItem() instanceof SquirtSlugItem ? itemstack.getItem() : SQUIRTSLUGITEM.get());
+        SquirtSlug slug  =  slugItem.createSlug(pLevel, pEntityLiving);
+        return magazine.fillSlug(slug);
+    }
+
+    private ItemStack loadFromMagazine(ItemStack pStack){
+        if(pStack.getItem() instanceof SquirtMagazine pMag) {
+            this.magazine.drainContainer(EXECUTE);
+            FluidStack stack = pMag.drainContainer(pMag.getFluidLevel(), EXECUTE);
+            this.magazine.setFluid(stack);
+            pStack.shrink(1);
+        }
+        return pStack;
+    }
+
+    private void MAGAZINELOADINGTEST(){
+        SquirtMagazine TESTMAG = (SquirtMagazine)SQUIRTMAGAZINE.get().asItem();
+        TESTMAG.setFluid(new FluidStack(Fluids.WATER, 750));
+        ItemStack stack = new ItemStack(TESTMAG,7);
+        stack = this.loadFromMagazine(stack);
+    }
+
+
+    public ItemStack unloadSquirtMagazine(){
+        SquirtMagazine mag = new SquirtMagazine();
+        mag.loadFromMagazine(magazine);
+        return new ItemStack(mag, 1);
+    }
+
+    @Override
+    public UseAnim getUseAnimation(ItemStack pStack) {
+        return UseAnim.BOW;
+    }
+
+    @Override
     public int getUseDuration(ItemStack pStack) {
         return 72000;
     }
 
     private void displayAmmunitionAmount(Level pLevel){
-        if(pLevel == Minecraft.getInstance().level){
-
-        }
+//        if(pLevel == Minecraft.getInstance().level){
+//
+//        }
 //        Format will be Shots Available/Shots Max
 //        int magCapacity = (int) Math.floor(magazine.getFluidCapacity()/SquirtSlug.shotSize);
 //        int magFluidLevel = (int) Math.floor(magazine.getFluidLevel()/SquirtSlug.shotSize);
