@@ -33,11 +33,6 @@ public class SquirtgunItem extends BowItem {
         super(new Item.Properties().tab(SQUIRTGUN_TAB));
     }
 
-//    @Override
-//    public Predicate<ItemStack> getAllSupportedProjectiles() {
-//        return Common.SQUIRT_SLUG_ONLY;
-//    }
-
     @Override
     public int getDefaultProjectileRange() {
         return 15;

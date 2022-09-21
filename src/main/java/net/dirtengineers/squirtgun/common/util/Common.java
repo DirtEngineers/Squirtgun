@@ -12,8 +12,5 @@ public class Common {
 
     public static final Predicate<ItemStack> SQUIRT_FLUIDS_ONLY =
             (itemStack) -> Common.AmmunitionFluids.contains(itemStack.getItem());
-
-//    public static final Predicate<ItemStack> SQUIRT_SLUG_ONLY =
-//            (itemStack) -> itemStack.getItem() instanceof SquirtSlugItem;
 }
 
