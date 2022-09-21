@@ -13,9 +13,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.client.event.ComputeFovModifierEvent;
+import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
+import java.util.Iterator;
 
 public class SquirtSlug extends AbstractArrow {
 //    DynamicFluidContainerModel
@@ -26,13 +30,14 @@ public class SquirtSlug extends AbstractArrow {
     public static final int shotSize = 100;
     private int life;
 
-    private FluidStack ammoType;
+    private Fluid ammoType;
 
     public SquirtSlug(Level pLevel){
         this(EntityRegistration.SQUIRT_SLUG.get(), pLevel);
     }
-    public SquirtSlug(LivingEntity pShooter, Level pLevel) {
+    public SquirtSlug(LivingEntity pShooter, Level pLevel, Fluid pFluid) {
         super(EntityRegistration.SQUIRT_SLUG.get(), pShooter, pLevel);
+        this.ammoType = pFluid;
     }
 
     public SquirtSlug(EntityType<? extends AbstractArrow> pEntityType, Level pLevel) {
@@ -46,15 +51,12 @@ public class SquirtSlug extends AbstractArrow {
     public SquirtSlug(EntityType<? extends AbstractArrow> pEntityType, LivingEntity pShooter, Level pLevel) {
         super(pEntityType, pShooter, pLevel);
     }
-//    ComputeFovModifierEvent
-//    AbstractClientPlayer
-//    net.minecraftforge.event
 
     public void setAmmoType(Fluid pAmmoType){
-        this.ammoType = new FluidStack(pAmmoType, 1);
+        this.ammoType = pAmmoType;
     }
 
-    public FluidStack getAmmoType(){
+    public Fluid getAmmoType(){
         return this.ammoType;
     }
 
@@ -90,4 +92,15 @@ public class SquirtSlug extends AbstractArrow {
         this.life = 0;
         super.onHitEntity(pResult);
     }
+
+//    Iterator var1 = Arrays.asList("solid", "liquid", "gas", "dust").iterator();
+//
+//        while(var1.hasNext()) {
+//        String type = (String)var1.next();
+//        (
+//                (ItemModelBuilder)(
+//                        (ItemModelBuilder)this.withExistingParent(String.format("item/compound_%s_model", type), this.mcLoc("item/generated"))
+//                ).texture("layer0", this.modLoc(String.format("items/compound_%s_layer_0", type)))
+//        ).texture("layer1", this.modLoc(String.format("items/compound_%s_layer_1", type)));
+//    }
 }

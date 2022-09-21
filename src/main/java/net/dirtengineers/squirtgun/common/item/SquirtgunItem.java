@@ -17,11 +17,12 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fluids.FluidStack;
+
 import java.util.function.Predicate;
 
-import static net.dirtengineers.squirtgun.common.registry.ItemRegistration.*;
+import static net.dirtengineers.squirtgun.common.registry.ItemRegistration.SQUIRTGUN_TAB;
+import static net.dirtengineers.squirtgun.common.registry.ItemRegistration.SQUIRTMAGAZINE;
 import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction.EXECUTE;
 
 public class SquirtgunItem extends BowItem {
@@ -32,10 +33,10 @@ public class SquirtgunItem extends BowItem {
         super(new Item.Properties().tab(SQUIRTGUN_TAB));
     }
 
-    @Override
-    public Predicate<ItemStack> getAllSupportedProjectiles() {
-        return Common.SQUIRT_SLUG_ONLY;
-    }
+//    @Override
+//    public Predicate<ItemStack> getAllSupportedProjectiles() {
+//        return Common.SQUIRT_SLUG_ONLY;
+//    }
 
     @Override
     public int getDefaultProjectileRange() {
@@ -51,7 +52,9 @@ public class SquirtgunItem extends BowItem {
         displayAmmunitionAmount(pLevel);
 
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
-        boolean hasAmmo = !getProjectileItem(itemstack, pPlayer).isEmpty();
+
+//        Got ammo?
+        boolean hasAmmo = !hasAmmunition(pPlayer);
 
         InteractionResultHolder<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(itemstack, pLevel, pPlayer, pHand, hasAmmo);
         if (ret != null) return ret;
@@ -64,27 +67,24 @@ public class SquirtgunItem extends BowItem {
         }
     }
 
-    private ItemStack getProjectileItem(ItemStack pShootable, Player pPlayer) {
-        ItemStack itemstack = magazine.hasAmmunition() || pPlayer.getAbilities().instabuild ?
-                new ItemStack(SQUIRTSLUGITEM.get()) :
-                ItemStack.EMPTY;
-
-        return ForgeHooks.getProjectile(pPlayer, pShootable, itemstack);
-    }
-
     @Override
     public void releaseUsing(ItemStack pStack, Level pLevel, LivingEntity pEntityLiving, int pTimeLeft) {
         if (pEntityLiving instanceof Player player) {
-            boolean flag = player.getAbilities().instabuild || EnchantmentHelper.getTagEnchantmentLevel(Enchantments.INFINITY_ARROWS, pStack) > 0;
-            ItemStack itemstack = getProjectileItem(pStack, player);
+            boolean bInstabuild = player.getAbilities().instabuild;
+            boolean bInfinityAmmo = EnchantmentHelper.getTagEnchantmentLevel(Enchantments.INFINITY_ARROWS, pStack) > 0;
+            boolean flag = bInstabuild || bInfinityAmmo;
+
+            boolean hasAmmo = !hasAmmunition(player);
 
             int i = this.getUseDuration(pStack) - pTimeLeft;
-            i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(pStack, pLevel, player, i, !itemstack.isEmpty() || flag);
+            i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(pStack, pLevel, player, i, hasAmmo || flag);
             if (i < 0) return;
 
-            boolean flag1 = player.getAbilities().instabuild || (itemstack.getItem() instanceof SquirtSlugItem && ((SquirtSlugItem)itemstack.getItem()).isInfinite(itemstack, pStack, player));
+//            Infinity slugs?
+//            boolean bInfinityAmmo = bInstabuild || (itemstack.getItem() instanceof SquirtSlugItem && ((SquirtSlugItem)itemstack.getItem()).isInfinite(itemstack, pStack, player));
+
             if (!pLevel.isClientSide) {
-                SquirtSlug slug = makeSlugToFire(itemstack, pLevel, player);
+                SquirtSlug slug = magazine.makeSlugToFire(pLevel, player);
                 slug.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 3.0F, 1.0F);
                 pLevel.addFreshEntity(slug);
             }
@@ -100,17 +100,12 @@ public class SquirtgunItem extends BowItem {
                     1.0F / (pLevel.getRandom().nextFloat() * 0.4F + 1.2F) +  0.5F
             );
 
-            if (!flag1 && !player.getAbilities().instabuild) {
-                itemstack.shrink(1);
-            }
             player.awardStat(Stats.ITEM_USED.get(this));
         }
     }
 
-    private SquirtSlug makeSlugToFire(ItemStack itemstack, Level pLevel, LivingEntity pEntityLiving){
-        SquirtSlugItem slugItem = (SquirtSlugItem)(itemstack.getItem() instanceof SquirtSlugItem ? itemstack.getItem() : SQUIRTSLUGITEM.get());
-        SquirtSlug slug  =  slugItem.createSlug(pLevel, pEntityLiving);
-        return magazine.fillSlug(slug);
+    private boolean hasAmmunition(Player pPlayer){
+        return magazine.hasAmmunition(pPlayer);
     }
 
     private ItemStack loadFromMagazine(ItemStack pStack){

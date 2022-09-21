@@ -4,6 +4,7 @@ import net.dirtengineers.squirtgun.common.entity.ammunition.SquirtSlug;
 import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -13,7 +14,7 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import static net.minecraft.world.InteractionResultHolder.success;
-import static net.minecraftforge.fluids.capability.IFluidHandler.*;
+import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction.EXECUTE;
 
 public class SquirtMagazine extends Item {
@@ -37,17 +38,25 @@ public class SquirtMagazine extends Item {
 //        this.setFluid(pMag.container.drain(pMag.container.getFluidAmount(), FluidAction.EXECUTE));
     }
 
-    public boolean hasAmmunition(){
-        return true;  //magazine.getFluidLevel() >= SquirtSlug.shotSize;
+    public boolean hasAmmunition(Player pPlayer){
+        return this.getFluidLevel() >= SquirtSlug.shotSize || pPlayer.getAbilities().instabuild;
     }
 
-     public SquirtSlug fillSlug(SquirtSlug pSlug){
-        if(hasAmmunition()){
-            pSlug.setAmmoType(this.container.getFluid().getFluid());
-            container.drain(SquirtSlug.shotSize, EXECUTE);
-        }
-        return pSlug;
+    public SquirtSlug makeSlugToFire(Level pLevel, LivingEntity pEntityLiving){
+        SquirtSlug slug  = new SquirtSlug(pEntityLiving, pLevel, this.container.getFluid().getFluid());
+        return this.fillSlug(pEntityLiving, slug);
     }
+
+     public SquirtSlug fillSlug(LivingEntity pEntityLiving, SquirtSlug pSlug) {
+         if (pEntityLiving instanceof Player player) {
+             if (hasAmmunition(player)) {
+                 pSlug.setAmmoType(this.container.getFluid().getFluid());
+                 if (!player.getAbilities().instabuild)
+                     container.drain(SquirtSlug.shotSize, EXECUTE);
+             }
+         }
+         return pSlug;
+     }
 
     public void loadFromMagazine(SquirtMagazine pMag) {
         this.container.drain(this.container.getCapacity(), EXECUTE);

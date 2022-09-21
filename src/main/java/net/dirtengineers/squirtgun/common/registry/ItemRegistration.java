@@ -2,7 +2,6 @@ package net.dirtengineers.squirtgun.common.registry;
 
 import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.common.item.SquirtMagazine;
-import net.dirtengineers.squirtgun.common.item.SquirtSlugItem;
 import net.dirtengineers.squirtgun.common.item.SquirtgunItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -29,7 +28,7 @@ public class ItemRegistration {
 
     public static final RegistryObject<Item> SQUIRTMAGAZINE = SQUIRTGUNITEMS.register("squirtmagazine", SquirtMagazine::new);
 
-    public static final RegistryObject<Item> SQUIRTSLUGITEM = SQUIRTGUNITEMS.register("squirtslugitem", SquirtSlugItem::new);
+//    public static final RegistryObject<Item> SQUIRTMAGAZINETEST = SQUIRTGUNITEMS.register("squirtmagazinetest", SquirtMagazineTest::new);
 
     public static void register(IEventBus eventbus){
         SQUIRTGUNITEMS.register(eventbus);
