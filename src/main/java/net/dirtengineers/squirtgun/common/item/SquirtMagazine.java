@@ -2,6 +2,7 @@ package net.dirtengineers.squirtgun.common.item;
 
 import net.dirtengineers.squirtgun.common.entity.ammunition.SquirtSlug;
 import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
+import net.dirtengineers.squirtgun.common.util.Common;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,12 +25,12 @@ public class SquirtMagazine extends Item {
 
     public SquirtMagazine(){
         super(new Item.Properties().tab(ItemRegistration.SQUIRTGUN_TAB));
-        this.container = new FluidTank(baseCapacity);
+        this.container = new FluidTank(baseCapacity, Common.SQUIRT_FLUIDS_ONLY);
     }
 
     public SquirtMagazine(int pCapacity) {
         super(new Item.Properties().tab(ItemRegistration.SQUIRTGUN_TAB));
-        this.container = new FluidTank(pCapacity);
+        this.container = new FluidTank(pCapacity, Common.SQUIRT_FLUIDS_ONLY);
     }
 
     public SquirtMagazine(SquirtMagazine pMag){
