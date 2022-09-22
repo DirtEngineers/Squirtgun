@@ -2,5 +2,6 @@
   "itemGroup.squirtguntab": "Squirtgun",
 
   "item.squirtgun.squirtgun": "Squirtgun",
-  "item.squirtgun.squirtmagazine": "Magazine"
+  "item.squirtgun.squirtmagazine": "Magazine",
+  "sounds.squirtgun.squirt_slug_hit": "EWWW!"
 }

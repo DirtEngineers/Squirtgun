@@ -16,18 +16,14 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
-
-import java.util.function.Predicate;
 
 import static net.dirtengineers.squirtgun.common.registry.ItemRegistration.SQUIRTGUN_TAB;
 import static net.dirtengineers.squirtgun.common.registry.ItemRegistration.SQUIRTMAGAZINE;
-import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction.EXECUTE;
 
 public class SquirtgunItem extends BowItem {
 
-    private SquirtMagazine magazine;
+    private final SquirtMagazine magazine = (SquirtMagazine) SQUIRTMAGAZINE.get();
 
     public SquirtgunItem(){
         super(new Item.Properties().tab(SQUIRTGUN_TAB));
@@ -40,7 +36,6 @@ public class SquirtgunItem extends BowItem {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
-        if(magazine == null) magazine = (SquirtMagazine) SQUIRTMAGAZINE.get();
 
         MAGAZINELOADINGTEST();
 
@@ -48,7 +43,6 @@ public class SquirtgunItem extends BowItem {
 
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
 
-//        Got ammo?
         boolean hasAmmo = !hasAmmunition(pPlayer);
 
         InteractionResultHolder<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(itemstack, pLevel, pPlayer, pHand, hasAmmo);
@@ -69,7 +63,7 @@ public class SquirtgunItem extends BowItem {
             boolean bInfinityAmmo = EnchantmentHelper.getTagEnchantmentLevel(Enchantments.INFINITY_ARROWS, pStack) > 0;
             boolean flag = bInstabuild || bInfinityAmmo;
 
-            boolean hasAmmo = !hasAmmunition(player);
+            boolean hasAmmo = hasAmmunition(player);
 
             int i = this.getUseDuration(pStack) - pTimeLeft;
             i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(pStack, pLevel, player, i, hasAmmo || flag);
@@ -103,28 +97,27 @@ public class SquirtgunItem extends BowItem {
         return magazine.hasAmmunition(pPlayer);
     }
 
-    private ItemStack loadFromMagazine(ItemStack pStack){
+    private ItemStack loadSquirtMagazine(ItemStack pStack){
         if(pStack.getItem() instanceof SquirtMagazine pMag) {
-            this.magazine.drainContainer(EXECUTE);
-            FluidStack stack = pMag.drainContainer(pMag.getFluidLevel(), EXECUTE);
+            this.magazine.emptyMagazine();
+            FluidStack stack = pMag.emptyMagazine();
             this.magazine.setFluid(stack);
             pStack.shrink(1);
         }
         return pStack;
     }
 
-    private void MAGAZINELOADINGTEST(){
-        SquirtMagazine TESTMAG = (SquirtMagazine)SQUIRTMAGAZINE.get().asItem();
-        TESTMAG.setFluid(new FluidStack(Fluids.WATER, 750));
-        ItemStack stack = new ItemStack(TESTMAG,7);
-        stack = this.loadFromMagazine(stack);
+    public ItemStack unloadSquirtMagazine(){
+        SquirtMagazine mag = new SquirtMagazine(this.magazine);
+        this.magazine.emptyMagazine();
+        return new ItemStack(mag, 1);
     }
 
-
-    public ItemStack unloadSquirtMagazine(){
-        SquirtMagazine mag = new SquirtMagazine();
-        mag.loadFromMagazine(magazine);
-        return new ItemStack(mag, 1);
+    private void MAGAZINELOADINGTEST(){
+        this.magazine.setFluid(new FluidStack(Common.AmmunitionFluids.get(0), 750));
+//        SquirtMagazine TESTMAG = (SquirtMagazine)SQUIRTMAGAZINE.get().asItem();
+//        TESTMAG.setFluid(new FluidStack(Common.AmmunitionFluids.get(0), 750));
+//        this.loadFromMagazine(new ItemStack(this.magazine));
     }
 
     @Override

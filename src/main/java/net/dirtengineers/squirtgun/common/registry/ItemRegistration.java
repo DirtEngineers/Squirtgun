@@ -24,9 +24,9 @@ public class ItemRegistration {
         }
     };
 
-    public static final RegistryObject<Item> SQUIRTGUN = SQUIRTGUNITEMS.register("squirtgun", SquirtgunItem::new);
-
     public static final RegistryObject<Item> SQUIRTMAGAZINE = SQUIRTGUNITEMS.register("squirtmagazine", SquirtMagazine::new);
+
+    public static final RegistryObject<Item> SQUIRTGUN = SQUIRTGUNITEMS.register("squirtgun", SquirtgunItem::new);
 
 //    public static final RegistryObject<Item> SQUIRTMAGAZINETEST = SQUIRTGUNITEMS.register("squirtmagazinetest", SquirtMagazineTest::new);
 

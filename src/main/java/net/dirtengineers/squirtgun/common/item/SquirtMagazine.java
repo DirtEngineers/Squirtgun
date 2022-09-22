@@ -36,7 +36,7 @@ public class SquirtMagazine extends Item {
     public SquirtMagazine(SquirtMagazine pMag){
         super(new Item.Properties().tab(ItemRegistration.SQUIRTGUN_TAB));
         this.container = new FluidTank(pMag.getFluidCapacity());
-//        this.setFluid(pMag.container.drain(pMag.container.getFluidAmount(), FluidAction.EXECUTE));
+        this.container.fill(pMag.container.getFluid(), EXECUTE);
     }
 
     public boolean hasAmmunition(Player pPlayer){
@@ -59,12 +59,9 @@ public class SquirtMagazine extends Item {
          return pSlug;
      }
 
-    public void loadFromMagazine(SquirtMagazine pMag) {
-        this.container.drain(this.container.getCapacity(), EXECUTE);
-        this.container.setCapacity(pMag.getFluidCapacity());
-        this.setFluid(pMag.container.drain(pMag.container.getFluidAmount(), EXECUTE));
+    public FluidStack emptyMagazine(){
+        return this.container.drain(this.container.getCapacity(), EXECUTE);
     }
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //    TANK UTILITIES
@@ -75,10 +72,6 @@ public class SquirtMagazine extends Item {
 
     public int getFluidCapacity(){
         return this.container.getCapacity();
-    }
-
-    public FluidStack drainContainer(FluidAction pAction){
-        return this.container.drain(FluidStack.EMPTY, pAction);
     }
 
     public FluidStack drainContainer(int maxDrain, FluidAction action){

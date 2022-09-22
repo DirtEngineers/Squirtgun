@@ -1,0 +1,8 @@
+{
+  "squirt_slug_hit": {
+    "subtitle": "sounds.squirtgun.squirt_slug_hit",
+    "sounds": [
+      "squirtgun:slug_hit"
+    ]
+  }
+}
