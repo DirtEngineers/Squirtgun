@@ -23,6 +23,8 @@ import static net.dirtengineers.squirtgun.common.registry.ItemRegistration.SQUIR
 
 public class SquirtgunItem extends BowItem {
 
+    int testFluidRotationIndex = 0;
+
     private final SquirtMagazine magazine = (SquirtMagazine) SQUIRTMAGAZINE.get();
 
     public SquirtgunItem(){
@@ -114,10 +116,11 @@ public class SquirtgunItem extends BowItem {
     }
 
     private void MAGAZINELOADINGTEST(){
-        this.magazine.setFluid(new FluidStack(Common.AmmunitionFluids.get(0), 750));
-//        SquirtMagazine TESTMAG = (SquirtMagazine)SQUIRTMAGAZINE.get().asItem();
-//        TESTMAG.setFluid(new FluidStack(Common.AmmunitionFluids.get(0), 750));
-//        this.loadFromMagazine(new ItemStack(this.magazine));
+        this.magazine.setFluid(new FluidStack(Common.AmmunitionFluids.get(testFluidRotationIndex), 750));
+
+        //Rotate the values to check colors
+        testFluidRotationIndex++;
+        if(testFluidRotationIndex >= Common.AmmunitionFluids.size()) testFluidRotationIndex = 0;
     }
 
     @Override
