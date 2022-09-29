@@ -1,17 +1,19 @@
 package net.dirtengineers.squirtgun.common.entity.ammunition;
 
 import com.google.common.collect.Sets;
+import com.smashingmods.chemlib.api.Chemical;
 import net.dirtengineers.squirtgun.common.registry.EntityRegistration;
 import net.dirtengineers.squirtgun.common.registry.SoundEventRegistration;
-import net.dirtengineers.squirtgun.common.util.Common;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -24,14 +26,18 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
-
+import java.util.Objects;
 import java.util.Set;
+
+import static net.dirtengineers.squirtgun.common.util.Common.Ammunition;
 
 public class SquirtSlug extends AbstractArrow {
     //    DynamicFluidContainerModel
     public static final int shotSize = 100;
     private int life;
     private Fluid ammoType;
+
+    private final int maxGroundTime = 10;
 
     private static final int NO_EFFECT_COLOR = -1;
     private static final EntityDataAccessor<Integer> ID_EFFECT_COLOR =
@@ -48,82 +54,59 @@ public class SquirtSlug extends AbstractArrow {
         super(pEntityType, pLevel);
     }
 
-    public SquirtSlug(EntityType<? extends AbstractArrow> pEntityType, double pX, double pY, double pZ, Level pLevel) {
-        super(pEntityType, pX, pY, pZ, pLevel);
-    }
-
-    public SquirtSlug(EntityType<? extends AbstractArrow> pEntityType, LivingEntity pShooter, Level pLevel) {
-        super(pEntityType, pShooter, pLevel);
-    }
-
-    public SquirtSlug(Level pLevel) {
-        this(EntityRegistration.SQUIRT_SLUG.get(), pLevel);
-    }
-
     public void setAmmoType(Fluid pAmmoType) {
         this.ammoType = pAmmoType;
+        setEffects();
+    }
+
+    public void setEffects() {
+        this.effects.clear();
+        if (ammoType != null) {
+            Chemical chemical = Ammunition.get(ammoType);
+            for (MobEffectInstance effect : chemical.getEffects()) {
+                this.effects.add(new MobEffectInstance(effect));
+            }
+        }
         this.updateColor();
     }
 
-//    public void setEffectsFromItem(ItemStack pStack) {
-//        if (pStack.is(Items.TIPPED_ARROW)) {
-//            this.potion = PotionUtils.getPotion(pStack);
-//            Collection<MobEffectInstance> collection = PotionUtils.getCustomEffects(pStack);
-//            if (!collection.isEmpty()) {
-//                for(MobEffectInstance mobeffectinstance : collection) {
-//                    this.effects.add(new MobEffectInstance(mobeffectinstance));
-//                }
-//            }
-//
-//            int i = getCustomColor(pStack);
-//            if (i == -1) {
-//                this.updateColor();
-//            } else {
-//                this.setFixedColor(i);
-//            }
-//        } else if (pStack.is(Items.ARROW)) {
-//            this.potion = Potions.EMPTY;
-//            this.effects.clear();
-//            this.entityData.set(ID_EFFECT_COLOR, -1);
-//        }
-//    }
-
-//    public void addEffect(MobEffectInstance pEffectInstance) {
-//        this.effects.add(pEffectInstance);
-//        this.getEntityData().set(ID_EFFECT_COLOR, PotionUtils.getColor(PotionUtils.getAllEffects(this.potion, this.effects)));
-//    }
+    public void addEffect(MobEffectInstance pEffectInstance) {
+        this.effects.add(pEffectInstance);
+        this.getEntityData().set(ID_EFFECT_COLOR, IClientFluidTypeExtensions.of(this.ammoType).getTintColor());
+    }
 
     public void tick() {
         super.tick();
-        if (this.level.isClientSide) {
-//            if (this.inGround) {
-//                if (this.inGroundTime % 5 == 0) {
-//                    this.makeParticle(1);
-//                }
-//            } else {
-                this.makeParticle(2);
-//            }
-        } else if (this.inGround && this.inGroundTime != 0 && !this.effects.isEmpty() && this.inGroundTime >= 600) {
-            this.level.broadcastEntityEvent(this, (byte)0);
-            this.effects.clear();
-            this.entityData.set(ID_EFFECT_COLOR, NO_EFFECT_COLOR);
-        }
+
+        if (this.level.isClientSide)
+            this.makeParticle(this.inGround ? 1 : 2);
+        else
+            if (this.inGround && this.inGroundTime != 0 && !this.effects.isEmpty()) {
+                this.level.broadcastEntityEvent(this, (byte) 0);
+                this.effects.clear();
+                this.entityData.set(ID_EFFECT_COLOR, NO_EFFECT_COLOR);
+            }
     }
 
-//    protected void doPostHurtEffects(LivingEntity pLiving) {
-//        super.doPostHurtEffects(pLiving);
-//        Entity entity = this.getEffectSource();
-//
-//        for(MobEffectInstance mobeffectinstance : this.potion.getEffects()) {
-//            pLiving.addEffect(new MobEffectInstance(mobeffectinstance.getEffect(), Math.max(mobeffectinstance.getDuration() / 8, 1), mobeffectinstance.getAmplifier(), mobeffectinstance.isAmbient(), mobeffectinstance.isVisible()), entity);
-//        }
-//
+    protected void doPostHurtEffects(LivingEntity pLiving) {
+        super.doPostHurtEffects(pLiving);
+        Entity entity = this.getEffectSource();
+
+        for(MobEffectInstance mobeffectinstance : this.effects) {
+            pLiving.addEffect(
+                    new MobEffectInstance(mobeffectinstance.getEffect(),
+                            Math.max(mobeffectinstance.getDuration() / 8, 1),
+                            mobeffectinstance.getAmplifier(),
+                            mobeffectinstance.isAmbient(),
+                            mobeffectinstance.isVisible()),
+                    entity);
+        }
 //        if (!this.effects.isEmpty()) {
 //            for(MobEffectInstance mobeffectinstance1 : this.effects) {
 //                pLiving.addEffect(mobeffectinstance1, entity);
 //            }
 //        }
-//    }
+    }
 
     /**
      * Handles an entity event fired from {@link net.minecraft.world.level.Level#broadcastEntityEvent}.
@@ -163,7 +146,7 @@ public class SquirtSlug extends AbstractArrow {
     @Override
     public void tickDespawn() {
         ++this.life;
-        if (this.life >= 10) {
+        if (this.life >= maxGroundTime) {
             this.discard();
         }
     }
@@ -186,10 +169,7 @@ public class SquirtSlug extends AbstractArrow {
     }
 
     private void updateColor() {
-        if (this.ammoType == null)
-            this.entityData.set(ID_EFFECT_COLOR, -1);
-        else
-            this.entityData.set(ID_EFFECT_COLOR, IClientFluidTypeExtensions.of(this.ammoType).getTintColor());
+        this.entityData.set(ID_EFFECT_COLOR, this.ammoType == null ? -1 : IClientFluidTypeExtensions.of(this.ammoType).getTintColor());
     }
 
     private void makeParticle(int pParticleAmount) {
@@ -226,20 +206,16 @@ public class SquirtSlug extends AbstractArrow {
         if (this.ammoType != null) {
             pCompound.putString("Fluid", ammoType.getFluidType().toString());
         }
-//
-//        if (this.fixedColor) {
-//            pCompound.putInt("Color", this.getColor());
-//        }
-//
-//        if (!this.effects.isEmpty()) {
-//            ListTag listtag = new ListTag();
-//
-//            for(MobEffectInstance mobeffectinstance : this.effects) {
-//                listtag.add(mobeffectinstance.save(new CompoundTag()));
-//            }
-//
-//            pCompound.put("CustomPotionEffects", listtag);
-//        }
+
+        if (!this.effects.isEmpty()) {
+            ListTag listtag = new ListTag();
+
+            for(MobEffectInstance mobeffectinstance : this.effects) {
+                listtag.add(mobeffectinstance.save(new CompoundTag()));
+            }
+
+            pCompound.put("CustomEffects", listtag);
+        }
     }
 
 
@@ -249,18 +225,15 @@ public class SquirtSlug extends AbstractArrow {
     @Override
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-        if (pCompound.contains("Fluid"))
-            this.ammoType = Common.getAmmunitionFluidByName(pCompound.getString("Fluid"));
-
-//        for(MobEffectInstance mobeffectinstance : PotionUtils.getCustomEffects(pCompound)) {
-//            this.addEffect(mobeffectinstance);
-//        }
-//
-//        if (pCompound.contains("Color", 99)) {
-//            this.setFixedColor(pCompound.getInt("Color"));
-//        } else {
-//            this.updateColor();
-//        }
+        if (pCompound.contains("Fluid")) {
+            for (Fluid fluid : Ammunition.keySet()) {
+                if (Objects.equals(fluid.getFluidType().toString(), pCompound.getString("Fluid"))) {
+                    this.ammoType = fluid;
+                    break;
+                }
+            }
+        }
+        setEffects();
     }
 
     @Override

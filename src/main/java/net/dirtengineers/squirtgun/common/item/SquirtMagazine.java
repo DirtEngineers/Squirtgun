@@ -1,5 +1,6 @@
 package net.dirtengineers.squirtgun.common.item;
 
+import com.smashingmods.chemlib.api.Chemical;
 import net.dirtengineers.squirtgun.common.entity.ammunition.SquirtSlug;
 import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
 import net.dirtengineers.squirtgun.common.util.Common;
@@ -10,9 +11,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.Optional;
 
 import static net.minecraft.world.InteractionResultHolder.success;
 import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
@@ -25,12 +30,12 @@ public class SquirtMagazine extends Item {
 
     public SquirtMagazine(){
         super(new Item.Properties().tab(ItemRegistration.SQUIRTGUN_TAB));
-        this.container = new FluidTank(baseCapacity, Common.SQUIRT_FLUIDS_ONLY);
+        this.container = new FluidTank(baseCapacity, Common.SQUIRT_AMMUNITION_ONLY);
     }
 
     public SquirtMagazine(int pCapacity) {
         super(new Item.Properties().tab(ItemRegistration.SQUIRTGUN_TAB));
-        this.container = new FluidTank(pCapacity, Common.SQUIRT_FLUIDS_ONLY);
+        this.container = new FluidTank(pCapacity, Common.SQUIRT_AMMUNITION_ONLY);
     }
 
     public SquirtMagazine(SquirtMagazine pMag){
@@ -92,8 +97,8 @@ public class SquirtMagazine extends Item {
 //        }
 //        else{
 //            Fluid blah = ForgeRegistries.FLUIDS.getValue(Common.AmmunitionFluids.get(1));
-        ForgeRegistries.FLUIDS.getEntries().stream().filter(key ->{return key.getKey().location().getNamespace() == "chemlib" &&
-                key.getKey().location().getPath().contains("ethanol_fluid");}).toList();
+//        ForgeRegistries.FLUIDS.getEntries().stream().filter(key ->{return key.getKey().location().getNamespace() == "chemlib" &&
+//                key.getKey().location().getPath().contains("ethanol_fluid");}).toList();
         //(itemStack) -> Common.AmmunitionFluids.contains(itemStack.getItem().getRegistryName())
         //setFluid(new FluidStack());
 //        }chemlib
@@ -103,6 +108,15 @@ public class SquirtMagazine extends Item {
     public void setFluid(FluidStack pFluidStack) {
         container.drain(container.getCapacity(), EXECUTE);
         container.fill(pFluidStack, EXECUTE);
+    }
+
+    public void setFluid(Chemical chemical, int amount) {
+        container.drain(container.getCapacity(), EXECUTE);
+        Optional<FluidType> fluidType = chemical.getFluidTypeReference();
+//        if (fluidType.isPresent()) {
+//            Fluid type = fluidType.get();
+//            container.fill(new FluidStack(fluidType.get(), amount), EXECUTE);
+//        }
     }
 
     public static class Builder{
