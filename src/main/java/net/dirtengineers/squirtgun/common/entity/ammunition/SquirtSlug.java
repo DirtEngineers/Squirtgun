@@ -33,7 +33,8 @@ import static net.dirtengineers.squirtgun.common.util.Common.Ammunition;
 
 public class SquirtSlug extends AbstractArrow {
     //    DynamicFluidContainerModel
-    private double baseDamage = 2.0D;
+
+    private final double baseDamage = 2.0D;
     public static final int shotSize = 100;
     private int life;
     private Fluid ammoType;
@@ -106,11 +107,6 @@ public class SquirtSlug extends AbstractArrow {
                             mobeffectinstance.isVisible()),
                     entity);
         }
-//        if (!this.effects.isEmpty()) {
-//            for(MobEffectInstance mobeffectinstance1 : this.effects) {
-//                pLiving.addEffect(mobeffectinstance1, entity);
-//            }
-//        }
     }
 
     /**
@@ -135,8 +131,7 @@ public class SquirtSlug extends AbstractArrow {
     }
 
     @Override
-    public void playerTouch(Player pEntity) {
-    }
+    public void playerTouch(Player pEntity) {}
 
     @Override
     public ItemStack getPickupItem() {
@@ -211,14 +206,11 @@ public class SquirtSlug extends AbstractArrow {
         if (this.ammoType != null) {
             pCompound.putString("Fluid", ammoType.getFluidType().toString());
         }
-
         if (!this.effects.isEmpty()) {
             ListTag listtag = new ListTag();
-
             for(MobEffectInstance mobeffectinstance : this.effects) {
                 listtag.add(mobeffectinstance.save(new CompoundTag()));
             }
-
             pCompound.put("CustomEffects", listtag);
         }
     }

@@ -23,9 +23,7 @@ public class ClientForgeEventHandler {
             } else {
                 f1 *= f1;
             }
-
             f *= 1.0F - f1 * 0.15F;
-
             event.setNewFovModifier(f);
         }
     }

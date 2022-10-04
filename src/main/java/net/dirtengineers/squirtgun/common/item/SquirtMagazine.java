@@ -1,11 +1,10 @@
 package net.dirtengineers.squirtgun.common.item;
 
 import com.smashingmods.chemlib.api.Chemical;
-import com.smashingmods.chemlib.api.Compound;
-import com.smashingmods.chemlib.common.items.CompoundItem;
 import net.dirtengineers.squirtgun.common.entity.ammunition.SquirtSlug;
 import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
 import net.dirtengineers.squirtgun.common.util.Common;
+import net.dirtengineers.squirtgun.common.util.Text;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -16,6 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
@@ -80,10 +80,7 @@ public class SquirtMagazine extends Item {
         return (int) Math.floor((float)this.getFluidLevel()/SquirtSlug.shotSize);
     }
 
-    public String getFriendlyFluidName(){
-        Chemical chemical = Common.Ammunition.get(this.container.getFluid().getFluid());
-        return chemical instanceof Compound ? I18n.get(((CompoundItem) chemical).getDescriptionId()) : chemical.getChemicalName();
-    }
+    public Fluid getFluid(){ return this.container.getFluid().getFluid(); }
 
     private String getFriendlyName(){
         return I18n.get(this.getDescriptionId());
@@ -91,7 +88,7 @@ public class SquirtMagazine extends Item {
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, Common.setAmmoHoverText(this, getFriendlyName(), pTooltipComponents), pIsAdvanced);
+        super.appendHoverText(pStack, pLevel, Text.setAmmoHoverText(this, getFriendlyName(), pTooltipComponents), pIsAdvanced);
     }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

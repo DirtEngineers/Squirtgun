@@ -2,6 +2,7 @@ package net.dirtengineers.squirtgun.common.item;
 
 import net.dirtengineers.squirtgun.common.entity.ammunition.SquirtSlug;
 import net.dirtengineers.squirtgun.common.util.Common;
+import net.dirtengineers.squirtgun.common.util.Text;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -53,15 +54,13 @@ public class SquirtgunItem extends BowItem {
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, Common.setAmmoHoverText(this.magazine, getFriendlyName(), pTooltipComponents), pIsAdvanced);
+        super.appendHoverText(pStack, pLevel, Text.setAmmoHoverText(this.magazine, getFriendlyName(), pTooltipComponents), pIsAdvanced);
     }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
 
         MAGAZINELOADINGTEST(pLevel);
-
-        displayAmmunitionAmount(pLevel);
 
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
 
@@ -120,6 +119,8 @@ public class SquirtgunItem extends BowItem {
         return magazine.hasAmmunition(pPlayer);
     }
 
+    public SquirtMagazine getMagazine(){return this.magazine;}
+
     private SquirtMagazine loadNewSquirtMagazine(SquirtMagazine pMagazine) {
         SquirtMagazine outMagazine = new SquirtMagazine(this.magazine);
         this.magazine = new SquirtMagazine(pMagazine);
@@ -155,12 +156,5 @@ public class SquirtgunItem extends BowItem {
     @Override
     public int getUseDuration(ItemStack pStack) {
         return 72000;
-    }
-
-    private void displayAmmunitionAmount(Level pLevel){
-//        Format will be Shots Available/Shots Max
-//        int magCapacity = (int) Math.floor(magazine.getFluidCapacity()/SquirtSlug.shotSize);
-//        int magFluidLevel = (int) Math.floor(magazine.getFluidLevel()/SquirtSlug.shotSize);
-
     }
 }

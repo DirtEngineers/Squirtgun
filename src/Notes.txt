@@ -3,25 +3,15 @@ ideas on custom projectile https://forums.minecraftforge.net/topic/116267-projec
 
 https://forums.minecraftforge.net/topic/116264-how-to-recoil-for-a-gun-mod/
 
-Get chemlib compounds pre-registration to make and register ammo entities
-
 Set up a custom sound for the ammunition firing and for it impacting
 
 Gun is loaded from a magazine.
-magazine loads gun's internal magazine and then is discarded (ItemStack.EMPTY).
-when gun fires, it creates a slug entity from the fluid in the internal magazine.
-
-FIRING
-    1.  check liquid amount in cartridge.
-    2.  make new slug item and set internal reference to the liquid from cartridge
-    3.  deduct appropriate amount from cartridge
-    4.  shoot slug
+magazine loads gun's internal magazine.  If the internal magazine is empty, the magazine is discarded (ItemStack.EMPTY).
+Otherwise, it exchanges contents with the gun's internal magazine.
 
 loading/reloading?
 
 allow later modders to add liquid ammunition via tags -- maybe
-
-https://forums.minecraftforge.net/topic/116264-how-to-recoil-for-a-gun-mod/
 
 SQUIRTGUNITEM:
  Lifts and modifies code from BowItem
@@ -33,4 +23,4 @@ SQUIRTGUNITEM:
  make a custom keybind that opens a screen if you have the gun in your inventory.
  The screen should have a slot where you can put the magazine.
 
- Default manually load and auto-load being an upgrade.  Also allow player to toggle auto-load behavior in the gun's UI
+ UPGRADE! -- Default manually load and auto-load being an upgrade.  Also allow player to toggle auto-load behavior in the gun's UI
