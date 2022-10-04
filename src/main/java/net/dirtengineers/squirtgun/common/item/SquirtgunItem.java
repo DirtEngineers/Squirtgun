@@ -2,6 +2,7 @@ package net.dirtengineers.squirtgun.common.item;
 
 import net.dirtengineers.squirtgun.common.entity.ammunition.SquirtSlug;
 import net.dirtengineers.squirtgun.common.util.Common;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -16,7 +17,6 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,18 +27,23 @@ import static net.dirtengineers.squirtgun.common.util.Common.Ammunition;
 
 public class SquirtgunItem extends BowItem {
 
-    int testFluidRotationIndex = 0;
+    private int testFluidRotationIndex = 0;
 
-    List<String> myFluids = new ArrayList<>();
+    private final List<String> myFluids = new ArrayList<>();
 
     private SquirtMagazine magazine = (SquirtMagazine) SQUIRTMAGAZINE.get();
 
     public SquirtgunItem(){
         super(new Item.Properties().tab(SQUIRTGUN_TAB));
-        myFluids.add("chemlib:epinephrine");
+//        myFluids.add("chemlib:epinephrine");
         myFluids.add("chemlib:hydrochloric_acid");
-        myFluids.add("chemlib:sulfuric_acid");
-        myFluids.add("chemlib:nitric_acid");
+//        myFluids.add("chemlib:sulfuric_acid");
+//        myFluids.add("chemlib:nitric_acid");
+        myFluids.add("chemlib:bromine");
+    }
+
+    private String getFriendlyName(){
+        return I18n.get(this.getDescriptionId());
     }
 
     @Override
@@ -46,8 +51,9 @@ public class SquirtgunItem extends BowItem {
         return 15;
     }
 
+    @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-
+        super.appendHoverText(pStack, pLevel, Common.setAmmoHoverText(this.magazine, getFriendlyName(), pTooltipComponents), pIsAdvanced);
     }
 
     @Override
@@ -90,6 +96,7 @@ public class SquirtgunItem extends BowItem {
 
             if (!pLevel.isClientSide) {
                 SquirtSlug slug = magazine.makeSlugToFire(pLevel, player);
+                if(slug.hasEffects()) slug.setBaseDamage(0D);
                 slug.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 3.0F, 1.0F);
                 pLevel.addFreshEntity(slug);
             }
@@ -151,10 +158,6 @@ public class SquirtgunItem extends BowItem {
     }
 
     private void displayAmmunitionAmount(Level pLevel){
-//        Optional<TooltipComponent> blah = ((Item)this).getTooltipImage(new ItemStack(this));
-//        if(pLevel == Minecraft.getInstance().level){
-//
-//        }
 //        Format will be Shots Available/Shots Max
 //        int magCapacity = (int) Math.floor(magazine.getFluidCapacity()/SquirtSlug.shotSize);
 //        int magFluidLevel = (int) Math.floor(magazine.getFluidLevel()/SquirtSlug.shotSize);

@@ -33,6 +33,7 @@ import static net.dirtengineers.squirtgun.common.util.Common.Ammunition;
 
 public class SquirtSlug extends AbstractArrow {
     //    DynamicFluidContainerModel
+    private double baseDamage = 2.0D;
     public static final int shotSize = 100;
     private int life;
     private Fluid ammoType;
@@ -68,6 +69,10 @@ public class SquirtSlug extends AbstractArrow {
             }
         }
         this.updateColor();
+    }
+
+    public boolean hasEffects(){
+        return !this.effects.isEmpty();
     }
 
     public void addEffect(MobEffectInstance pEffectInstance) {

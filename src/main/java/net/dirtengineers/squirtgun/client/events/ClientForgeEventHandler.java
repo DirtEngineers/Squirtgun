@@ -29,4 +29,17 @@ public class ClientForgeEventHandler {
             event.setNewFovModifier(f);
         }
     }
+
+//    @SubscribeEvent
+//    public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
+//        if (event.side == LogicalSide.SERVER) {
+//            if (event.player.getItemInHand(event.player.getUsedItemHand()).getItem() instanceof SquirtgunItem) {
+////                HUD_AMMUNITION
+//                String blah = "I'M HERE!";
+//            }
+////        if(event.player.getItemInHand(event.player.getUsedItemHand()).equals(new ItemStack(ItemRegistration.SQUIRTGUN.get()))){
+////            String blah = "I'M HERE!";
+////        }
+//        }
+//    }
 }
