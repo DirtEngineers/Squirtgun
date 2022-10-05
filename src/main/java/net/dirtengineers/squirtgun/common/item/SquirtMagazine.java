@@ -5,7 +5,6 @@ import net.dirtengineers.squirtgun.common.entity.ammunition.SquirtSlug;
 import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
 import net.dirtengineers.squirtgun.common.util.Common;
 import net.dirtengineers.squirtgun.common.util.Text;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -82,13 +81,9 @@ public class SquirtMagazine extends Item {
 
     public Fluid getFluid(){ return this.container.getFluid().getFluid(); }
 
-    private String getFriendlyName(){
-        return I18n.get(this.getDescriptionId());
-    }
-
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, Text.setAmmoHoverText(this, getFriendlyName(), pTooltipComponents), pIsAdvanced);
+        super.appendHoverText(pStack, pLevel, Text.setAmmoHoverText(this, Common.getFriendlyItemName(this), pTooltipComponents), pIsAdvanced);
     }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

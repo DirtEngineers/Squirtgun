@@ -3,7 +3,6 @@ package net.dirtengineers.squirtgun.common.item;
 import net.dirtengineers.squirtgun.common.entity.ammunition.SquirtSlug;
 import net.dirtengineers.squirtgun.common.util.Common;
 import net.dirtengineers.squirtgun.common.util.Text;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -27,24 +26,19 @@ import static net.dirtengineers.squirtgun.common.registry.ItemRegistration.SQUIR
 import static net.dirtengineers.squirtgun.common.util.Common.Ammunition;
 
 public class SquirtgunItem extends BowItem {
-
+    private final boolean restrictedFluidTest = true;
+    private final boolean fluidRotationTest = true;
     private int testFluidRotationIndex = 0;
-
     private final List<String> myFluids = new ArrayList<>();
-
     private SquirtMagazine magazine = (SquirtMagazine) SQUIRTMAGAZINE.get();
 
     public SquirtgunItem(){
         super(new Item.Properties().tab(SQUIRTGUN_TAB));
-//        myFluids.add("chemlib:epinephrine");
+        myFluids.add("chemlib:epinephrine");
         myFluids.add("chemlib:hydrochloric_acid");
-//        myFluids.add("chemlib:sulfuric_acid");
-//        myFluids.add("chemlib:nitric_acid");
+        myFluids.add("chemlib:sulfuric_acid");
+        myFluids.add("chemlib:nitric_acid");
         myFluids.add("chemlib:bromine");
-    }
-
-    private String getFriendlyName(){
-        return I18n.get(this.getDescriptionId());
     }
 
     @Override
@@ -54,13 +48,13 @@ public class SquirtgunItem extends BowItem {
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, Text.setAmmoHoverText(this.magazine, getFriendlyName(), pTooltipComponents), pIsAdvanced);
+        super.appendHoverText(pStack, pLevel, Text.setAmmoHoverText(this.magazine, Common.getFriendlyItemName(this), pTooltipComponents), pIsAdvanced);
     }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
-
-        MAGAZINELOADINGTEST(pLevel);
+        if (fluidRotationTest || restrictedFluidTest)
+            MAGAZINELOADINGTEST(pLevel);
 
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
 
@@ -101,7 +95,7 @@ public class SquirtgunItem extends BowItem {
             }
 
             pLevel.playSound(
-                    (Player)null,
+                    null,
                     player.getX(),
                     player.getY(),
                     player.getZ(),
@@ -135,10 +129,13 @@ public class SquirtgunItem extends BowItem {
 
     private void MAGAZINELOADINGTEST(Level pLevel) {
         if (pLevel.isClientSide) {
-            while (!myFluids.contains(((Fluid) Ammunition.keySet().toArray()[testFluidRotationIndex]).getFluidType().toString()))
+            if (restrictedFluidTest)
+                while (!myFluids.contains(((Fluid) Ammunition.keySet().toArray()[testFluidRotationIndex]).getFluidType().toString()))
+                    testFluidRotationIndex = indexRotation(testFluidRotationIndex);
+            if(fluidRotationTest) {
+                this.magazine.setFluid(new FluidStack((Fluid) Ammunition.keySet().toArray()[testFluidRotationIndex], 750));
                 testFluidRotationIndex = indexRotation(testFluidRotationIndex);
-            this.magazine.setFluid(new FluidStack((Fluid) Ammunition.keySet().toArray()[testFluidRotationIndex], 750));
-            testFluidRotationIndex = indexRotation(testFluidRotationIndex);
+            }
         }
     }
 

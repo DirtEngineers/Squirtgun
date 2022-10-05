@@ -1,10 +1,12 @@
 package net.dirtengineers.squirtgun.common.util;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.dirtengineers.squirtgun.common.item.SquirtMagazine;
+import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.level.material.Fluid;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -12,7 +14,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class Text {
     public static final Style hoverTextStyle = Style.EMPTY.withFont(Style.DEFAULT_FONT);
-    public static final Style ammoStatusTextStyle = Style.EMPTY;//.withFont(Style.DEFAULT_FONT);
 
     public static List<Component> setAmmoHoverText(SquirtMagazine pMagazine, String pItemName, List<Component> pTooltipComponents) {
         AtomicReference<Integer> textTint = new AtomicReference<>(0XFFFFFFFF);
@@ -55,4 +56,13 @@ public class Text {
         return Component.literal(pMagazine.getShotsAvailable() + "/" + pMagazine.getMaxShots()).withStyle(hoverTextStyle.withColor(color));
     }
 
+    public static int drawCenteredStringNoShadow(PoseStack pPoseStack, Font pFont, Component pText, int pX, int pY){
+        FormattedCharSequence formattedcharsequence = pText.getVisualOrderText();
+        return pFont.draw(
+                pPoseStack,
+                formattedcharsequence,
+                (float)(pX - pFont.width(formattedcharsequence) / 2),
+                (float)pY,
+                Objects.requireNonNull(pText.getStyle().getColor()).getValue());
+    }
 }
