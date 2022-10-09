@@ -7,6 +7,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+
 import java.util.Objects;
 
 public class AmmunitionHudOverlay {
@@ -18,11 +19,11 @@ public class AmmunitionHudOverlay {
         Player player = Minecraft.getInstance().player;
         assert player != null;
         if(player.getItemInHand(player.getUsedItemHand()).getItem() instanceof SquirtgunItem pSquirtgun) {
-            Component fluidName = Text.ammoOverlayFluidName(pSquirtgun.getMagazine().getFluid());
+            Component fluidName = Text.ammoOverlayFluidName(pSquirtgun.getInnerStorage());
             if (Objects.equals(fluidName.getString(), "empty"))
                 Text.drawCenteredStringNoShadow(poseStack, font, fluidName, x, y - font.lineHeight);
             else {
-                Component status = Text.ammoOverlayStatus(pSquirtgun.getMagazine(), Objects.requireNonNull(fluidName.getStyle().getColor()).getValue());
+                Component status = Text.ammoOverlayStatus(pSquirtgun.getInnerStorage());
                 Text.drawCenteredStringNoShadow(poseStack, font, fluidName, x, y - font.lineHeight);
                 Text.drawCenteredStringNoShadow(poseStack, font, status, x, y);
             }

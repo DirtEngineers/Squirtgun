@@ -1,30 +1,29 @@
 package net.dirtengineers.squirtgun.common.util;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.dirtengineers.squirtgun.common.item.SquirtMagazine;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
-import net.minecraft.world.level.material.Fluid;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class Text {
-    public static final Style hoverTextStyle = Style.EMPTY.withFont(Style.DEFAULT_FONT);
 
-    public static List<Component> setAmmoHoverText(SquirtMagazine pMagazine, String pItemName, List<Component> pTooltipComponents) {
-        AtomicReference<Integer> textTint = new AtomicReference<>(0XFFFFFFFF);
-        if (Objects.equals(pMagazine.getFluidType().toString(), "minecraft:empty"))
-            pTooltipComponents.add(Component.literal("  empty").withStyle(hoverTextStyle.withColor(textTint.get())));
+    public static final Style HOVER_TEXT_STYLE = Style.EMPTY.withFont(Style.DEFAULT_FONT);
+
+    public static List<Component> setAmmoHoverText(AmmunitionContainer container, String pItemName, List<Component> pTooltipComponents) {
+        int textTint = CustomFluidStorage.EMPTY_FLUID_COLOR;
+        if (container.isEmptyFluid())
+            pTooltipComponents.add(Component.literal(padFluidNameForDisplay("empty", pItemName )).withStyle(HOVER_TEXT_STYLE.withColor(textTint)));
         else {
-            String fluidName = padFluidNameForDisplay(Common.getFriendlyFluidName(pMagazine.getFluid()), pItemName);
+            String fluidName = padFluidNameForDisplay(container.getFriendlyFluidName(), pItemName);
 
-            textTint.set(Common.getFluidColor(pMagazine.getFluid()));
-            pTooltipComponents.add(Component.literal(fluidName).withStyle(hoverTextStyle.withColor(textTint.get())));
-            pTooltipComponents.add(Component.literal(buildAmmoStatus(pMagazine, fluidName.length())).withStyle(hoverTextStyle.withColor(textTint.get())));
+            textTint = container.getFluidColor();
+            pTooltipComponents.add(Component.literal(fluidName).withStyle(HOVER_TEXT_STYLE.withColor(textTint)));
+            pTooltipComponents.add(Component.literal(buildAmmoStatus(container, fluidName.length())).withStyle(HOVER_TEXT_STYLE.withColor(textTint)));
         }
         return pTooltipComponents;
     }
@@ -36,24 +35,21 @@ public class Text {
         return name.toString();
     }
 
-    private static String buildAmmoStatus(SquirtMagazine pMagazine, int fluidNameLength){
+    private static String buildAmmoStatus(AmmunitionContainer container, int fluidNameLength){
         StringBuilder ammoStatus = new StringBuilder();
-        String status = pMagazine.getShotsAvailable() + "/" + pMagazine.getMaxShots();
+        String status = container.getAmmoStatus();
         int padding = (fluidNameLength - status.length()) / 2;
         ammoStatus.append(" ".repeat(Math.max(0, padding + 1)));
         ammoStatus.append(status);
         return ammoStatus.toString();
     }
 
-    public static Component ammoOverlayFluidName(Fluid pFluid){
-        if (Objects.equals(pFluid.getFluidType().toString(), "minecraft:empty"))
-            return Component.literal("empty").withStyle(hoverTextStyle.withColor(0XFFFFFFFF));
-        else
-            return Component.literal(Common.getFriendlyFluidName(pFluid)).withStyle(hoverTextStyle.withColor(Common.getFluidColor(pFluid)));
+    public static Component ammoOverlayFluidName(AmmunitionContainer storage){
+        return Component.literal(storage.getFriendlyFluidName()).withStyle(HOVER_TEXT_STYLE.withColor(storage.getFluidColor()));
     }
 
-    public static Component ammoOverlayStatus(SquirtMagazine pMagazine, int color){
-        return Component.literal(pMagazine.getShotsAvailable() + "/" + pMagazine.getMaxShots()).withStyle(hoverTextStyle.withColor(color));
+    public static Component ammoOverlayStatus(AmmunitionContainer storage){
+        return Component.literal(storage.getAmmoStatus()).withStyle(HOVER_TEXT_STYLE.withColor(storage.getFluidColor()));
     }
 
     public static int drawCenteredStringNoShadow(PoseStack pPoseStack, Font pFont, Component pText, int pX, int pY){

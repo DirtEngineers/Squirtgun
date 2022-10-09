@@ -1,9 +1,16 @@
 package net.dirtengineers.squirtgun.client.events;
 
 import net.dirtengineers.squirtgun.Squirtgun;
+import net.dirtengineers.squirtgun.client.keybinds.GunAmmoLoadKeybind;
+import net.dirtengineers.squirtgun.client.screens.SquirtgunReloadScreen;
 import net.dirtengineers.squirtgun.common.item.SquirtgunItem;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ComputeFovModifierEvent;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -25,6 +32,21 @@ public class ClientForgeEventHandler {
             }
             f *= 1.0F - f1 * 0.15F;
             event.setNewFovModifier(f);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onKeyInput(InputEvent.Key event) {
+        Minecraft mc = Minecraft.getInstance();
+        Player player = mc.player;
+        assert player != null;
+        if(GunAmmoLoadKeybind.GUN_LOAD_AMMO_KEY.consumeClick() &&
+                player.getItemInHand(player.getUsedItemHand()).getItem() instanceof SquirtgunItem pSquirtgun) {
+            if (mc.level.isClientSide()) {
+                mc.setScreen(new SquirtgunReloadScreen());
+            }
+
+            player.sendSystemMessage(Component.literal("Pressed a Key!"));
         }
     }
 

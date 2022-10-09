@@ -6,16 +6,13 @@ https://forums.minecraftforge.net/topic/116264-how-to-recoil-for-a-gun-mod/
 Set up a custom sound for the ammunition firing and for it impacting
 
 Gun is loaded from a magazine.
-magazine loads gun's internal magazine.  If the internal magazine is empty, the magazine is discarded (ItemStack.EMPTY).
-Otherwise, it exchanges contents with the gun's internal magazine.
+magazine loads gun's internal magazine.  It exchanges contents with the gun's internal magazine.
 
 loading/reloading?
 
 allow later modders to add liquid ammunition via tags -- maybe
 
 SQUIRTGUNITEM:
- Lifts and modifies code from BowItem
- use net.minecraftforge.common.ForgeHooks.getProjectile as in Player#public ItemStack getProjectile(ItemStack pShootable)
  Rework enchantment values
  Need sounds for various actions
  Need advancements for item use

@@ -1,5 +1,5 @@
 {
-  "parent": "squirtgun:item/squirtgun",
+  "parent": "squirtgun:item/squirtgunitem",
   "textures": {
     "layer0": "squirtgun:item/squirtgun"
   }
