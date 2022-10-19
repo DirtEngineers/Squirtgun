@@ -41,9 +41,9 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider {
     }
 
     private void generateMagazineRecipe(Consumer<FinishedRecipe> pConsumer){
-        Item squirtgun = ItemRegistration.SQUIRTMAGAZINEITEM.get().asItem();
+        Item squirtgun_magazine = ItemRegistration.SQUIRTMAGAZINEITEM.get().asItem();
         ShapedRecipeBuilder
-                .shaped(squirtgun)
+                .shaped(squirtgun_magazine)
                 .define('I', Items.IRON_INGOT)
                 .define('P', Items.PISTON)
                 .define('B', Items.GLASS_BOTTLE)
