@@ -37,15 +37,12 @@ public class ClientForgeEventHandler {
 
     @SubscribeEvent
     public static void onKeyInput(InputEvent.Key event) {
-        Minecraft mc = Minecraft.getInstance();
-        Player player = mc.player;
+        Minecraft mineCraft = Minecraft.getInstance();
+        Player player = mineCraft.player;
         assert player != null;
-        if(GunAmmoLoadKeybind.GUN_LOAD_AMMO_KEY.consumeClick() &&
-                player.getItemInHand(player.getUsedItemHand()).getItem() instanceof SquirtgunItem pSquirtgun) {
-            if (mc.level.isClientSide()) {
-                mc.setScreen(new SquirtgunReloadScreen());
-            }
-
+        if (GunAmmoLoadKeybind.GUN_LOAD_AMMO_KEY.consumeClick() &&
+                player.getItemInHand(player.getUsedItemHand()).getItem() instanceof SquirtgunItem) {
+            mineCraft.setScreen(new SquirtgunReloadScreen());
             player.sendSystemMessage(Component.literal("Pressed a Key!"));
         }
     }

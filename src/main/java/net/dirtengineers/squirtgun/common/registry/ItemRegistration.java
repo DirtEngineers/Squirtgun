@@ -27,10 +27,10 @@ public class ItemRegistration {
     };
 
     public static final RegistryObject<Item> SQUIRTMAGAZINEITEM = SQUIRTGUNITEMS.register("squirtmagazineitem",
-            () -> new SquirtMagazineItem(new Item.Properties().tab(SQUIRTGUN_TAB).rarity(Rarity.COMMON)));
+            () -> new SquirtMagazineItem(new Item.Properties().tab(SQUIRTGUN_TAB).rarity(Rarity.COMMON).stacksTo(1)));
 
     public static final RegistryObject<Item> SQUIRTGUNITEM = SQUIRTGUNITEMS.register("squirtgunitem",
-            () -> new SquirtgunItem(new Item.Properties().tab(SQUIRTGUN_TAB).rarity(Rarity.COMMON)));
+            () -> new SquirtgunItem(new Item.Properties().tab(SQUIRTGUN_TAB).rarity(Rarity.COMMON).stacksTo(1)));
 
     public static void register(IEventBus eventbus){
         SQUIRTGUNITEMS.register(eventbus);

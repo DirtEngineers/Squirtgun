@@ -21,3 +21,24 @@ SQUIRTGUNITEM:
  The screen should have a slot where you can put the magazine.
 
  UPGRADE! -- Default manually load and auto-load being an upgrade.  Also allow player to toggle auto-load behavior in the gun's UI
+
+ !!! Tie magazine loading to game events like pause and game end.
+
+ this.fluidStorage.readFromNBT(pTag.getCompound("fluid"));
+ {
+    energy:0,
+    fluid:{Amount:0,FluidName:"minecraft:empty"},
+    id:"alchemistry:liquifier_block_entity",
+    item:{Items:[],Size:1},
+    keepPacked:0b,
+    locked:0b,
+    maxProgress:100,
+    paused:0b,
+    progress:0,
+    x:-56,
+    y:-60,
+    z:127
+   }
+
+   https://github.com/SmashingMods/Alchemistry/blob/1.18.x/src/main/java/com/smashingmods/alchemistry/datagen/DataGenerators.java
+   https://github.com/SmashingMods/Alchemistry/blob/1.18.x/src/main/java/com/smashingmods/alchemistry/datagen/RecipeProvider.java

@@ -1,9 +1,9 @@
 package net.dirtengineers.squirtgun.common.item;
 
 import net.dirtengineers.squirtgun.common.entity.ammunition.SquirtSlug;
-import net.dirtengineers.squirtgun.common.util.AmmunitionContainer;
 import net.dirtengineers.squirtgun.common.util.Common;
 import net.dirtengineers.squirtgun.common.util.Text;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -27,15 +27,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static net.dirtengineers.squirtgun.common.util.Common.Ammunition;
-import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction.EXECUTE;
 
 public class SquirtgunItem extends BowItem {
+
     private final boolean generalTest = true;
     private final boolean restrictedFluidTest = true;
     private final boolean fluidRotationTest = true;
     private int testFluidRotationIndex = 0;
     private final List<String> myFluids = new ArrayList<>();
-    private final AmmunitionContainer storage;
+    private  int Capacity = 10;
+    private Fluid fluid;
+    private int AmmunitionAvailable = 0;
+    private FluidStack fluidStack;
 
     public SquirtgunItem(Properties pProperties){
         super(pProperties);
@@ -44,7 +47,7 @@ public class SquirtgunItem extends BowItem {
         myFluids.add("chemlib:sulfuric_acid");
         myFluids.add("chemlib:nitric_acid");
         myFluids.add("chemlib:bromine");
-        storage = new AmmunitionContainer(Common.SQUIRT_AMMUNITION_ONLY);
+        fluidStack = FluidStack.EMPTY;
     }
 
     @Override
@@ -54,7 +57,7 @@ public class SquirtgunItem extends BowItem {
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, Text.setAmmoHoverText(this.storage, Common.getFriendlyItemName(this), pTooltipComponents), pIsAdvanced);
+        super.appendHoverText(pStack, pLevel, Text.setAmmoHoverText(this.fluid, this.getAmmoStatus(), Common.getFriendlyItemName(this), pTooltipComponents), pIsAdvanced);
     }
 
     @Override
@@ -63,8 +66,7 @@ public class SquirtgunItem extends BowItem {
             MAGAZINELOADINGTEST(pLevel, pPlayer);
 
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
-
-        boolean hasAmmo = !this.storage.hasAmmunition(pPlayer);
+        boolean hasAmmo = !this.hasAmmunition(pPlayer);
 
         InteractionResultHolder<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(itemstack, pLevel, pPlayer, pHand, hasAmmo);
         if (ret != null) return ret;
@@ -84,7 +86,7 @@ public class SquirtgunItem extends BowItem {
             boolean bInfinityAmmo = EnchantmentHelper.getTagEnchantmentLevel(Enchantments.INFINITY_ARROWS, pStack) > 0;
             boolean flag = bInstabuild || bInfinityAmmo;
 
-            boolean hasAmmo = this.storage.hasAmmunition(player);
+            boolean hasAmmo = this.hasAmmunition(player);
 
             int i = this.getUseDuration(pStack) - pTimeLeft;
             i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(pStack, pLevel, player, i, hasAmmo || flag);
@@ -114,24 +116,39 @@ public class SquirtgunItem extends BowItem {
     }
 
     public SquirtSlug makeSlugToFire(Level pLevel, LivingEntity pEntityLiving) {
-        SquirtSlug slug = new SquirtSlug(pEntityLiving, pLevel, this.storage.getFluid().getFluid());
+        SquirtSlug slug = new SquirtSlug(pEntityLiving, pLevel, this.fluid);
         return this.fillSlug(pEntityLiving, slug);
     }
 
     public SquirtSlug fillSlug(LivingEntity pEntityLiving, SquirtSlug pSlug) {
         if (pEntityLiving instanceof Player player) {
-            if (this.storage.hasAmmunition(player)) {
-                pSlug.setAmmoType(this.storage.getFluid().getFluid());
+            if (this.hasAmmunition(player)) {
+                pSlug.setAmmoType(this.fluid);
                 if (!player.getAbilities().instabuild)
-                    this.storage.drainContainer(SquirtSlug.shotSize, EXECUTE);
+                    this.AmmunitionAvailable --;
             }
         }
         return pSlug;
     }
 
-    public AmmunitionContainer getInnerStorage(){
-        return this.storage;
+    private boolean hasAmmunition(Player pPlayer){
+        return this.AmmunitionAvailable >= 0 || pPlayer.getAbilities().instabuild;
     }
+
+    public int loadFluid(Fluid pFluid, int pAmount){
+        this.fluid = pFluid;
+        this.AmmunitionAvailable = pAmount;
+        fluidStack = new FluidStack(pFluid, pAmount);
+        CompoundTag tag = fluidStack.writeToNBT(new CompoundTag());
+        return Math.max(pAmount - this.Capacity, 0);
+    }
+
+    public Fluid getFluid(){
+        return this.fluid;
+    }
+
+    public String getAmmoStatus(){ return this.AmmunitionAvailable + "/" +  this.Capacity; }
+
 
 //    private SquirtMagazineItem loadNewSquirtMagazine(SquirtMagazineItem pMagazine) {
 //        SquirtMagazineItem outMagazine = new SquirtMagazineItem(magazine);
@@ -160,8 +177,9 @@ public class SquirtgunItem extends BowItem {
             while (!myFluids.contains(((Fluid) Ammunition.keySet().toArray()[testFluidRotationIndex]).getFluidType().toString()))
                 testFluidRotationIndex = indexRotation(testFluidRotationIndex);
         if (fluidRotationTest) {
-            this.storage.setFluid(new FluidStack((Fluid) Ammunition.keySet().toArray()[testFluidRotationIndex], 750));
+            this.loadFluid((Fluid) Ammunition.keySet().toArray()[testFluidRotationIndex], 7);
             testFluidRotationIndex = indexRotation(testFluidRotationIndex);
+
 //            }
 //            for (ItemStack itemStack : pPlayer.getInventory().items) {
 //                if(itemStack.getItem() instanceof SquirtMagazine magazine)

@@ -34,7 +34,7 @@ import static net.dirtengineers.squirtgun.common.util.Common.Ammunition;
 public class SquirtSlug extends AbstractArrow {
     //    DynamicFluidContainerModel
 
-    private final double baseDamage = 2.0D;
+    private double baseDamage = 2.0D;
     public static final int shotSize = 100;
     private int life;
     private Fluid ammoType;
@@ -136,6 +136,16 @@ public class SquirtSlug extends AbstractArrow {
     @Override
     public ItemStack getPickupItem() {
         return ItemStack.EMPTY;
+    }
+
+    @Override
+    public void setBaseDamage(double pBaseDamage) {
+        this.baseDamage = pBaseDamage;
+    }
+
+    @Override
+    public double getBaseDamage() {
+        return this.baseDamage;
     }
 
     @Override
