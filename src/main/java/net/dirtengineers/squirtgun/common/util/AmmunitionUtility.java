@@ -3,6 +3,7 @@ package net.dirtengineers.squirtgun.common.util;
 import com.smashingmods.chemlib.api.Chemical;
 import com.smashingmods.chemlib.api.Compound;
 import com.smashingmods.chemlib.common.items.CompoundItem;
+import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;

@@ -9,14 +9,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-
-import static com.smashingmods.chemlib.api.MatterState.LIQUID;
-import static com.smashingmods.chemlib.registry.ItemRegistry.getCompounds;
-import static com.smashingmods.chemlib.registry.ItemRegistry.getElements;
-import static net.dirtengineers.squirtgun.common.util.Common.Ammunition;
 
 @Mod(Squirtgun.MOD_ID)
 public class Squirtgun {

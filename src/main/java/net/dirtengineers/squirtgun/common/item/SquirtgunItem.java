@@ -1,8 +1,7 @@
 package net.dirtengineers.squirtgun.common.item;
 
 import net.dirtengineers.squirtgun.common.entity.ammunition.SquirtSlug;
-import net.dirtengineers.squirtgun.common.util.Common;
-import net.dirtengineers.squirtgun.common.util.Text;
+import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -26,7 +25,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.dirtengineers.squirtgun.common.util.Common.Ammunition;
 
 public class SquirtgunItem extends BowItem {
 
@@ -55,10 +53,10 @@ public class SquirtgunItem extends BowItem {
         return 15;
     }
 
-    @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, Text.setAmmoHoverText(this.fluid, this.getAmmoStatus(), Common.getFriendlyItemName(this), pTooltipComponents), pIsAdvanced);
-    }
+//    @Override
+//    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+//        super.appendHoverText(pStack, pLevel, Text.setAmmoHoverText(this.fluid, this.getAmmoStatus(), ItemRegistration.getFriendlyItemName(this), pTooltipComponents), pIsAdvanced);
+//    }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
@@ -174,10 +172,10 @@ public class SquirtgunItem extends BowItem {
     private void MAGAZINELOADINGTEST(Level pLevel, Player pPlayer) {
 //        if (pLevel.isClientSide) {
         if (restrictedFluidTest)
-            while (!myFluids.contains(((Fluid) Ammunition.keySet().toArray()[testFluidRotationIndex]).getFluidType().toString()))
+            while (!myFluids.contains(((Fluid) ItemRegistration.MAGAZINES.keySet().toArray()[testFluidRotationIndex]).getFluidType().toString()))
                 testFluidRotationIndex = indexRotation(testFluidRotationIndex);
         if (fluidRotationTest) {
-            this.loadFluid((Fluid) Ammunition.keySet().toArray()[testFluidRotationIndex], 7);
+            this.loadFluid((Fluid) ItemRegistration.MAGAZINES.keySet().toArray()[testFluidRotationIndex], 7);
             testFluidRotationIndex = indexRotation(testFluidRotationIndex);
 
 //            }
@@ -195,7 +193,7 @@ public class SquirtgunItem extends BowItem {
 
     private int indexRotation(int index) {
         index++;
-        if (index >= Common.Ammunition.size()) index = 0;
+        if (index >= ItemRegistration.MAGAZINES.size()) index = 0;
         return index;
     }
 

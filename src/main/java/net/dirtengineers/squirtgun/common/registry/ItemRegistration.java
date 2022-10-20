@@ -17,14 +17,17 @@ import org.jetbrains.annotations.NotNull;
 public class ItemRegistration {
 
     public static final DeferredRegister<Item> SQUIRTGUNITEMS = DeferredRegister.create(ForgeRegistries.ITEMS,  Squirtgun.MOD_ID);
-
-    public static final CreativeModeTab SQUIRTGUN_TAB = new CreativeModeTab("squirtguntab")
-    {
+    public static final CreativeModeTab SQUIRTGUN_TAB = new CreativeModeTab("squirtguntab") {
         @Override
         public @NotNull ItemStack makeIcon() {
             return new ItemStack(SQUIRTGUNITEM.get());
         }
     };
+
+    public static Map<BaseSquirtMagazine, Chemical> MAGAZINES = new HashMap<>();
+    public static List<Chemical> ammunitionLiquids = new ArrayList<>();
+
+    public static final Predicate<FluidStack> SQUIRT_AMMUNITION_ONLY = (fluidStack) -> MAGAZINES.containsKey(fluidStack.getFluid());
 
     public static final RegistryObject<Item> SQUIRTMAGAZINEITEM = SQUIRTGUNITEMS.register("squirtmagazineitem",
             () -> new SquirtMagazineItem(new Item.Properties().tab(SQUIRTGUN_TAB).rarity(Rarity.COMMON).stacksTo(1)));

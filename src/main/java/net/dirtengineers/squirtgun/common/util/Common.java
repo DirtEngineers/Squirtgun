@@ -13,12 +13,7 @@ import java.util.function.Predicate;
 public class Common {
     public static Map<Fluid, Chemical> Ammunition = new HashMap<>();
 
-    public static final Predicate<FluidStack> SQUIRT_AMMUNITION_ONLY =
-            (fluidStack) -> Common.Ammunition.containsKey(fluidStack.getFluid());
 
-    public static String getFriendlyItemName(Item pItem){
-        return I18n.get(pItem.getDescriptionId());
-    }
 
 
 

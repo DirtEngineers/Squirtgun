@@ -1,6 +1,6 @@
 package net.dirtengineers.squirtgun.common.item;
 
-import net.dirtengineers.squirtgun.common.util.Common;
+import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
 import net.dirtengineers.squirtgun.common.util.Text;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -40,10 +40,10 @@ public class SquirtMagazineItem extends Item {
         return new MagazineReturnValue(pFluidStack, this.loadFluid(pFluidStack));
     }
 
-    @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, Text.setAmmoHoverText(this.fluid, this.getAmmoStatus(), Common.getFriendlyItemName(this), pTooltipComponents), pIsAdvanced);
-    }
+//    @Override
+//    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+//        super.appendHoverText(pStack, pLevel, Text.setAmmoHoverText(this.fluid, this.getAmmoStatus(), ItemRegistration.getFriendlyItemName(this), pTooltipComponents), pIsAdvanced);
+//    }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
