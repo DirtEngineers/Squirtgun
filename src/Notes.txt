@@ -42,3 +42,16 @@ SQUIRTGUNITEM:
 
    https://github.com/SmashingMods/Alchemistry/blob/1.18.x/src/main/java/com/smashingmods/alchemistry/datagen/DataGenerators.java
    https://github.com/SmashingMods/Alchemistry/blob/1.18.x/src/main/java/com/smashingmods/alchemistry/datagen/RecipeProvider.java
+
+   ///////////////////////////////////////
+   //register squirtgun, slug, and magazine as before.
+   //new mags, do new way.
+   //Anything that requires chemlib use register event method
+   //Item registry needs array list of mags with references to various magazines for recipe generation
+   //Need a base magazine class
+   //Mag stores chemical reference and number of shots
+   Gun takes a magazine (replacable)
+
+   //Chemical reference in magazine
+   Rework validator accordingly
+   Models and localization in data generation

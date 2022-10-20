@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": {
+      "item": "chemlib:hydrochloric_acid_bucket"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    }
+  },
+  "pattern": [
+    "IBI",
+    "IBI",
+    "IPI"
+  ],
+  "result": {
+    "item": "squirtgun:hydrochloric_acid_magazine"
+  }
+}

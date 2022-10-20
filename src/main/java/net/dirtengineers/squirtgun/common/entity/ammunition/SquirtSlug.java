@@ -62,14 +62,14 @@ public class SquirtSlug extends AbstractArrow {
     }
 
     public void setEffects() {
-        this.effects.clear();
-        if (ammoType != null) {
-            Chemical chemical = Ammunition.get(ammoType);
-            for (MobEffectInstance effect : chemical.getEffects()) {
-                this.effects.add(new MobEffectInstance(effect));
-            }
-        }
-        this.updateColor();
+//        this.effects.clear();
+//        if (ammoType != null) {
+//            Chemical chemical = ItemRegistration.ammunition.get(ammoType);
+//            for (MobEffectInstance effect : chemical.getEffects()) {
+//                this.effects.add(new MobEffectInstance(effect));
+//            }
+//        }
+//        this.updateColor();
     }
 
     public boolean hasEffects(){
@@ -232,15 +232,15 @@ public class SquirtSlug extends AbstractArrow {
     @Override
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-        if (pCompound.contains("Fluid")) {
-            for (Fluid fluid : Ammunition.keySet()) {
-                if (Objects.equals(fluid.getFluidType().toString(), pCompound.getString("Fluid"))) {
-                    this.ammoType = fluid;
-                    break;
-                }
-            }
-        }
-        setEffects();
+//        if (pCompound.contains("Fluid")) {
+//            for (Fluid fluid : ItemRegistration.ammunition.keySet()) {
+//                if (Objects.equals(fluid.getFluidType().toString(), pCompound.getString("Fluid"))) {
+//                    this.ammoType = fluid;
+//                    break;
+//                }
+//            }
+//        }
+//        setEffects();
     }
 
     @Override

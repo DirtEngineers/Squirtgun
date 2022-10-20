@@ -1,13 +1,17 @@
 package net.dirtengineers.squirtgun.datagen;
 
+import com.smashingmods.chemlib.registry.FluidRegistry;
+import net.dirtengineers.squirtgun.common.item.BaseSquirtMagazine;
 import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.fluids.FluidType;
 
 import java.util.function.Consumer;
 
@@ -16,9 +20,8 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider {
     public RecipeProvider(DataGenerator pGenerator) { super(pGenerator); }
 
     protected void buildCraftingRecipes(Consumer<FinishedRecipe> pConsumer) {
-//        AtomizerRecipeProvider.register(pConsumer);
         this.generateGunRecipe(pConsumer);
-        this.generateMagazineRecipe(pConsumer);
+        this.generateMagazineRecipes(pConsumer);
         this.generateMachineRecipes(pConsumer);
     }
 
@@ -40,7 +43,42 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider {
                 .save(pConsumer);
     }
 
-    private void generateMagazineRecipe(Consumer<FinishedRecipe> pConsumer){
+    private void generateMagazineRecipes(Consumer<FinishedRecipe> pConsumer){
+        this.generateEmptyMagazineRecipe(pConsumer);
+        for(BaseSquirtMagazine magazine : ItemRegistration.MAGAZINES.keySet()){
+            BucketItem bucketItem = this.getBucket(magazine);
+            if(bucketItem != null) {
+                ShapedRecipeBuilder
+                        .shaped(magazine)
+                        .define('I', Items.IRON_INGOT)
+                        .define('P', Items.PISTON)
+                        .define('B', bucketItem)
+                        .pattern("IBI")
+                        .pattern("IBI")
+                        .pattern("IPI")
+                        .unlockedBy(
+                                "has_item",
+                                inventoryTrigger(
+                                        ItemPredicate.Builder.item().of(new ItemLike[]{Items.PISTON, bucketItem}).build()))
+                        .save(pConsumer);
+            }
+        }
+    }
+
+    private BucketItem getBucket(BaseSquirtMagazine magazine){
+        BucketItem bucketItem = null;
+        if(FluidRegistry.getFluidTypeByName(ItemRegistration.MAGAZINES.get(magazine).getChemicalName()).isPresent()) {
+            FluidType fluidType = FluidRegistry.getFluidTypeByName(ItemRegistration.MAGAZINES.get(magazine).getChemicalName()).get();
+
+            for (BucketItem bucketItem1 : FluidRegistry.getBuckets().toList()) {
+                if (bucketItem1.getFluid().getFluidType() == fluidType)
+                    bucketItem = bucketItem1;
+            }
+        }
+        return bucketItem;
+    }
+
+    private void generateEmptyMagazineRecipe(Consumer<FinishedRecipe> pConsumer){
         Item squirtgun_magazine = ItemRegistration.SQUIRTMAGAZINEITEM.get().asItem();
         ShapedRecipeBuilder
                 .shaped(squirtgun_magazine)

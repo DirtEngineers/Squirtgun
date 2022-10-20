@@ -16,13 +16,14 @@ public class AmmunitionUtility {
     public static String EMPTY_FLUID_NAME = "minecraft:empty";
 
     public static String getFriendlyFluidName(Fluid pFluid){
-        if(AmmunitionUtility.isEmptyFluid(pFluid)) return "empty";
-        else {
-            Chemical chemical = Common.Ammunition.get(pFluid);
-            return chemical instanceof Compound ?
-                    I18n.get(((CompoundItem) chemical).getDescriptionId()) :
-                    chemical.getChemicalName();
-        }
+//        if(AmmunitionUtility.isEmptyFluid(pFluid)) return "empty";
+//        else {
+//            Chemical chemical = ItemRegistration.ammunition.get(pFluid);
+//            return chemical instanceof Compound ?
+//                    I18n.get(((CompoundItem) chemical).getDescriptionId()) :
+//                    chemical.getChemicalName();
+//        }
+        return "";
     }
 
     public static boolean isEmptyFluid(Fluid pFluid) {
