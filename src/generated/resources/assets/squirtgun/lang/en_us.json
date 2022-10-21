@@ -1,0 +1,22 @@
+{
+  "item.squirtgun.acetic_acid_magazine": "Acetic Acid Magazine",
+  "item.squirtgun.bromine_magazine": "Bromine Magazine",
+  "item.squirtgun.carbon_disulfide_magazine": "Carbon Disulfide Magazine",
+  "item.squirtgun.epinephrine_magazine": "Epinephrine Magazine",
+  "item.squirtgun.ethanol_magazine": "Ethanol Magazine",
+  "item.squirtgun.gun_functionality": "Squirtgun reload/settings",
+  "item.squirtgun.hexane_magazine": "Hexane Magazine",
+  "item.squirtgun.hydrochloric_acid_magazine": "Hydrochloric Acid Magazine",
+  "item.squirtgun.mercury_magazine": "Mercury Magazine",
+  "item.squirtgun.nitric_acid_magazine": "Nitric Acid Magazine",
+  "item.squirtgun.pentane_magazine": "Pentane Magazine",
+  "item.squirtgun.squirtgunitem": "Squirtgun",
+  "item.squirtgun.squirtmagazineitem": "Empty Magazine",
+  "item.squirtgun.sulfur_trioxide_magazine": "Sulfur Trioxide Magazine",
+  "item.squirtgun.sulfuric_acid_magazine": "Sulfuric Acid Magazine",
+  "item.squirtgun.water_magazine": "Water Magazine",
+  "itemGroup.squirtguntab": "Squirtgun",
+  "key.category.squirtgun": "Squirtgun",
+  "key.squirtgun.gun_ammo_load": "Load Ammunition",
+  "sounds.squirtgun.squirt_slug_hit": "EWWW!"
+}

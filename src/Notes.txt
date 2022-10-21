@@ -54,4 +54,4 @@ SQUIRTGUNITEM:
 
    //Chemical reference in magazine
    Rework validator accordingly
-   Models and localization in data generation
+   //Models and localization in data generation
