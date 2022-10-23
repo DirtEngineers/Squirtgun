@@ -2,7 +2,10 @@ package net.dirtengineers.squirtgun.common.item;
 
 import net.dirtengineers.squirtgun.common.entity.ammunition.SquirtSlug;
 import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
-import net.minecraft.nbt.CompoundTag;
+import net.dirtengineers.squirtgun.common.util.TextUtility;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -12,28 +15,26 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class SquirtgunItem extends BowItem {
 
-    private final boolean generalTest = true;
-    private final boolean restrictedFluidTest = true;
-    private final boolean fluidRotationTest = true;
     private int testFluidRotationIndex = 0;
     private final List<String> myFluids = new ArrayList<>();
-    private  int Capacity = 10;
-    private Fluid fluid;
-    private int AmmunitionAvailable = 0;
-    private FluidStack fluidStack;
+    private BaseSquirtMagazine magazine = null;
 
     public SquirtgunItem(Properties pProperties){
         super(pProperties);
@@ -42,7 +43,6 @@ public class SquirtgunItem extends BowItem {
         myFluids.add("chemlib:sulfuric_acid");
         myFluids.add("chemlib:nitric_acid");
         myFluids.add("chemlib:bromine");
-        fluidStack = FluidStack.EMPTY;
     }
 
     @Override
@@ -50,19 +50,27 @@ public class SquirtgunItem extends BowItem {
         return 15;
     }
 
-//    @Override
-//    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-//        super.appendHoverText(pStack, pLevel, Text.setAmmoHoverText(this.fluid, this.getAmmoStatus(), ItemRegistration.getFriendlyItemName(this), pTooltipComponents), pIsAdvanced);
-//    }
+    @Override
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        super.appendHoverText(
+                pStack,
+                pLevel,
+                TextUtility.setAmmoHoverText(
+                        this.magazine != null ? this.magazine.getFluid() : ForgeRegistries.FLUIDS.getValue(new ResourceLocation(TextUtility.EMPTY_FLUID_NAME)),
+                        this.getAmmoStatus(),
+                        ItemRegistration.getFriendlyItemName(this),
+                        pTooltipComponents),
+                pIsAdvanced);
+    }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
-        if (fluidRotationTest || restrictedFluidTest || generalTest)
-            MAGAZINELOADINGTEST(pLevel, pPlayer);
+//        MAGAZINELOADINGTEST(pLevel, pPlayer);
 
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
-        boolean hasAmmo = !this.hasAmmunition(pPlayer);
+        boolean hasAmmo = this.hasAmmunition(pPlayer);
 
+        net.minecraftforge.common.ForgeHooks.getProjectile(pPlayer, itemstack, hasAmmo ? new ItemStack(this.magazine.getGenericSlugItem()) : ItemStack.EMPTY);
         InteractionResultHolder<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(itemstack, pLevel, pPlayer, pHand, hasAmmo);
         if (ret != null) return ret;
 
@@ -77,11 +85,10 @@ public class SquirtgunItem extends BowItem {
     @Override
     public void releaseUsing(ItemStack pStack, Level pLevel, LivingEntity pEntityLiving, int pTimeLeft) {
         if (pEntityLiving instanceof Player player) {
-            boolean bInstabuild = player.getAbilities().instabuild;
-            boolean bInfinityAmmo = EnchantmentHelper.getTagEnchantmentLevel(Enchantments.INFINITY_ARROWS, pStack) > 0;
-            boolean flag = bInstabuild || bInfinityAmmo;
+            boolean flag = player.getAbilities().instabuild || EnchantmentHelper.getTagEnchantmentLevel(Enchantments.INFINITY_ARROWS, pStack) > 0;
 
             boolean hasAmmo = this.hasAmmunition(player);
+            net.minecraftforge.common.ForgeHooks.getProjectile(pEntityLiving, pStack, hasAmmo ? new ItemStack(this.magazine.getGenericSlugItem()) : ItemStack.EMPTY);
 
             int i = this.getUseDuration(pStack) - pTimeLeft;
             i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(pStack, pLevel, player, i, hasAmmo || flag);
@@ -90,9 +97,10 @@ public class SquirtgunItem extends BowItem {
 //            Infinity slugs?
 //            boolean bInfinityAmmo = bInstabuild || (itemstack.getItem() instanceof SquirtSlugItem && ((SquirtSlugItem)itemstack.getItem()).isInfinite(itemstack, pStack, player));
 
+            if(hasAmmo) {
             if (!pLevel.isClientSide) {
-                SquirtSlug slug = this.makeSlugToFire(pLevel, player);
-                if(slug.hasEffects()) slug.setBaseDamage(0D);
+                SquirtSlug slug = this.magazine.makeSlugToFire(pLevel, player);
+                if (slug.hasEffects()) slug.setBaseDamage(0D);
                 slug.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 3.0F, 1.0F);
                 pLevel.addFreshEntity(slug);
             }
@@ -104,47 +112,42 @@ public class SquirtgunItem extends BowItem {
                     SoundEvents.ARROW_SHOOT,
                     SoundSource.PLAYERS,
                     1.0F,
-                    1.0F / (pLevel.getRandom().nextFloat() * 0.4F + 1.2F) +  0.5F
+                    1.0F / (pLevel.getRandom().nextFloat() * 0.4F + 1.2F) + 0.5F
             );
             player.awardStat(Stats.ITEM_USED.get(this));
-        }
-    }
-
-    public SquirtSlug makeSlugToFire(Level pLevel, LivingEntity pEntityLiving) {
-        SquirtSlug slug = new SquirtSlug(pEntityLiving, pLevel, this.fluid);
-        return this.fillSlug(pEntityLiving, slug);
-    }
-
-    public SquirtSlug fillSlug(LivingEntity pEntityLiving, SquirtSlug pSlug) {
-        if (pEntityLiving instanceof Player player) {
-            if (this.hasAmmunition(player)) {
-                pSlug.setAmmoType(this.fluid);
-                if (!player.getAbilities().instabuild)
-                    this.AmmunitionAvailable --;
             }
         }
-        return pSlug;
     }
 
-    private boolean hasAmmunition(Player pPlayer){
-        return this.AmmunitionAvailable >= 0 || pPlayer.getAbilities().instabuild;
-    }
-
-    public int loadFluid(Fluid pFluid, int pAmount){
-        this.fluid = pFluid;
-        this.AmmunitionAvailable = pAmount;
-        fluidStack = new FluidStack(pFluid, pAmount);
-        CompoundTag tag = fluidStack.writeToNBT(new CompoundTag());
-        return Math.max(pAmount - this.Capacity, 0);
+    private boolean hasAmmunition(Player pPlayer) {
+        boolean result;
+        if (this.magazine == null)
+            if (pPlayer.getAbilities().instabuild) {
+                BaseSquirtMagazine newMag = (BaseSquirtMagazine) Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(new ResourceLocation("squirtgun:nitric_acid_magazine"))).asItem();
+                newMag.setFluid();
+                newMag.loadFluid(new FluidStack(newMag.getFluid(), 1000));
+                this.magazine = newMag;
+                result = this.magazine.hasAmmunition(pPlayer);
+            } else
+                result = false;
+        else
+            result = this.magazine.hasAmmunition(pPlayer);
+        return result;
     }
 
     public Fluid getFluid(){
-        return this.fluid;
+        return (this.magazine != null) ? this.magazine.getFluid() : FluidStack.EMPTY.getFluid();
     }
 
-    public String getAmmoStatus(){ return this.AmmunitionAvailable + "/" +  this.Capacity; }
+    public String getAmmoStatus(){
+        return (this.magazine == null) ? new TranslatableContents("No Magazine").getKey() : this.magazine.getAmmoStatus();
+    }
 
-
+    public BaseSquirtMagazine loadNewMagazine(BaseSquirtMagazine pMagazine){
+        BaseSquirtMagazine outMag = this.magazine;
+        this.magazine = pMagazine;
+        return outMag;
+    }
 //    private SquirtMagazineItem loadNewSquirtMagazine(SquirtMagazineItem pMagazine) {
 //        SquirtMagazineItem outMagazine = new SquirtMagazineItem(magazine);
 //        magazine = new SquirtMagazineItem(pMagazine);
@@ -167,25 +170,21 @@ public class SquirtgunItem extends BowItem {
 //    }
 
     private void MAGAZINELOADINGTEST(Level pLevel, Player pPlayer) {
-//        if (pLevel.isClientSide) {
-        if (restrictedFluidTest)
-            while (!myFluids.contains(((Fluid) ItemRegistration.MAGAZINES.keySet().toArray()[testFluidRotationIndex]).getFluidType().toString()))
-                testFluidRotationIndex = indexRotation(testFluidRotationIndex);
-        if (fluidRotationTest) {
-            this.loadFluid((Fluid) ItemRegistration.MAGAZINES.keySet().toArray()[testFluidRotationIndex], 7);
-            testFluidRotationIndex = indexRotation(testFluidRotationIndex);
+        BaseSquirtMagazine newMag = (BaseSquirtMagazine) Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(new ResourceLocation("squirtgun:nitric_acid_magazine"))).asItem();
+        newMag.setFluid();
+        FluidStack stack = new FluidStack(newMag.getFluid(), 1000);
+        newMag.loadFluid(stack);
+        GenericSquirtSlug slug = newMag.getGenericSlugItem();
+//        BaseSquirtMagazine newMag2 = this.loadNewMagazine(newMag);
 
-//            }
-//            for (ItemStack itemStack : pPlayer.getInventory().items) {
-//                if(itemStack.getItem() instanceof SquirtMagazine magazine)
-////                    magazine.drainContainer(magazine.getFluidLevel(), IFluidHandler.FluidAction.EXECUTE);
-//                    if(magazine.getFluidLevel() == 0) {
-//                        magazine.setFluid(new FluidStack((Fluid) Ammunition.keySet().toArray()[testFluidRotationIndex], 500));
-//                        itemStack.setCount(1);
-//                        break;
-//                    }
-//            }
-        }
+
+//        if (restrictedFluidTest)
+//            while (!myFluids.contains(((Fluid) ItemRegistration.MAGAZINES.keySet().toArray()[testFluidRotationIndex]).getFluidType().toString()))
+//                testFluidRotationIndex = indexRotation(testFluidRotationIndex);
+//        if (fluidRotationTest) {
+//            this.loadFluid((Fluid) ItemRegistration.MAGAZINES.keySet().toArray()[testFluidRotationIndex], 7);
+//            testFluidRotationIndex = indexRotation(testFluidRotationIndex);
+//        }
     }
 
     private int indexRotation(int index) {

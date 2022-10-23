@@ -27,6 +27,7 @@ public class LocalizationGenerator extends LanguageProvider {
         this.add("sounds.squirtgun.squirt_slug_hit", "EWWW!");
         this.add("key.category.squirtgun", "Squirtgun");
         this.add("key.squirtgun.gun_ammo_load", "Load Ammunition");
+        this.add("key.squirtgun.no_magazine", "No Magazine");
     }
 
     private String setText(String text, char delimiter){

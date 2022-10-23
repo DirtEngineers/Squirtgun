@@ -3,7 +3,6 @@ package net.dirtengineers.squirtgun.common.entity.ammunition;
 import com.google.common.collect.Sets;
 import com.smashingmods.chemlib.api.Chemical;
 import net.dirtengineers.squirtgun.common.registry.EntityRegistration;
-import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
 import net.dirtengineers.squirtgun.common.registry.SoundEventRegistration;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -27,17 +26,18 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
-import java.util.Objects;
+
 import java.util.Set;
 
 
 public class SquirtSlug extends AbstractArrow {
-    //    DynamicFluidContainerModel
 
     private double baseDamage = 2.0D;
     public static final int shotSize = 100;
     private int life;
     private Fluid ammoType;
+
+    private Chemical chemical;
 
     private final int maxGroundTime = 10;
 
@@ -49,7 +49,14 @@ public class SquirtSlug extends AbstractArrow {
 
     public SquirtSlug(LivingEntity pShooter, Level pLevel, Fluid pFluid) {
         super(EntityRegistration.SQUIRT_SLUG.get(), pShooter, pLevel);
-        this.setAmmoType(pFluid);
+        this.ammoType = pFluid;
+    }
+
+    public SquirtSlug(LivingEntity pShooter, Level pLevel, Fluid pFluid, Chemical pChemical) {
+        super(EntityRegistration.SQUIRT_SLUG.get(), pShooter, pLevel);
+        this.ammoType = pFluid;
+        this.chemical = pChemical;
+        setEffects();
     }
 
     public SquirtSlug(EntityType<? extends AbstractArrow> pEntityType, Level pLevel) {
@@ -62,14 +69,11 @@ public class SquirtSlug extends AbstractArrow {
     }
 
     public void setEffects() {
-//        this.effects.clear();
-//        if (ammoType != null) {
-//            Chemical chemical = ItemRegistration.ammunition.get(ammoType);
-//            for (MobEffectInstance effect : chemical.getEffects()) {
-//                this.effects.add(new MobEffectInstance(effect));
-//            }
-//        }
-//        this.updateColor();
+        this.effects.clear();
+        for (MobEffectInstance effect : this.chemical.getEffects())
+            this.effects.add(new MobEffectInstance(effect));
+
+        this.updateColor();
     }
 
     public boolean hasEffects(){

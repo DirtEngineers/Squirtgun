@@ -10,6 +10,5 @@ public class Registry {
         SoundEventRegistration.register(modEventBus);
 //        BlockRegistry.register(modEventBus);
 //        FluidRegistry.register(modEventBus);
-
     }
 }
