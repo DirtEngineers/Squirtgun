@@ -42,7 +42,7 @@ public class SquirtgunItem extends BowItem {
 
     public SquirtgunItem(Properties pProperties){
         super(pProperties);
-        statusChanged = false;
+        statusChanged = true;
     }
 
     private void MAGAZINELOADINGTEST(Level pLevel, Player pPlayer) {
@@ -57,7 +57,7 @@ public class SquirtgunItem extends BowItem {
     @Override
     public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pItemSlot, boolean pIsSelected) {
         if (!pLevel.isClientSide) {
-            if(this.magazine == null)
+            if(this.magazine == null && statusChanged)
                 this.loadFromNBT(pStack);
             if(this.statusChanged)
                 this.setTag(pStack);
@@ -181,7 +181,6 @@ public class SquirtgunItem extends BowItem {
     private void loadFromNBT(ItemStack pStack) {
         CompoundTag stackTag = pStack.getOrCreateTag();
         if (Objects.requireNonNull(stackTag).contains(MAGAZINE_TYPE_TAG) && stackTag.contains(MAGAZINE_SHOTS_TAG)) {
-            //get mag type, fill, and put into gun
             this.magazine = (BaseSquirtMagazine)
                     Objects.requireNonNull(
                             ForgeRegistries.ITEMS.getValue(
@@ -189,8 +188,11 @@ public class SquirtgunItem extends BowItem {
                             )
                     ).asItem();
             this.magazine.setFluid();
-            magazine.loadFluid(new FluidStack(this.magazine.getFluid(), stackTag.getInt(MAGAZINE_SHOTS_TAG) * SquirtSlug.shotSize));
+            magazine.loadFluid(new FluidStack(
+                    this.magazine.getFluid(),
+                    stackTag.getInt(MAGAZINE_SHOTS_TAG) * SquirtSlug.shotSize));
             pStack.setTag(stackTag);
+            statusChanged = false;
         }
 //        pStack.setTag(new CompoundTag());
     }
