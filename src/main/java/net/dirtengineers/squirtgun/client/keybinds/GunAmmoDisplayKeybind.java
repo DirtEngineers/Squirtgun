@@ -7,7 +7,7 @@ import org.lwjgl.glfw.GLFW;
 
 import static net.dirtengineers.squirtgun.client.keybinds.Common.*;
 
-public class GunAmmoLoadKeybind {
-    public static final KeyMapping GUN_LOAD_AMMO_KEY = new KeyMapping(KEY_GUN_LOAD_AMMO, KeyConflictContext.IN_GAME,
-            InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, KEY_CATEGORY_MOD);
+public class GunAmmoDisplayKeybind {
+    public static final KeyMapping GUN_AMMO_STATUS_DISPLAY_KEY = new KeyMapping(KEY_GUN_AMMO_STATUS_DISPLAY, KeyConflictContext.IN_GAME,
+            InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_Y, KEY_CATEGORY_MOD);
 }

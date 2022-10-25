@@ -1,29 +1,22 @@
 package net.dirtengineers.squirtgun.client.events;
 
-import com.smashingmods.chemlib.api.Chemical;
-import com.smashingmods.chemlib.api.Element;
 import com.smashingmods.chemlib.common.items.CompoundItem;
 import com.smashingmods.chemlib.common.items.ElementItem;
-import com.smashingmods.chemlib.registry.FluidRegistry;
-import com.smashingmods.chemlib.registry.ItemRegistry;
 import net.dirtengineers.squirtgun.Squirtgun;
+import net.dirtengineers.squirtgun.client.keybinds.GunAmmoDisplayKeybind;
 import net.dirtengineers.squirtgun.client.keybinds.GunAmmoLoadKeybind;
 import net.dirtengineers.squirtgun.client.overlay.AmmunitionHudOverlay;
 import net.dirtengineers.squirtgun.client.render.SquirtSlugRenderer;
 import net.dirtengineers.squirtgun.common.registry.EntityRegistration;
 import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
 import net.minecraft.client.renderer.entity.EntityRenderers;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
-import net.minecraftforge.client.model.DynamicFluidContainerModel;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Objects;
 
@@ -42,6 +35,7 @@ public class ClientModEventHandler {
     @SubscribeEvent
     public static void onKeyRegister(RegisterKeyMappingsEvent event) {
         event.register(GunAmmoLoadKeybind.GUN_LOAD_AMMO_KEY);
+        event.register(GunAmmoDisplayKeybind.GUN_AMMO_STATUS_DISPLAY_KEY);
     }
 
     @SubscribeEvent

@@ -12,22 +12,26 @@ import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import java.util.Objects;
 
 public class AmmunitionHudOverlay {
-    public static final IGuiOverlay HUD_AMMUNITION = (gui, poseStack, partialTick, width, height) -> {
-        int x = width / 2;
-        int y = height - 30;
-        Font font = gui.getFont();
 
-        Player player = Minecraft.getInstance().player;
-        assert player != null;
-        if(player.getItemInHand(player.getUsedItemHand()).getItem() instanceof SquirtgunItem pSquirtgun) {
-            Fluid fluid = pSquirtgun.getFluid();
-            Component fluidName = Component.literal(TextUtility.getFriendlyFluidName(fluid)).withStyle(TextUtility.HOVER_TEXT_STYLE.withColor(TextUtility.getFluidColor(fluid)));
-            if (Objects.equals(fluidName.getString(), "empty"))
-                TextUtility.drawCenteredStringNoShadow(poseStack, font, fluidName, x, y - font.lineHeight);
-            else {
-                Component status = Component.literal(pSquirtgun.getAmmoStatus()).withStyle(TextUtility.HOVER_TEXT_STYLE.withColor(TextUtility.getFluidColor(fluid)));
-                TextUtility.drawCenteredStringNoShadow(poseStack, font, fluidName, x, y - font.lineHeight);
-                TextUtility.drawCenteredStringNoShadow(poseStack, font, status, x, y);
+    public static boolean display = true;
+    public static final IGuiOverlay HUD_AMMUNITION = (gui, poseStack, partialTick, width, height) -> {
+        if(AmmunitionHudOverlay.display) {
+            int x = width / 2;
+            int y = 15;
+            Font font = gui.getFont();
+
+            Player player = Minecraft.getInstance().player;
+            assert player != null;
+            if (player.getItemInHand(player.getUsedItemHand()).getItem() instanceof SquirtgunItem pSquirtgun) {
+                Fluid fluid = pSquirtgun.getFluid();
+                Component fluidName = Component.literal(TextUtility.getFriendlyFluidName(fluid)).withStyle(TextUtility.HOVER_TEXT_STYLE.withColor(TextUtility.getFluidColor(fluid)));
+                if (Objects.equals(fluidName.getString(), "empty"))
+                    TextUtility.drawCenteredStringNoShadow(poseStack, font, fluidName, x, y - font.lineHeight);
+                else {
+                    Component status = Component.literal(pSquirtgun.getAmmoStatus()).withStyle(TextUtility.HOVER_TEXT_STYLE.withColor(TextUtility.getFluidColor(fluid)));
+                    TextUtility.drawCenteredStringNoShadow(poseStack, font, fluidName, x, y - font.lineHeight);
+                    TextUtility.drawCenteredStringNoShadow(poseStack, font, status, x, y);
+                }
             }
         }
     };

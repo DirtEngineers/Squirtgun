@@ -28,6 +28,7 @@ public class LocalizationGenerator extends LanguageProvider {
         this.add("key.category.squirtgun", "Squirtgun");
         this.add("key.squirtgun.gun_ammo_load", "Load Ammunition");
         this.add("key.squirtgun.no_magazine", "No Magazine");
+        this.add("key.squirtgun.gun_display_ammo_status", "Toggle Ammunition Status Display");
     }
 
     private String setText(String text, char delimiter){

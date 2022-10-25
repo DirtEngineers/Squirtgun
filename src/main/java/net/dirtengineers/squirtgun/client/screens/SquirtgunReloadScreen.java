@@ -22,13 +22,6 @@ public class SquirtgunReloadScreen extends Screen {
     @Override
     public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick){
         renderBackground(pPoseStack);
-        int blah = this.width;
-        int imageWidth = 2000;
-        int imageHeight = 1016;
-        int displayWidth = imageWidth / 4;
-        int displayHeight = imageHeight / 4;
-        int leftPos = (this.width - displayWidth) / 2;
-        int topPos = (this.height - displayHeight) / 2;
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -45,18 +38,4 @@ public class SquirtgunReloadScreen extends Screen {
 
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
     }
-//    @Override
-//    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-//        renderBackground(pPoseStack);
-//
-//        int imageWidth = 2000;
-//        int imageHeight = 1016;
-//        int displayWidth = imageWidth / 4;
-//        int displayHeight = imageHeight / 4;
-//        int leftPos = (this.width - displayWidth) / 2;
-//        int topPos = (this.height - displayHeight) / 2;
-//
-//        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-//        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-//    }
 }
