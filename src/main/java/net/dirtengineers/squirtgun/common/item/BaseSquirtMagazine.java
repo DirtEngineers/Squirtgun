@@ -21,11 +21,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class BaseSquirtMagazine extends Item {
-    public enum UPGRADES{
+    public enum UPGRADES {
         BASE,
         DOUBLESHOTS,
         TRIPLESHOTS
     }
+
     private final Chemical chemical;
     private Fluid fluid = null;
     private final UPGRADES upgrades;
@@ -35,12 +36,13 @@ public class BaseSquirtMagazine extends Item {
 
     public BaseSquirtMagazine(Chemical pChemical, Properties pProperties, UPGRADES pUpgrades) {
         super(pProperties);
+        this.shotsAvailable = 0;
         this.chemical = pChemical;
         this.upgrades = pUpgrades;
         this.applyUpgrades();
     }
 
-    private void applyUpgrades(){
+    private void applyUpgrades() {
         int baseMaxShots = 10;
         switch (this.upgrades) {
             case BASE -> this.maxShots = baseMaxShots;
@@ -49,13 +51,13 @@ public class BaseSquirtMagazine extends Item {
         }
     }
 
-    public GenericSquirtSlug getGenericSlugItem(){
-        if(this.slugItem == null)
+    public GenericSquirtSlug getGenericSlugItem() {
+        if (this.slugItem == null)
             this.slugItem = ItemRegistration.SLUGS.get(this);
         return this.slugItem;
     }
 
-    public void setFluid(){
+    public void setFluid() {
         this.fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation("minecraft:water"));
         if (this.chemical.getFluidTypeReference().isPresent()) {
             for (Fluid fluid : FluidRegistry.getFluidsAsStream().toList())
@@ -66,19 +68,19 @@ public class BaseSquirtMagazine extends Item {
         }
     }
 
-    public Fluid getFluid(){
+    public Fluid getFluid() {
         return this.fluid;
     }
 
-    public FluidStack loadFluid(FluidStack pFluidStack){
-        if(this.fluid == null) this.setFluid();
-        if(isFluidValid(pFluidStack)){
-            if(pFluidStack.getAmount() >= maxShots * SquirtSlug.shotSize){
+    public FluidStack loadFluid(FluidStack pFluidStack) {
+        if (this.fluid == null)
+            this.setFluid();
+        if (isFluidValid(pFluidStack)) {
+            if (pFluidStack.getAmount() >= maxShots * SquirtSlug.shotSize) {
                 shotsAvailable = maxShots;
                 pFluidStack.shrink(maxShots * SquirtSlug.shotSize);
-            }
-            else{
-                int stackShots = (int)Math.floor((double)pFluidStack.getAmount()/SquirtSlug.shotSize);
+            } else {
+                int stackShots = (int) Math.floor((double) pFluidStack.getAmount() / SquirtSlug.shotSize);
                 this.shotsAvailable += stackShots;
                 pFluidStack.shrink(stackShots * SquirtSlug.shotSize);
             }
@@ -103,16 +105,17 @@ public class BaseSquirtMagazine extends Item {
         return slug;
     }
 
-    private void consumeAmmunition(Player pPlayer){
-        if(!pPlayer.getAbilities().instabuild)
-            this.shotsAvailable --;
+    private void consumeAmmunition(Player pPlayer) {
+        if (!pPlayer.getAbilities().instabuild) {
+            this.shotsAvailable--;
+        }
     }
 
-    public boolean hasAmmunition(Player pPlayer){
+    public boolean hasAmmunition(Player pPlayer) {
         return this.shotsAvailable > 0 || pPlayer.getAbilities().instabuild;
     }
 
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced){
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         super.appendHoverText(
                 pStack,
                 pLevel,
@@ -124,7 +127,11 @@ public class BaseSquirtMagazine extends Item {
                 pIsAdvanced);
     }
 
-    public String getAmmoStatus(){
-        return this.shotsAvailable + "/" +  this.maxShots;
+    public String getAmmoStatus() {
+        return this.shotsAvailable + "/" + this.maxShots;
+    }
+
+    public int getShotsAvailable(){
+        return this.shotsAvailable;
     }
 }
