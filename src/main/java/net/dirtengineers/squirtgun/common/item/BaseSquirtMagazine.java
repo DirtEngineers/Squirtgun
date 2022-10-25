@@ -15,7 +15,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -91,9 +90,10 @@ public class BaseSquirtMagazine extends Item {
     public boolean isFluidValid(FluidStack pFluidStack) {
         if (chemical.getFluidTypeReference().isPresent() &&
                 pFluidStack != null &&
-                pFluidStack != FluidStack.EMPTY)
+                pFluidStack != FluidStack.EMPTY) {
             return pFluidStack.getFluid().getFluidType() == chemical.getFluidTypeReference().get();
-        else return false;
+        }
+        return false;
     }
 
     public SquirtSlug makeSlugToFire(Level pLevel, LivingEntity pEntityLiving) {
