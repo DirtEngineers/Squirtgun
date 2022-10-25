@@ -5,15 +5,11 @@ https://forums.minecraftforge.net/topic/116264-how-to-recoil-for-a-gun-mod/
 
 Set up a custom sound for the ammunition firing and for it impacting
 
-Gun is loaded from a magazine.
-magazine loads gun's internal magazine.  It exchanges contents with the gun's internal magazine.
-
 loading/reloading?
 
 allow later modders to add liquid ammunition via tags -- maybe
 
 SQUIRTGUNITEM:
- Rework enchantment values
  Need sounds for various actions
  Need advancements for item use
 
@@ -22,36 +18,5 @@ SQUIRTGUNITEM:
 
  UPGRADE! -- Default manually load and auto-load being an upgrade.  Also allow player to toggle auto-load behavior in the gun's UI
 
- !!! Tie magazine loading to game events like pause and game end.
-
- this.fluidStorage.readFromNBT(pTag.getCompound("fluid"));
- {
-    energy:0,
-    fluid:{Amount:0,FluidName:"minecraft:empty"},
-    id:"alchemistry:liquifier_block_entity",
-    item:{Items:[],Size:1},
-    keepPacked:0b,
-    locked:0b,
-    maxProgress:100,
-    paused:0b,
-    progress:0,
-    x:-56,
-    y:-60,
-    z:127
-   }
-
-   https://github.com/SmashingMods/Alchemistry/blob/1.18.x/src/main/java/com/smashingmods/alchemistry/datagen/DataGenerators.java
-   https://github.com/SmashingMods/Alchemistry/blob/1.18.x/src/main/java/com/smashingmods/alchemistry/datagen/RecipeProvider.java
-
-   ///////////////////////////////////////
-   //register squirtgun, slug, and magazine as before.
-   //new mags, do new way.
-   //Anything that requires chemlib use register event method
-   //Item registry needs array list of mags with references to various magazines for recipe generation
-   //Need a base magazine class
-   //Mag stores chemical reference and number of shots
-   Gun takes a magazine (replacable)
-
-   //Chemical reference in magazine
-   Rework validator accordingly
-   //Models and localization in data generation
+   look at making base magazine abstract
+   look into making an interface for magazine upgrades.  Also toggle on/off

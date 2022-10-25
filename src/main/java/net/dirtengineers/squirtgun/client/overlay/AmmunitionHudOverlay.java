@@ -10,6 +10,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
 import java.util.Objects;
+import java.util.Optional;
 
 public class AmmunitionHudOverlay {
 
@@ -23,7 +24,7 @@ public class AmmunitionHudOverlay {
             Player player = Minecraft.getInstance().player;
             assert player != null;
             if (player.getItemInHand(player.getUsedItemHand()).getItem() instanceof SquirtgunItem pSquirtgun) {
-                Fluid fluid = pSquirtgun.getFluid();
+                Optional<Fluid> fluid = pSquirtgun.getFluid();
                 Component fluidName = Component.literal(TextUtility.getFriendlyFluidName(fluid)).withStyle(TextUtility.HOVER_TEXT_STYLE.withColor(TextUtility.getFluidColor(fluid)));
                 if (Objects.equals(fluidName.getString(), "empty"))
                     TextUtility.drawCenteredStringNoShadow(poseStack, font, fluidName, x, y - font.lineHeight);

@@ -6,7 +6,6 @@ import net.dirtengineers.squirtgun.common.entity.ammunition.SquirtSlug;
 import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
 import net.dirtengineers.squirtgun.common.util.TextUtility;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -18,6 +17,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 public class BaseSquirtMagazine extends Item {
     public enum UPGRADES {
@@ -27,7 +27,7 @@ public class BaseSquirtMagazine extends Item {
     }
 
     private final Chemical chemical;
-    private Fluid fluid = null;
+    private Optional<Fluid> optionalFluid = Optional.empty();
     private final UPGRADES upgrades;
     private int maxShots;
     private int shotsAvailable;
@@ -35,52 +35,50 @@ public class BaseSquirtMagazine extends Item {
 
     public BaseSquirtMagazine(Chemical pChemical, Properties pProperties, UPGRADES pUpgrades) {
         super(pProperties);
-        this.shotsAvailable = 0;
-        this.chemical = pChemical;
-        this.upgrades = pUpgrades;
-        this.applyUpgrades();
+        shotsAvailable = 0;
+        chemical = pChemical;
+        upgrades = pUpgrades;
+        applyUpgrades();
     }
 
     private void applyUpgrades() {
         int baseMaxShots = 10;
-        switch (this.upgrades) {
-            case BASE -> this.maxShots = baseMaxShots;
-            case DOUBLESHOTS -> this.maxShots = baseMaxShots * 2;
-            case TRIPLESHOTS -> this.maxShots = baseMaxShots * 3;
+        switch (upgrades) {
+            case BASE -> maxShots = baseMaxShots;
+            case DOUBLESHOTS -> maxShots = baseMaxShots * 2;
+            case TRIPLESHOTS -> maxShots = baseMaxShots * 3;
         }
     }
 
     public GenericSquirtSlug getGenericSlugItem() {
-        if (this.slugItem == null)
-            this.slugItem = ItemRegistration.SLUGS.get(this);
-        return this.slugItem;
+        if (slugItem == null)
+            slugItem = ItemRegistration.SLUGS.get(this);
+        return slugItem;
     }
 
-    public void setFluid() {
-        this.fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation("minecraft:water"));
-        if (this.chemical.getFluidTypeReference().isPresent()) {
-            for (Fluid fluid : FluidRegistry.getFluidsAsStream().toList())
-                if (fluid.getFluidType() == this.chemical.getFluidTypeReference().get()) {
-                    this.fluid = fluid;
-                    break;
-                }
-        }
+    public void initializeFluid() {
+        chemical.getFluidTypeReference()
+                .flatMap(fluidType -> FluidRegistry.getFluidsAsStream()
+                    .filter(fluid -> fluid.getFluidType().equals(chemical.getFluidTypeReference().get()))
+                    .findFirst())
+                    .ifPresent(fluid -> optionalFluid = Optional.of(fluid));
     }
 
-    public Fluid getFluid() {
-        return this.fluid;
+    public Optional<Fluid> getOptionalFluid() {
+        return optionalFluid;
     }
 
     public FluidStack loadFluid(FluidStack pFluidStack) {
-        if (this.fluid == null)
-            this.setFluid();
-        if (isFluidValid(pFluidStack)) {
+
+        if (optionalFluid.isEmpty()) {
+            initializeFluid();
+        } else if (isFluidValid(pFluidStack)) {
             if (pFluidStack.getAmount() >= maxShots * SquirtSlug.shotSize) {
                 shotsAvailable = maxShots;
                 pFluidStack.shrink(maxShots * SquirtSlug.shotSize);
             } else {
                 int stackShots = (int) Math.floor((double) pFluidStack.getAmount() / SquirtSlug.shotSize);
-                this.shotsAvailable += stackShots;
+                shotsAvailable += stackShots;
                 pFluidStack.shrink(stackShots * SquirtSlug.shotSize);
             }
         }
@@ -97,22 +95,27 @@ public class BaseSquirtMagazine extends Item {
     }
 
     public SquirtSlug makeSlugToFire(Level pLevel, LivingEntity pEntityLiving) {
-        SquirtSlug slug = null;
-        if (this.hasAmmunition((Player) pEntityLiving)) {
-            slug = new SquirtSlug(pEntityLiving, pLevel, this.fluid, this.chemical);
-            this.consumeAmmunition((Player) pEntityLiving);
-        }
-        return slug;
+        // TODO: Use optional rather than anonymous reference object
+        var ref = new Object() {
+            SquirtSlug slug = null;
+        };
+        optionalFluid.ifPresent(fluid -> {
+            if (hasAmmunition((Player) pEntityLiving)) {
+                ref.slug = new SquirtSlug(pEntityLiving, pLevel, fluid, chemical);
+                consumeAmmunition((Player) pEntityLiving);
+            }
+        });
+        return ref.slug;
     }
 
     private void consumeAmmunition(Player pPlayer) {
         if (!pPlayer.getAbilities().instabuild) {
-            this.shotsAvailable--;
+            shotsAvailable--;
         }
     }
 
     public boolean hasAmmunition(Player pPlayer) {
-        return this.shotsAvailable > 0 || pPlayer.getAbilities().instabuild;
+        return shotsAvailable > 0 || pPlayer.getAbilities().instabuild;
     }
 
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
@@ -120,18 +123,18 @@ public class BaseSquirtMagazine extends Item {
                 pStack,
                 pLevel,
                 TextUtility.setAmmoHoverText(
-                        this.fluid,
-                        this.getAmmoStatus(),
+                        optionalFluid,
+                        getAmmoStatus(),
                         ItemRegistration.getFriendlyItemName(this),
                         pTooltipComponents),
                 pIsAdvanced);
     }
 
     public String getAmmoStatus() {
-        return this.shotsAvailable + "/" + this.maxShots;
+        return shotsAvailable + "/" + maxShots;
     }
 
     public int getShotsAvailable(){
-        return this.shotsAvailable;
+        return shotsAvailable;
     }
 }

@@ -24,12 +24,14 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 
 public class SquirtgunItem extends BowItem {
@@ -48,8 +50,11 @@ public class SquirtgunItem extends BowItem {
     private void MAGAZINELOADINGTEST(Level pLevel, Player pPlayer) {
         if(this.magazine == null){
             magazine = (BaseSquirtMagazine) Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(new ResourceLocation("squirtgun:hydrochloric_acid_magazine"))).asItem();
-            magazine.setFluid();
-            magazine.loadFluid(new FluidStack(magazine.getFluid(), 1000));
+            magazine.loadFluid(new FluidStack(magazine.getOptionalFluid().orElse(Fluids.EMPTY), 1000));
+            this.statusChanged = true;
+        }
+        if(pPlayer.getAbilities().instabuild && magazine.getShotsAvailable() <= 0){
+            magazine.loadFluid(new FluidStack(magazine.getOptionalFluid().orElse(Fluids.EMPTY), 1000));
             this.statusChanged = true;
         }
     }
@@ -70,7 +75,9 @@ public class SquirtgunItem extends BowItem {
                 pStack,
                 pLevel,
                 TextUtility.setAmmoHoverText(
-                        this.magazine != null ? this.magazine.getFluid() : ForgeRegistries.FLUIDS.getValue(new ResourceLocation(TextUtility.EMPTY_FLUID_NAME)),
+                        this.magazine != null ?
+                                this.magazine.getOptionalFluid() :
+                                Optional.ofNullable(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(TextUtility.EMPTY_FLUID_NAME))),
                         this.getAmmoStatus(),
                         ItemRegistration.getFriendlyItemName(this),
                         pTooltipComponents),
@@ -140,9 +147,13 @@ public class SquirtgunItem extends BowItem {
         boolean result;
         if (this.magazine == null)
             if (pPlayer.getAbilities().instabuild) {
-                BaseSquirtMagazine newMag = (BaseSquirtMagazine) Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(new ResourceLocation("squirtgun:nitric_acid_magazine"))).asItem();
-                newMag.setFluid();
-                newMag.loadFluid(new FluidStack(newMag.getFluid(), 1000));
+                BaseSquirtMagazine newMag =
+                        (BaseSquirtMagazine)
+                                Objects.requireNonNull(ForgeRegistries
+                                        .ITEMS
+                                        .getValue(new ResourceLocation("squirtgun:nitric_acid_magazine")))
+                                        .asItem();
+                newMag.loadFluid(new FluidStack(newMag.getOptionalFluid().orElse(Fluids.EMPTY), 1000));
                 this.magazine = newMag;
                 statusChanged = true;
                 result = this.magazine.hasAmmunition(pPlayer);
@@ -153,8 +164,8 @@ public class SquirtgunItem extends BowItem {
         return result;
     }
 
-    public Fluid getFluid(){
-        return (this.magazine != null) ? this.magazine.getFluid() : FluidStack.EMPTY.getFluid();
+    public Optional<Fluid> getFluid(){
+        return (this.magazine != null) ? this.magazine.getOptionalFluid() : Optional.of(FluidStack.EMPTY.getFluid());
     }
 
     public String getAmmoStatus(){
@@ -181,15 +192,13 @@ public class SquirtgunItem extends BowItem {
     private void loadFromNBT(ItemStack pStack) {
         CompoundTag stackTag = pStack.getOrCreateTag();
         if (Objects.requireNonNull(stackTag).contains(MAGAZINE_TYPE_TAG) && stackTag.contains(MAGAZINE_SHOTS_TAG)) {
-            this.magazine = (BaseSquirtMagazine)
+            magazine = (BaseSquirtMagazine)
                     Objects.requireNonNull(
                             ForgeRegistries.ITEMS.getValue(
                                     new ResourceLocation(Squirtgun.MOD_ID + ":" + stackTag.getString(MAGAZINE_TYPE_TAG))
                             )
                     ).asItem();
-            this.magazine.setFluid();
-            magazine.loadFluid(new FluidStack(
-                    this.magazine.getFluid(),
+            magazine.loadFluid(new FluidStack(magazine.getOptionalFluid().orElse(Fluids.EMPTY),
                     stackTag.getInt(MAGAZINE_SHOTS_TAG) * SquirtSlug.shotSize));
             pStack.setTag(stackTag);
             statusChanged = false;
