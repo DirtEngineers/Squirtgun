@@ -99,18 +99,22 @@ public class SquirtSlug extends AbstractArrow {
     @Override
     public void handleEntityEvent(byte pId) {
         if (pId == 0) {
-            int i = this.getColor();
-            if (i != -1) {
-                double green = (double)(i >> 16 & 255) / 255.0D;
-                double red = (double)(i >> 8 & 255) / 255.0D;
-                double blue = (double)(i >> 0 & 255) / 255.0D;
-
-                for(int j = 0; j < 20; ++j) {
-                    this.level.addParticle(ParticleTypes.ENTITY_EFFECT, this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), green, red, blue);
-                }
-            }
+            makeParticle(0);
         } else {
             super.handleEntityEvent(pId);
+        }
+    }
+
+    private void makeParticle(int pParticleAmount) {
+        int i = this.getColor();
+        if (i != -1 && pParticleAmount > 0) {
+            double d0 = (double)(i >> 16 & 255) / 255.0D;
+            double d1 = (double)(i >> 8 & 255) / 255.0D;
+            double d2 = (double)(i & 255) / 255.0D;
+
+            for(int j = 0; j < (pParticleAmount > 0 ? pParticleAmount : 20); ++j) {
+                this.level.addParticle(ParticleTypes.ENTITY_EFFECT, this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), d0, d1, d2);
+            }
         }
     }
 
@@ -165,20 +169,6 @@ public class SquirtSlug extends AbstractArrow {
     private void updateColor() {
         int pValue = this.ammoType == null ? -1 : IClientFluidTypeExtensions.of(this.ammoType).getTintColor();
         this.entityData.set(ID_EFFECT_COLOR, pValue);
-    }
-
-    //TODO: color math also in handleEntityEvent.  De-duplicate
-    private void makeParticle(int pParticleAmount) {
-        int i = this.getColor();
-        if (i != -1 && pParticleAmount > 0) {
-            double d0 = (double)(i >> 16 & 255) / 255.0D;
-            double d1 = (double)(i >> 8 & 255) / 255.0D;
-            double d2 = (double)(i >> 0 & 255) / 255.0D;
-
-            for(int j = 0; j < pParticleAmount; ++j) {
-                this.level.addParticle(ParticleTypes.ENTITY_EFFECT, this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), d0, d1, d2);
-            }
-        }
     }
 
     public int getColor() {
