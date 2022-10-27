@@ -30,35 +30,21 @@ import static com.smashingmods.chemlib.registry.ItemRegistry.getElements;
 
 
 public class ItemRegistration {
-
-    public static final DeferredRegister<Item> SQUIRTGUNITEMS = DeferredRegister.create(ForgeRegistries.ITEMS,  Squirtgun.MOD_ID);
-    public static final CreativeModeTab SQUIRTGUN_TAB = new CreativeModeTab("squirtguntab") {
-        @Override
-        public @NotNull ItemStack makeIcon() {
-            return new ItemStack(SQUIRTGUNITEM.get());
-        }
-    };
-
-    public static Map<BaseSquirtMagazine, Chemical> MAGAZINES = new HashMap<>();
-    public static Map<Chemical, Fluid> CHEMICAL_FLUIDS = new HashMap<>();
-    public static List<Chemical> ammunitionChemicals = new ArrayList<>();
-
-    public static final RegistryObject<Item> SQUIRTMAGAZINEITEM = SQUIRTGUNITEMS.register("squirtmagazineitem", SquirtMagazineItem::new);
-
-    public static final RegistryObject<Item> SQUIRTSLUGITEM = SQUIRTGUNITEMS.register("squirtslugitem", GenericSquirtSlug::new);
-
-    public static final RegistryObject<Item> SQUIRTGUNITEM = SQUIRTGUNITEMS.register("squirtgunitem", SquirtgunItem::new);
+    public static final DeferredRegister<Item> SQUIRTGUNITEMS;
+    public static final RegistryObject<Item> SQUIRTMAGAZINEITEM;
+    public static final RegistryObject<Item> SQUIRTSLUGITEM;
+    public static final RegistryObject<Item> SQUIRTGUNITEM;
+    public static Map<BaseSquirtMagazine, Chemical> MAGAZINES;
+    public static Map<Chemical, Fluid> CHEMICAL_FLUIDS;
+    public static List<Chemical> ammunitionChemicals;
+    public static final CreativeModeTab SQUIRTGUN_TAB;
 
     public static void registerMagsAndSlugs(RegisterEvent pEvent){
         if(pEvent.getRegistryKey() == ForgeRegistries.Keys.ITEMS) {
-            ItemRegistration.buildAmmunitionChemicals();
+            ItemRegistration.ammunitionChemicals.addAll(getCompounds().stream().filter(compound -> compound.getMatterState() == LIQUID).toList());
+            ItemRegistration.ammunitionChemicals.addAll(getElements().stream().filter(element -> element.getMatterState() == LIQUID).toList());
             ItemRegistration.buildMagazines(pEvent);
         }
-    }
-
-    private static void buildAmmunitionChemicals(){
-        ItemRegistration.ammunitionChemicals.addAll(getCompounds().stream().filter(compound -> compound.getMatterState() == LIQUID).toList());
-        ItemRegistration.ammunitionChemicals.addAll(getElements().stream().filter(element -> element.getMatterState() == LIQUID).toList());
     }
 
     private static void buildMagazines(RegisterEvent pEvent){
@@ -76,5 +62,21 @@ public class ItemRegistration {
 
     public static void register(IEventBus eventbus){
         SQUIRTGUNITEMS.register(eventbus);
+    }
+
+    static{
+        SQUIRTGUNITEMS = DeferredRegister.create(ForgeRegistries.ITEMS,  Squirtgun.MOD_ID);
+        SQUIRTMAGAZINEITEM = SQUIRTGUNITEMS.register("squirtmagazineitem", SquirtMagazineItem::new);
+        SQUIRTSLUGITEM = SQUIRTGUNITEMS.register("squirtslugitem", GenericSquirtSlug::new);
+        SQUIRTGUNITEM = SQUIRTGUNITEMS.register("squirtgunitem", SquirtgunItem::new);
+        MAGAZINES = new HashMap<>();
+        CHEMICAL_FLUIDS = new HashMap<>();
+        ammunitionChemicals = new ArrayList<>();
+        SQUIRTGUN_TAB = new CreativeModeTab("squirtguntab") {
+            @Override
+            public @NotNull ItemStack makeIcon() {
+                return new ItemStack(SQUIRTGUNITEM.get());
+            }
+        };
     }
 }

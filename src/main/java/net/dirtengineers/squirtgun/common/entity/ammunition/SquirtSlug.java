@@ -143,8 +143,8 @@ public class SquirtSlug extends AbstractArrow {
 
     @Override
     public void tickDespawn() {
+        ++this.life;
         if (this.life >= maxGroundTime) {
-            ++this.life;
             this.discard();
         }
     }
