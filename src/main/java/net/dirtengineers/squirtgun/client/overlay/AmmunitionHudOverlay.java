@@ -1,7 +1,7 @@
 package net.dirtengineers.squirtgun.client.overlay;
 
 import net.dirtengineers.squirtgun.common.item.SquirtgunItem;
-import net.dirtengineers.squirtgun.common.util.TextUtility;
+import net.dirtengineers.squirtgun.client.TextUtility;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
@@ -20,16 +20,14 @@ public class AmmunitionHudOverlay {
             int x = width / 2;
             int y = 15;
             Font font = gui.getFont();
-
             Player player = Minecraft.getInstance().player;
-            assert player != null;
-            if (player.getItemInHand(player.getUsedItemHand()).getItem() instanceof SquirtgunItem pSquirtgun) {
+            if (player != null && player.getItemInHand(player.getUsedItemHand()).getItem() instanceof SquirtgunItem pSquirtgun) {
                 Optional<Fluid> fluid = pSquirtgun.getFluid();
-                Component fluidName = Component.literal(TextUtility.getFriendlyFluidName(fluid)).withStyle(TextUtility.HOVER_TEXT_STYLE.withColor(TextUtility.getFluidColor(fluid)));
-                if (Objects.equals(fluidName.getString(), "empty"))
+                Component fluidName = TextUtility.getFriendlyFluidName(fluid);
+                if (Objects.equals(fluidName.getString(), "empty")) {
                     TextUtility.drawCenteredStringNoShadow(poseStack, font, fluidName, x, y - font.lineHeight);
-                else {
-                    Component status = Component.literal(pSquirtgun.getAmmoStatus()).withStyle(TextUtility.HOVER_TEXT_STYLE.withColor(TextUtility.getFluidColor(fluid)));
+                } else {
+                    Component status = Component.literal(pSquirtgun.getAmmoStatus()).withStyle(TextUtility.HOVER_TEXT_STYLE);
                     TextUtility.drawCenteredStringNoShadow(poseStack, font, fluidName, x, y - font.lineHeight);
                     TextUtility.drawCenteredStringNoShadow(poseStack, font, status, x, y);
                 }

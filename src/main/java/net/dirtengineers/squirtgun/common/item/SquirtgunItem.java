@@ -3,7 +3,7 @@ package net.dirtengineers.squirtgun.common.item;
 import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.common.entity.ammunition.SquirtSlug;
 import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
-import net.dirtengineers.squirtgun.common.util.TextUtility;
+import net.dirtengineers.squirtgun.client.TextUtility;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
@@ -16,10 +16,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BowItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
@@ -42,20 +39,20 @@ public class SquirtgunItem extends BowItem {
     private boolean statusChanged;
     private BaseSquirtMagazine magazine = null;
 
-    public SquirtgunItem(Properties pProperties){
-        super(pProperties);
+    public SquirtgunItem(){
+        super(new Item.Properties().tab(ItemRegistration.SQUIRTGUN_TAB).rarity(Rarity.COMMON).stacksTo(1));
         statusChanged = true;
     }
 
     private void MAGAZINELOADINGTEST(Level pLevel, Player pPlayer) {
-        if(this.magazine == null){
+        if(magazine == null){
             magazine = (BaseSquirtMagazine) Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(new ResourceLocation("squirtgun:hydrochloric_acid_magazine"))).asItem();
             magazine.loadFluid(new FluidStack(magazine.getOptionalFluid().orElse(Fluids.EMPTY), 1000));
-            this.statusChanged = true;
+            statusChanged = true;
         }
         if(pPlayer.getAbilities().instabuild && magazine.getShotsAvailable() <= 0){
             magazine.loadFluid(new FluidStack(magazine.getOptionalFluid().orElse(Fluids.EMPTY), 1000));
-            this.statusChanged = true;
+            statusChanged = true;
         }
     }
 
@@ -63,9 +60,9 @@ public class SquirtgunItem extends BowItem {
     public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pItemSlot, boolean pIsSelected) {
         if (!pLevel.isClientSide) {
             if(this.magazine == null && statusChanged)
-                this.loadFromNBT(pStack);
+                loadFromNBT(pStack);
             if(this.statusChanged)
-                this.setTag(pStack);
+                setTag(pStack);
         }
     }
 
@@ -79,7 +76,7 @@ public class SquirtgunItem extends BowItem {
                                 this.magazine.getOptionalFluid() :
                                 Optional.ofNullable(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(TextUtility.EMPTY_FLUID_NAME))),
                         this.getAmmoStatus(),
-                        ItemRegistration.getFriendlyItemName(this),
+                        this,
                         pTooltipComponents),
                 pIsAdvanced);
     }
@@ -91,9 +88,9 @@ public class SquirtgunItem extends BowItem {
 
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
 
-        boolean hasAmmo = this.hasAmmunition(pPlayer);
+        boolean hasAmmo = hasAmmunition(pPlayer);
 
-        net.minecraftforge.common.ForgeHooks.getProjectile(pPlayer, itemstack, hasAmmo ? new ItemStack(this.magazine.getGenericSlugItem()) : ItemStack.EMPTY);
+        net.minecraftforge.common.ForgeHooks.getProjectile(pPlayer, itemstack, hasAmmo ? new ItemStack(magazine.getOrCreateGenericSlugItem()) : ItemStack.EMPTY);
         InteractionResultHolder<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(itemstack, pLevel, pPlayer, pHand, hasAmmo);
         if (ret != null) return ret;
 
@@ -110,10 +107,10 @@ public class SquirtgunItem extends BowItem {
         if (pEntityLiving instanceof Player player) {
             boolean flag = player.getAbilities().instabuild || EnchantmentHelper.getTagEnchantmentLevel(Enchantments.INFINITY_ARROWS, pStack) > 0;
 
-            boolean hasAmmo = this.hasAmmunition(player);
-            net.minecraftforge.common.ForgeHooks.getProjectile(pEntityLiving, pStack, hasAmmo ? new ItemStack(this.magazine.getGenericSlugItem()) : ItemStack.EMPTY);
+            boolean hasAmmo = hasAmmunition(player);
+            net.minecraftforge.common.ForgeHooks.getProjectile(pEntityLiving, pStack, hasAmmo ? new ItemStack(magazine.getOrCreateGenericSlugItem()) : ItemStack.EMPTY);
 
-            int i = this.getUseDuration(pStack) - pTimeLeft;
+            int i = getUseDuration(pStack) - pTimeLeft;
             i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(pStack, pLevel, player, i, hasAmmo || flag);
             if (i < 0) return;
 
@@ -122,8 +119,8 @@ public class SquirtgunItem extends BowItem {
 
             if(hasAmmo) {
             if (!pLevel.isClientSide) {
-                SquirtSlug slug = this.magazine.makeSlugToFire(pLevel, player);
-                this.statusChanged = true;
+                SquirtSlug slug = magazine.makeSlugToFire(pLevel, player);
+                statusChanged = !((Player)pEntityLiving).getAbilities().instabuild;
                 if (slug.hasEffects()) slug.setBaseDamage(0D);
                 slug.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 3.0F, 1.0F);
                 pLevel.addFreshEntity(slug);
@@ -154,27 +151,27 @@ public class SquirtgunItem extends BowItem {
                                         .getValue(new ResourceLocation("squirtgun:nitric_acid_magazine")))
                                         .asItem();
                 newMag.loadFluid(new FluidStack(newMag.getOptionalFluid().orElse(Fluids.EMPTY), 1000));
-                this.magazine = newMag;
+                magazine = newMag;
                 statusChanged = true;
                 result = this.magazine.hasAmmunition(pPlayer);
             } else
                 result = false;
         else
-            result = this.magazine.hasAmmunition(pPlayer);
+            result = magazine.hasAmmunition(pPlayer);
         return result;
     }
 
     public Optional<Fluid> getFluid(){
-        return (this.magazine != null) ? this.magazine.getOptionalFluid() : Optional.of(FluidStack.EMPTY.getFluid());
+        return (magazine != null) ? magazine.getOptionalFluid() : Optional.of(FluidStack.EMPTY.getFluid());
     }
 
     public String getAmmoStatus(){
-        return (this.magazine == null) ? new TranslatableContents("No Magazine").getKey() : this.magazine.getAmmoStatus();
+        return (magazine == null) ? new TranslatableContents("No Magazine").getKey() : magazine.getAmmoStatus();
     }
 
     public BaseSquirtMagazine loadNewMagazine(BaseSquirtMagazine pMagazine){
-        BaseSquirtMagazine outMag = this.magazine;
-        this.magazine = pMagazine;
+        BaseSquirtMagazine outMag = magazine;
+        magazine = pMagazine;
         statusChanged = true;
         return outMag;
     }
@@ -208,11 +205,11 @@ public class SquirtgunItem extends BowItem {
 
     private void setTag(ItemStack pStack) {
         CompoundTag tag = pStack.getOrCreateTag();
-        if(this.magazine != null) {
-            tag.putString(MAGAZINE_TYPE_TAG, this.magazine.toString());
-            tag.putInt(MAGAZINE_SHOTS_TAG, this.magazine.getShotsAvailable());
+        if(magazine != null) {
+            tag.putString(MAGAZINE_TYPE_TAG, magazine.toString());
+            tag.putInt(MAGAZINE_SHOTS_TAG, magazine.getShotsAvailable());
         }
         pStack.setTag(tag);
-        this.statusChanged = false;
+        statusChanged = false;
     }
 }

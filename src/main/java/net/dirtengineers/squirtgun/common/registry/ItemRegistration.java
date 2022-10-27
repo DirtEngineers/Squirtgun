@@ -6,7 +6,6 @@ import net.dirtengineers.squirtgun.common.item.BaseSquirtMagazine;
 import net.dirtengineers.squirtgun.common.item.GenericSquirtSlug;
 import net.dirtengineers.squirtgun.common.item.SquirtMagazineItem;
 import net.dirtengineers.squirtgun.common.item.SquirtgunItem;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -41,23 +40,19 @@ public class ItemRegistration {
     };
 
     public static Map<BaseSquirtMagazine, Chemical> MAGAZINES = new HashMap<>();
-    public static Map<BaseSquirtMagazine, GenericSquirtSlug> SLUGS = new HashMap<>();
     public static Map<Chemical, Fluid> CHEMICAL_FLUIDS = new HashMap<>();
     public static List<Chemical> ammunitionChemicals = new ArrayList<>();
 
-    public static final RegistryObject<Item> SQUIRTMAGAZINEITEM = SQUIRTGUNITEMS.register("squirtmagazineitem",
-            () -> new SquirtMagazineItem(new Item.Properties().tab(SQUIRTGUN_TAB).rarity(Rarity.COMMON).stacksTo(1)));
+    public static final RegistryObject<Item> SQUIRTMAGAZINEITEM = SQUIRTGUNITEMS.register("squirtmagazineitem", SquirtMagazineItem::new);
 
-    public static final RegistryObject<Item> SQUIRTSLUGITEM = SQUIRTGUNITEMS.register("squirtslugitem",
-            () -> new GenericSquirtSlug(new Item.Properties().rarity(Rarity.COMMON).stacksTo(1)));
+    public static final RegistryObject<Item> SQUIRTSLUGITEM = SQUIRTGUNITEMS.register("squirtslugitem", GenericSquirtSlug::new);
 
-    public static final RegistryObject<Item> SQUIRTGUNITEM = SQUIRTGUNITEMS.register("squirtgunitem",
-            () -> new SquirtgunItem(new Item.Properties().tab(SQUIRTGUN_TAB).rarity(Rarity.COMMON).stacksTo(1)));
+    public static final RegistryObject<Item> SQUIRTGUNITEM = SQUIRTGUNITEMS.register("squirtgunitem", SquirtgunItem::new);
 
     public static void registerMagsAndSlugs(RegisterEvent pEvent){
         if(pEvent.getRegistryKey() == ForgeRegistries.Keys.ITEMS) {
             ItemRegistration.buildAmmunitionChemicals();
-            ItemRegistration.buildMagazinesAndSlugs(pEvent);
+            ItemRegistration.buildMagazines(pEvent);
         }
     }
 
@@ -66,10 +61,9 @@ public class ItemRegistration {
         ItemRegistration.ammunitionChemicals.addAll(getElements().stream().filter(element -> element.getMatterState() == LIQUID).toList());
     }
 
-    private static void buildMagazinesAndSlugs(RegisterEvent pEvent){
+    private static void buildMagazines(RegisterEvent pEvent){
         for (Chemical chemical : ItemRegistration.ammunitionChemicals) {
             ResourceLocation magLocation = new ResourceLocation(Squirtgun.MOD_ID, String.format("%s_magazine", chemical.getChemicalName()));
-            ResourceLocation slugLocation = new ResourceLocation(Squirtgun.MOD_ID, String.format("%s_slugitem", chemical.getChemicalName()));
 
             pEvent.register(
                     ForgeRegistries.Keys.ITEMS,
@@ -77,17 +71,7 @@ public class ItemRegistration {
                     () -> new BaseSquirtMagazine(chemical,
                             new Item.Properties().tab(SQUIRTGUN_TAB).rarity(Rarity.COMMON), BaseSquirtMagazine.UPGRADES.BASE));
             MAGAZINES.put((BaseSquirtMagazine) ForgeRegistries.ITEMS.getValue(magLocation), chemical);
-
-            pEvent.register(
-                    ForgeRegistries.Keys.ITEMS,
-                    slugLocation,
-                    () -> new GenericSquirtSlug(new Item.Properties()));
-            SLUGS.put((BaseSquirtMagazine) ForgeRegistries.ITEMS.getValue(magLocation), (GenericSquirtSlug) ForgeRegistries.ITEMS.getValue(slugLocation));
         }
-    }
-
-    public static String getFriendlyItemName(Item pItem){
-        return I18n.get(pItem.getDescriptionId());
     }
 
     public static void register(IEventBus eventbus){

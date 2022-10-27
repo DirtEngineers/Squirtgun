@@ -1,17 +1,13 @@
 package net.dirtengineers.squirtgun.common.item;
 
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
 
 public class SquirtMagazineItem extends Item {
 
-    public SquirtMagazineItem(Properties properties) {
-        super(properties);
+    public SquirtMagazineItem() {
+        super(new Item.Properties().rarity(Rarity.COMMON).stacksTo(1));
     }
-    //TODO: Hover Text
-//    @Override
-//    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-//        super.appendHoverText(pStack, pLevel, TextUtility.setAmmoHoverText(this.fluid, this.getAmmoStatus(), ItemRegistration.getFriendlyItemName(this), pTooltipComponents), pIsAdvanced);
-//    }
 }
 
 

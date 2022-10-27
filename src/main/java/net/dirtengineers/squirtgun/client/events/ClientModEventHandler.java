@@ -3,8 +3,6 @@ package net.dirtengineers.squirtgun.client.events;
 import com.smashingmods.chemlib.common.items.CompoundItem;
 import com.smashingmods.chemlib.common.items.ElementItem;
 import net.dirtengineers.squirtgun.Squirtgun;
-import net.dirtengineers.squirtgun.client.keybinds.GunAmmoDisplayKeybind;
-import net.dirtengineers.squirtgun.client.keybinds.GunAmmoLoadKeybind;
 import net.dirtengineers.squirtgun.client.overlay.AmmunitionHudOverlay;
 import net.dirtengineers.squirtgun.client.render.SquirtSlugRenderer;
 import net.dirtengineers.squirtgun.common.registry.EntityRegistration;
@@ -20,6 +18,9 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import java.util.Objects;
 
+import static net.dirtengineers.squirtgun.client.Keybinds.GUN_AMMO_STATUS_DISPLAY_KEY;
+import static net.dirtengineers.squirtgun.client.Keybinds.GUN_LOAD_AMMO_KEY;
+
 @Mod.EventBusSubscriber(modid = Squirtgun.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientModEventHandler {
     @SubscribeEvent
@@ -34,8 +35,8 @@ public class ClientModEventHandler {
 
     @SubscribeEvent
     public static void onKeyRegister(RegisterKeyMappingsEvent event) {
-        event.register(GunAmmoLoadKeybind.GUN_LOAD_AMMO_KEY);
-        event.register(GunAmmoDisplayKeybind.GUN_AMMO_STATUS_DISPLAY_KEY);
+        event.register(GUN_LOAD_AMMO_KEY);
+        event.register(GUN_AMMO_STATUS_DISPLAY_KEY);
     }
 
     @SubscribeEvent

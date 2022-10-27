@@ -4,7 +4,7 @@ import com.smashingmods.chemlib.api.Chemical;
 import com.smashingmods.chemlib.registry.FluidRegistry;
 import net.dirtengineers.squirtgun.common.entity.ammunition.SquirtSlug;
 import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
-import net.dirtengineers.squirtgun.common.util.TextUtility;
+import net.dirtengineers.squirtgun.client.TextUtility;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -50,9 +50,9 @@ public class BaseSquirtMagazine extends Item {
         }
     }
 
-    public GenericSquirtSlug getGenericSlugItem() {
+    public GenericSquirtSlug getOrCreateGenericSlugItem() {
         if (slugItem == null)
-            slugItem = ItemRegistration.SLUGS.get(this);
+            slugItem = (GenericSquirtSlug) ItemRegistration.SQUIRTSLUGITEM.get();
         return slugItem;
     }
 
@@ -65,14 +65,14 @@ public class BaseSquirtMagazine extends Item {
     }
 
     public Optional<Fluid> getOptionalFluid() {
+        if(optionalFluid.isEmpty()){
+            initializeFluid();
+        }
         return optionalFluid;
     }
 
     public FluidStack loadFluid(FluidStack pFluidStack) {
-
-        if (optionalFluid.isEmpty()) {
-            initializeFluid();
-        } else if (isFluidValid(pFluidStack)) {
+        if (isFluidValid(pFluidStack)) {
             if (pFluidStack.getAmount() >= maxShots * SquirtSlug.shotSize) {
                 shotsAvailable = maxShots;
                 pFluidStack.shrink(maxShots * SquirtSlug.shotSize);
@@ -125,7 +125,7 @@ public class BaseSquirtMagazine extends Item {
                 TextUtility.setAmmoHoverText(
                         optionalFluid,
                         getAmmoStatus(),
-                        ItemRegistration.getFriendlyItemName(this),
+                        this,
                         pTooltipComponents),
                 pIsAdvanced);
     }

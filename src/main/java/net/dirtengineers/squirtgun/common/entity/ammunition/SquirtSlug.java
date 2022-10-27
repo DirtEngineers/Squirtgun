@@ -36,21 +36,14 @@ public class SquirtSlug extends AbstractArrow {
     public static final int shotSize = 100;
     private int life;
     private Fluid ammoType;
-
     private Chemical chemical;
-
     private final int maxGroundTime = 10;
-
     private static final int NO_EFFECT_COLOR = -1;
     private static final EntityDataAccessor<Integer> ID_EFFECT_COLOR =
             SynchedEntityData.defineId(SquirtSlug.class, EntityDataSerializers.INT);
+    //TODO: why does this exist?
     private boolean fixedColor;
     private final Set<MobEffectInstance> effects = Sets.newHashSet();
-
-    public SquirtSlug(LivingEntity pShooter, Level pLevel, Fluid pFluid) {
-        super(EntityRegistration.SQUIRT_SLUG.get(), pShooter, pLevel);
-        this.ammoType = pFluid;
-    }
 
     public SquirtSlug(LivingEntity pShooter, Level pLevel, Fluid pFluid, Chemical pChemical) {
         super(EntityRegistration.SQUIRT_SLUG.get(), pShooter, pLevel);
@@ -63,11 +56,6 @@ public class SquirtSlug extends AbstractArrow {
         super(pEntityType, pLevel);
     }
 
-    public void setAmmoType(Fluid pAmmoType) {
-        this.ammoType = pAmmoType;
-        setEffects();
-    }
-
     public void setEffects() {
         this.effects.clear();
         for (MobEffectInstance effect : this.chemical.getEffects())
@@ -78,11 +66,6 @@ public class SquirtSlug extends AbstractArrow {
 
     public boolean hasEffects(){
         return !this.effects.isEmpty();
-    }
-
-    public void addEffect(MobEffectInstance pEffectInstance) {
-        this.effects.add(pEffectInstance);
-        this.getEntityData().set(ID_EFFECT_COLOR, IClientFluidTypeExtensions.of(this.ammoType).getTintColor());
     }
 
     public void tick() {
@@ -113,20 +96,17 @@ public class SquirtSlug extends AbstractArrow {
         }
     }
 
-    /**
-     * Handles an entity event fired from {@link net.minecraft.world.level.Level#broadcastEntityEvent}.
-     */
     @Override
     public void handleEntityEvent(byte pId) {
         if (pId == 0) {
             int i = this.getColor();
             if (i != -1) {
-                double d0 = (double)(i >> 16 & 255) / 255.0D;
-                double d1 = (double)(i >> 8 & 255) / 255.0D;
-                double d2 = (double)(i >> 0 & 255) / 255.0D;
+                double green = (double)(i >> 16 & 255) / 255.0D;
+                double red = (double)(i >> 8 & 255) / 255.0D;
+                double blue = (double)(i >> 0 & 255) / 255.0D;
 
                 for(int j = 0; j < 20; ++j) {
-                    this.level.addParticle(ParticleTypes.ENTITY_EFFECT, this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), d0, d1, d2);
+                    this.level.addParticle(ParticleTypes.ENTITY_EFFECT, this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), green, red, blue);
                 }
             }
         } else {
@@ -159,8 +139,8 @@ public class SquirtSlug extends AbstractArrow {
 
     @Override
     public void tickDespawn() {
-        ++this.life;
         if (this.life >= maxGroundTime) {
+            ++this.life;
             this.discard();
         }
     }
@@ -183,9 +163,11 @@ public class SquirtSlug extends AbstractArrow {
     }
 
     private void updateColor() {
-        this.entityData.set(ID_EFFECT_COLOR, this.ammoType == null ? -1 : IClientFluidTypeExtensions.of(this.ammoType).getTintColor());
+        int pValue = this.ammoType == null ? -1 : IClientFluidTypeExtensions.of(this.ammoType).getTintColor();
+        this.entityData.set(ID_EFFECT_COLOR, pValue);
     }
 
+    //TODO: color math also in handleEntityEvent.  De-duplicate
     private void makeParticle(int pParticleAmount) {
         int i = this.getColor();
         if (i != -1 && pParticleAmount > 0) {
@@ -233,6 +215,7 @@ public class SquirtSlug extends AbstractArrow {
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
+    //TODO: READ IT IN!
     @Override
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);

@@ -20,3 +20,8 @@ SQUIRTGUNITEM:
 
    look at making base magazine abstract
    look into making an interface for magazine upgrades.  Also toggle on/off
+
+   Add this to packages:
+   https://github.com/SmashingMods/Alchemistry/blob/1.18.x/src/main/java/com/smashingmods/alchemistry/package-info.java
+
+   Machine block: lift from liquifier block, block entity, menu, and screen as example
