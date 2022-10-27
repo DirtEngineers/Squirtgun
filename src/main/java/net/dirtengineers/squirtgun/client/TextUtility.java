@@ -73,9 +73,20 @@ public class TextUtility {
                 Objects.requireNonNull(chemical);
                 Objects.requireNonNull(fluid);
                 if (pFluid.isPresent() && fluid == pFluid.get()) {
-                    result = chemical instanceof Compound ?
-                            I18n.get(((CompoundItem) chemical).getDescriptionId()) :
-                            chemical.getChemicalName();
+                    if (chemical instanceof Compound) {
+                        return MutableComponent.create(
+                                new TranslatableContents(
+                                        ((CompoundItem) chemical).getDescriptionId()
+                                )
+                        ).withStyle(HOVER_TEXT_STYLE);
+                    } else {
+                        return MutableComponent.create(
+                                        new TranslatableContents(
+                                                chemical.getChemicalName()
+                                        )
+                                )
+                                .withStyle(HOVER_TEXT_STYLE);
+                    }
                 }
             }
         }
