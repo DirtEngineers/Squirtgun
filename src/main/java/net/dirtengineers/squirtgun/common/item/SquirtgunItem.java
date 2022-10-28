@@ -2,7 +2,6 @@ package net.dirtengineers.squirtgun.common.item;
 
 import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.common.entity.ammunition.SquirtSlug;
-import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
 import net.dirtengineers.squirtgun.client.TextUtility;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -32,26 +31,26 @@ import java.util.Optional;
 
 
 public class SquirtgunItem extends BowItem {
-    private final String MAGAZINE_TYPE_TAG = Squirtgun.MOD_ID + ".magazine_type";
-    private final String MAGAZINE_SHOTS_TAG = Squirtgun.MOD_ID + ".magazine_shots";
+    private final String PHIAL_TYPE_TAG = Squirtgun.MOD_ID + ".phial_type";
+    private final String PHIAL_SHOTS_TAG = Squirtgun.MOD_ID + ".phial_shots";
 
-//    Change on loading new magazine or firing slug
+//    Change on loading new phial or firing slug
     private boolean statusChanged;
-    private BaseSquirtMagazine magazine = null;
+    private BasePhial phial = null;
 
-    public SquirtgunItem(){
-        super(new Item.Properties().tab(ItemRegistration.SQUIRTGUN_TAB).rarity(Rarity.COMMON).stacksTo(1));
+    public SquirtgunItem(Properties pProperties){
+        super(pProperties);
         statusChanged = true;
     }
 
-    private void MAGAZINELOADINGTEST(Level pLevel, Player pPlayer) {
-        if(magazine == null){
-            magazine = (BaseSquirtMagazine) Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(new ResourceLocation("squirtgun:hydrochloric_acid_magazine"))).asItem();
-            magazine.loadFluid(new FluidStack(magazine.getOptionalFluid().orElse(Fluids.EMPTY), 1000));
+    private void PHIALLOADINGTEST(Level pLevel, Player pPlayer) {
+        if(phial == null){
+            phial = (BasePhial) Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(new ResourceLocation("squirtgun:hydrochloric_acid_phial"))).asItem();
+            phial.loadFluid(new FluidStack(phial.getOptionalFluid().orElse(Fluids.EMPTY), 1000));
             statusChanged = true;
         }
-        if(pPlayer.getAbilities().instabuild && magazine.getShotsAvailable() <= 0){
-            magazine.loadFluid(new FluidStack(magazine.getOptionalFluid().orElse(Fluids.EMPTY), 1000));
+        if(pPlayer.getAbilities().instabuild && phial.getShotsAvailable() <= 0){
+            phial.loadFluid(new FluidStack(phial.getOptionalFluid().orElse(Fluids.EMPTY), 1000));
             statusChanged = true;
         }
     }
@@ -59,7 +58,7 @@ public class SquirtgunItem extends BowItem {
     @Override
     public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pItemSlot, boolean pIsSelected) {
         if (!pLevel.isClientSide) {
-            if(this.magazine == null && statusChanged)
+            if(this.phial == null && statusChanged)
                 loadFromNBT(pStack);
             if(this.statusChanged)
                 setTag(pStack);
@@ -72,8 +71,8 @@ public class SquirtgunItem extends BowItem {
                 pStack,
                 pLevel,
                 TextUtility.setAmmoHoverText(
-                        this.magazine != null ?
-                                this.magazine.getOptionalFluid() :
+                        this.phial != null ?
+                                this.phial.getOptionalFluid() :
                                 Optional.ofNullable(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(TextUtility.EMPTY_FLUID_NAME))),
                         this.getAmmoStatus(),
                         this,
@@ -84,13 +83,13 @@ public class SquirtgunItem extends BowItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
 
-        MAGAZINELOADINGTEST(pLevel, pPlayer);
+        PHIALLOADINGTEST(pLevel, pPlayer);
 
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
 
         boolean hasAmmo = hasAmmunition(pPlayer);
 
-        net.minecraftforge.common.ForgeHooks.getProjectile(pPlayer, itemstack, hasAmmo ? new ItemStack(magazine.getOrCreateGenericSlugItem()) : ItemStack.EMPTY);
+        net.minecraftforge.common.ForgeHooks.getProjectile(pPlayer, itemstack, hasAmmo ? new ItemStack(phial.getOrCreateGenericSlugItem()) : ItemStack.EMPTY);
         InteractionResultHolder<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(itemstack, pLevel, pPlayer, pHand, hasAmmo);
         if (ret != null) return ret;
 
@@ -108,7 +107,7 @@ public class SquirtgunItem extends BowItem {
             boolean flag = player.getAbilities().instabuild || EnchantmentHelper.getTagEnchantmentLevel(Enchantments.INFINITY_ARROWS, pStack) > 0;
 
             boolean hasAmmo = hasAmmunition(player);
-            net.minecraftforge.common.ForgeHooks.getProjectile(pEntityLiving, pStack, hasAmmo ? new ItemStack(magazine.getOrCreateGenericSlugItem()) : ItemStack.EMPTY);
+            net.minecraftforge.common.ForgeHooks.getProjectile(pEntityLiving, pStack, hasAmmo ? new ItemStack(phial.getOrCreateGenericSlugItem()) : ItemStack.EMPTY);
 
             int i = getUseDuration(pStack) - pTimeLeft;
             i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(pStack, pLevel, player, i, hasAmmo || flag);
@@ -119,7 +118,7 @@ public class SquirtgunItem extends BowItem {
 
             if(hasAmmo) {
             if (!pLevel.isClientSide) {
-                SquirtSlug slug = magazine.makeSlugToFire(pLevel, player);
+                SquirtSlug slug = phial.makeSlugToFire(pLevel, player);
                 statusChanged = !((Player)pEntityLiving).getAbilities().instabuild;
                 if (slug.hasEffects()) slug.setBaseDamage(0D);
                 slug.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 3.0F, 1.0F);
@@ -142,36 +141,36 @@ public class SquirtgunItem extends BowItem {
 
     private boolean hasAmmunition(Player pPlayer) {
         boolean result;
-        if (this.magazine == null)
+        if (this.phial == null)
             if (pPlayer.getAbilities().instabuild) {
-                BaseSquirtMagazine newMag =
-                        (BaseSquirtMagazine)
+                BasePhial newMag =
+                        (BasePhial)
                                 Objects.requireNonNull(ForgeRegistries
                                         .ITEMS
-                                        .getValue(new ResourceLocation("squirtgun:nitric_acid_magazine")))
+                                        .getValue(new ResourceLocation("squirtgun:nitric_acid_phial")))
                                         .asItem();
                 newMag.loadFluid(new FluidStack(newMag.getOptionalFluid().orElse(Fluids.EMPTY), 1000));
-                magazine = newMag;
+                phial = newMag;
                 statusChanged = true;
-                result = this.magazine.hasAmmunition(pPlayer);
+                result = this.phial.hasAmmunition(pPlayer);
             } else
                 result = false;
         else
-            result = magazine.hasAmmunition(pPlayer);
+            result = phial.hasAmmunition(pPlayer);
         return result;
     }
 
     public Optional<Fluid> getFluid(){
-        return (magazine != null) ? magazine.getOptionalFluid() : Optional.of(FluidStack.EMPTY.getFluid());
+        return (phial != null) ? phial.getOptionalFluid() : Optional.of(FluidStack.EMPTY.getFluid());
     }
 
     public String getAmmoStatus(){
-        return (magazine == null) ? new TranslatableContents("No Magazine").getKey() : magazine.getAmmoStatus();
+        return (phial == null) ? new TranslatableContents("No Phial").getKey() : phial.getAmmoStatus();
     }
 
-    public BaseSquirtMagazine loadNewMagazine(BaseSquirtMagazine pMagazine){
-        BaseSquirtMagazine outMag = magazine;
-        magazine = pMagazine;
+    public BasePhial loadNewPhial(BasePhial pPhial){
+        BasePhial outMag = phial;
+        phial = pPhial;
         statusChanged = true;
         return outMag;
     }
@@ -188,15 +187,15 @@ public class SquirtgunItem extends BowItem {
 
     private void loadFromNBT(ItemStack pStack) {
         CompoundTag stackTag = pStack.getOrCreateTag();
-        if (Objects.requireNonNull(stackTag).contains(MAGAZINE_TYPE_TAG) && stackTag.contains(MAGAZINE_SHOTS_TAG)) {
-            magazine = (BaseSquirtMagazine)
+        if (Objects.requireNonNull(stackTag).contains(PHIAL_TYPE_TAG) && stackTag.contains(PHIAL_SHOTS_TAG)) {
+            phial = (BasePhial)
                     Objects.requireNonNull(
                             ForgeRegistries.ITEMS.getValue(
-                                    new ResourceLocation(Squirtgun.MOD_ID + ":" + stackTag.getString(MAGAZINE_TYPE_TAG))
+                                    new ResourceLocation(Squirtgun.MOD_ID + ":" + stackTag.getString(PHIAL_TYPE_TAG))
                             )
                     ).asItem();
-            magazine.loadFluid(new FluidStack(magazine.getOptionalFluid().orElse(Fluids.EMPTY),
-                    stackTag.getInt(MAGAZINE_SHOTS_TAG) * SquirtSlug.shotSize));
+            phial.loadFluid(new FluidStack(phial.getOptionalFluid().orElse(Fluids.EMPTY),
+                    stackTag.getInt(PHIAL_SHOTS_TAG) * SquirtSlug.shotSize));
             pStack.setTag(stackTag);
             statusChanged = false;
         }
@@ -205,9 +204,9 @@ public class SquirtgunItem extends BowItem {
 
     private void setTag(ItemStack pStack) {
         CompoundTag tag = pStack.getOrCreateTag();
-        if(magazine != null) {
-            tag.putString(MAGAZINE_TYPE_TAG, magazine.toString());
-            tag.putInt(MAGAZINE_SHOTS_TAG, magazine.getShotsAvailable());
+        if(phial != null) {
+            tag.putString(PHIAL_TYPE_TAG, phial.toString());
+            tag.putInt(PHIAL_SHOTS_TAG, phial.getShotsAvailable());
         }
         pStack.setTag(tag);
         statusChanged = false;

@@ -1,7 +1,7 @@
 package net.dirtengineers.squirtgun.datagen;
 
 import net.dirtengineers.squirtgun.Squirtgun;
-import net.dirtengineers.squirtgun.common.item.BaseSquirtMagazine;
+import net.dirtengineers.squirtgun.common.item.BasePhial;
 import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
@@ -14,17 +14,17 @@ public class ItemModelGenerator extends ItemModelProvider  {
 
     @Override
     protected void registerModels() {
-        this.generateMagazineModel();
-        ItemRegistration.MAGAZINES.keySet().forEach(this::generateMagazine);
+        this.generatePhialModel();
+        ItemRegistration.PHIALS.keySet().forEach(this::generatePhial);
     }
 
-    private void generateMagazineModel(){
-        this.withExistingParent("item/squirt_magazine_model", this.mcLoc("item/generated"))
-                .texture("layer0", this.modLoc("item/magazine_layer_0"))
-                .texture("layer1", this.modLoc("item/magazine_layer_1"));
+    private void generatePhialModel(){
+        this.withExistingParent("item/phial_model", this.mcLoc("item/generated"))
+                .texture("layer0", this.modLoc("item/phial_layer_0"))
+                .texture("layer1", this.modLoc("item/phial_layer_1"));
     }
 
-    private void generateMagazine(BaseSquirtMagazine magazine) {
-        this.withExistingParent(String.format("item/%s", magazine.toString()), this.modLoc("item/squirt_magazine_model"));
+    private void generatePhial(BasePhial phial) {
+        this.withExistingParent(String.format("item/%s", phial), this.modLoc("item/phial_model"));
     }
 }

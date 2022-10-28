@@ -22,7 +22,7 @@ public class Squirtgun {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         Registry.register(modEventBus);
         modEventBus.addListener(this::commonSetupEvent);
-        modEventBus.addListener(ItemRegistration::registerMagsAndSlugs);
+        modEventBus.addListener(ItemRegistration::registerPhialsAndSlugs);
     }
 
     private void commonSetupEvent(final FMLCommonSetupEvent event) {

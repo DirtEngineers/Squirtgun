@@ -13,7 +13,7 @@ public class LocalizationGenerator extends LanguageProvider {
     @Override
     protected void addTranslations() {
         addManualTranslations();
-        ItemRegistration.MAGAZINES.keySet().forEach(
+        ItemRegistration.PHIALS.keySet().forEach(
                 magazine -> this.add(
                         String.format("item.squirtgun.%s", magazine),
                         setText(magazine.toString().replace('_', ' '), ' ')));
@@ -22,12 +22,12 @@ public class LocalizationGenerator extends LanguageProvider {
     private void addManualTranslations(){
         this.add("itemGroup.squirtguntab", "Squirtgun");
         this.add("item.squirtgun.squirtgunitem", "Squirtgun");
-        this.add("item.squirtgun.squirtmagazineitem", "Empty Magazine");
+        this.add("item.squirtgun.squirtphialitem", "Empty Phial");
         this.add("item.squirtgun.gun_functionality", "Squirtgun reload/settings");
         this.add("sounds.squirtgun.squirt_slug_hit", "EWWW!");
         this.add("key.category.squirtgun", "Squirtgun");
         this.add("key.squirtgun.gun_ammo_load", "Load Ammunition");
-        this.add("key.squirtgun.no_magazine", "No Magazine");
+        this.add("key.squirtgun.no_phial", "No Phial");
         this.add("key.squirtgun.gun_display_ammo_status", "Toggle Ammunition Status Display");
         this.add("fluid.squirtgun.empty_fluid_name", "EMPTY");
     }

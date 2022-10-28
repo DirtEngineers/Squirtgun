@@ -42,14 +42,14 @@ public class ClientModEventHandler {
     @SubscribeEvent
     public static void onItemColorHandlerEvent(RegisterColorHandlersEvent.Item event) {
 
-        ItemRegistration.MAGAZINES.forEach((magazine, chemical) -> {
-            Objects.requireNonNull(magazine);
+        ItemRegistration.PHIALS.forEach((phial, chemical) -> {
+            Objects.requireNonNull(phial);
             Objects.requireNonNull(chemical);
 
             if(chemical instanceof ElementItem)
-                event.register(((ElementItem)chemical)::getColor, magazine);
+                event.register(((ElementItem)chemical)::getColor, phial);
             else
-                event.register(((CompoundItem)chemical)::getColor, magazine);
+                event.register(((CompoundItem)chemical)::getColor, phial);
                 });
     }
 }
