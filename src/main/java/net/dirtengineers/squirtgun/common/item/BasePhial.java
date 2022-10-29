@@ -57,11 +57,13 @@ public class BasePhial extends Item {
     }
 
     public void initializeFluid() {
-        chemical.getFluidTypeReference()
-                .flatMap(fluidType -> FluidRegistry.getFluidsAsStream()
-                    .filter(fluid -> fluid.getFluidType().equals(chemical.getFluidTypeReference().get()))
-                    .findFirst())
+        if (chemical != null) {
+            chemical.getFluidTypeReference()
+                    .flatMap(fluidType -> FluidRegistry.getFluidsAsStream()
+                            .filter(fluid -> fluid.getFluidType().equals(chemical.getFluidTypeReference().get()))
+                            .findFirst())
                     .ifPresent(fluid -> optionalFluid = Optional.of(fluid));
+        }
     }
 
     public Optional<Fluid> getOptionalFluid() {
@@ -86,7 +88,7 @@ public class BasePhial extends Item {
     }
 
     public boolean isFluidValid(FluidStack pFluidStack) {
-        if (chemical.getFluidTypeReference().isPresent() &&
+        if (chemical != null && chemical.getFluidTypeReference().isPresent() &&
                 pFluidStack != null &&
                 pFluidStack != FluidStack.EMPTY) {
             return pFluidStack.getFluid().getFluidType() == chemical.getFluidTypeReference().get();

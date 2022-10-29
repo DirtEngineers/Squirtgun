@@ -1,0 +1,14 @@
+{
+  "type": "squirtgun:fluid_encapsulator",
+  "group": "squirtgun:fluid_encapsulator",
+  "input1": {
+    "item": "squirtgun:squirtphialitem"
+  },
+  "input2": {
+    "amount": "1000",
+    "fluid": "chemlib:nitric_acid_fluid"
+  },
+  "result": {
+    "item": "squirtgun:nitric_acid_phial"
+  }
+}

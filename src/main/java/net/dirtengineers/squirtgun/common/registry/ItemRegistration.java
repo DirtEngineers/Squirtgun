@@ -4,6 +4,7 @@ import com.smashingmods.chemlib.api.Chemical;
 import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.common.item.BasePhial;
 import net.dirtengineers.squirtgun.common.item.GenericSlug;
+import net.dirtengineers.squirtgun.common.item.PhialItem;
 import net.dirtengineers.squirtgun.common.item.SquirtgunItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
@@ -15,10 +16,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
 import net.minecraftforge.registries.RegistryObject;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.smashingmods.chemlib.api.MatterState.LIQUID;
 import static com.smashingmods.chemlib.registry.ItemRegistry.getCompounds;
@@ -34,24 +32,41 @@ public class ItemRegistration {
     public static final Item.Properties ITEM_PROPERTIES_NO_TAB;
     public static final Item.Properties ITEM_PROPERTIES_WITH_TAB;
     public static final DeferredRegister<Item> SQUIRTGUNITEMS;
-//    public static final RegistryObject<Item> PHIAL_ITEMS;
+    public static final RegistryObject<Item> PHIAL_ITEM;
     public static final RegistryObject<Item> SQUIRTSLUGITEM;
     public static final RegistryObject<Item> SQUIRTGUNITEM;
     public static Map<BasePhial, Chemical> PHIALS;
     public static Map<Chemical, Fluid> CHEMICAL_FLUIDS;
     public static List<Chemical> ammunitionChemicals;
 
-    public static void registerPhialsAndSlugs(RegisterEvent pEvent){
+    public static void buildChemical_Fluids(){
+        for (Chemical chemical : ItemRegistration.ammunitionChemicals)
+            if (chemical != null && chemical.getFluidTypeReference().isPresent()) {
+                String location = String.valueOf(chemical.getFluidTypeReference().get());
+                if (!Objects.equals(location, "minecraft:water")) location += "_fluid";
+                ItemRegistration.CHEMICAL_FLUIDS.put(chemical, ForgeRegistries.FLUIDS.getValue(new ResourceLocation(location)));
+            }
+    }
+
+    public static void registerPhialsAndSlugs(RegisterEvent pEvent) {
         if(pEvent.getRegistryKey() == ForgeRegistries.Keys.ITEMS) {
-            ItemRegistration.ammunitionChemicals.addAll(getCompounds().stream().filter(compound -> compound.getMatterState() == LIQUID).toList());
-            ItemRegistration.ammunitionChemicals.addAll(getElements().stream().filter(element -> element.getMatterState() == LIQUID).toList());
+            ItemRegistration.SetAmmunitionChemicals();
             ItemRegistration.buildPhials(pEvent);
         }
     }
 
+    private static void SetAmmunitionChemicals() {
+        ItemRegistration.ammunitionChemicals.addAll(getCompounds().stream().filter(compound -> compound.getMatterState() == LIQUID).toList());
+        ItemRegistration.ammunitionChemicals.addAll(getElements().stream().filter(element -> element.getMatterState() == LIQUID).toList());
+    }
+
     private static void buildPhials(RegisterEvent pEvent){
+        ResourceLocation magLocation;
         for (Chemical chemical : ItemRegistration.ammunitionChemicals) {
-            ResourceLocation magLocation = new ResourceLocation(Squirtgun.MOD_ID, String.format("%s_phial", chemical.getChemicalName()));
+            magLocation =
+                    new ResourceLocation(
+                            Squirtgun.MOD_ID,
+                            String.format("%s_phial", chemical.getChemicalName()));
 
             pEvent.register(
                     ForgeRegistries.Keys.ITEMS,
@@ -74,7 +89,7 @@ public class ItemRegistration {
         ITEM_PROPERTIES_WITH_TAB = new Item.Properties().tab(SQUIRTGUN_TAB).rarity(Rarity.COMMON).stacksTo(1);
         ITEM_PROPERTIES_NO_TAB = new Item.Properties().rarity(Rarity.COMMON).stacksTo(1);
         SQUIRTGUNITEMS = DeferredRegister.create(ForgeRegistries.ITEMS,  Squirtgun.MOD_ID);
-//        PHIAL_ITEMS = SQUIRTGUNITEMS.register("squirtphialitem", () -> new PhialItem(ITEM_PROPERTIES_NO_TAB));
+        PHIAL_ITEM = SQUIRTGUNITEMS.register("squirtphialitem", () -> new PhialItem(ITEM_PROPERTIES_WITH_TAB));
         SQUIRTSLUGITEM = SQUIRTGUNITEMS.register("squirtslugitem", () -> new GenericSlug(ITEM_PROPERTIES_NO_TAB));
         SQUIRTGUNITEM = SQUIRTGUNITEMS.register("squirtgunitem", () -> new SquirtgunItem(ITEM_PROPERTIES_WITH_TAB));
         PHIALS = new HashMap<>();

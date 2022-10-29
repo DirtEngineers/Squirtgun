@@ -1,0 +1,20 @@
+{
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "squirtgun:fluid_encapsulator/carbon_disulfide_phial"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "squirtgun:carbon_disulfide_phial_phial"
+    ]
+  }
+}

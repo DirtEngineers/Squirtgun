@@ -44,7 +44,6 @@ public class ClientModEventHandler {
 
         ItemRegistration.PHIALS.forEach((phial, chemical) -> {
             Objects.requireNonNull(phial);
-            Objects.requireNonNull(chemical);
 
             if(chemical instanceof ElementItem)
                 event.register(((ElementItem)chemical)::getColor, phial);
