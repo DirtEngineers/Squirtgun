@@ -1,5 +1,6 @@
-package net.dirtengineers.squirtgun.datagen.recipe.fluid_encapsulator;
+package net.dirtengineers.squirtgun.datagen.recipe.fluid_encapsulator.creation;
 
+import net.dirtengineers.squirtgun.Config;
 import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
 import net.minecraft.advancements.Advancement;
@@ -16,23 +17,23 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public class FluidEncapsulatorRecipeBuilder implements RecipeBuilder {
+public class PhialTypeCreationRecipeBuilder implements RecipeBuilder {
     private String group;
     private final ResourceLocation recipeId;
     private final ItemStack phial;
-    private final FluidStack fluidStack;
+    private final FluidStack fluid;
     private final ItemStack result;
     private final Advancement.Builder advancementBuilder = Advancement.Builder.advancement();
 
-    public FluidEncapsulatorRecipeBuilder(ItemStack pPhial, FluidStack pfluidStack, ItemStack pOutput, ResourceLocation pRecipeId) {
+    public PhialTypeCreationRecipeBuilder(ItemStack pPhial, FluidStack pfluidStack, ItemStack pOutput, ResourceLocation pRecipeId) {
         this.phial = pPhial;
-        this.fluidStack = pfluidStack;
+        this.fluid = pfluidStack;
         this.result = pOutput;
         this.recipeId = pRecipeId;
     }
 
-    public static FluidEncapsulatorRecipeBuilder createRecipe(ItemStack pInput1, FluidStack pInput2, ItemStack pOutput, ResourceLocation pRecipeId) {
-        return new FluidEncapsulatorRecipeBuilder(pInput1, pInput2, pOutput, pRecipeId);
+    public static PhialTypeCreationRecipeBuilder createRecipe(ItemStack pInput1, FluidStack pInput2, ItemStack pOutput, ResourceLocation pRecipeId) {
+        return new PhialTypeCreationRecipeBuilder(pInput1, pInput2, pOutput, pRecipeId);
     }
 
     @Override
@@ -68,17 +69,24 @@ public class FluidEncapsulatorRecipeBuilder implements RecipeBuilder {
 
     @Override
     public void save(Consumer<FinishedRecipe> pFinishedRecipeConsumer, ResourceLocation pRecipeId) {
-        ResourceLocation recipeLocation = new ResourceLocation(Squirtgun.MOD_ID, String.format("fluid_encapsulator/%s", pRecipeId.getPath()));
-        ResourceLocation advancementLocation = new ResourceLocation(Squirtgun.MOD_ID, String.format("recipes/fluid_encapsulator/%s", pRecipeId.getPath()));
-
+        ResourceLocation recipeLocation = new ResourceLocation(
+                Squirtgun.MOD_ID
+                ,String.format("%screate_%s"
+                ,Config.Common.fluidEncapsulatorPhialCreationRecipeLocationPrefix
+                ,pRecipeId.getPath()));
+        ResourceLocation advancementLocation = new ResourceLocation(
+                Squirtgun.MOD_ID
+                ,String.format("%screate_%s"
+                ,Config.Common.fluidEncapsulatorPhialCreationAdvancementLocationPrefix
+                ,pRecipeId.getPath()));
         pFinishedRecipeConsumer.accept(
-                new FluidEncapsulatorRecipeResult(
+                new PhialTypeCreationRecipeResult(
                         this.group,
                         this.advancementBuilder,
                         recipeLocation,
                         advancementLocation,
                         this.phial,
-                        this.fluidStack,
+                        this.fluid,
                         this.result));
     }
 }

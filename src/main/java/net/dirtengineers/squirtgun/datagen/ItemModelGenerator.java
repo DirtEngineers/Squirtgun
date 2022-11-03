@@ -1,13 +1,15 @@
 package net.dirtengineers.squirtgun.datagen;
 
 import net.dirtengineers.squirtgun.Squirtgun;
-import net.dirtengineers.squirtgun.common.item.BasePhial;
+import net.dirtengineers.squirtgun.common.item.BasePhialItem;
 import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.Objects;
 
 public class ItemModelGenerator extends ItemModelProvider  {
     public ItemModelGenerator(DataGenerator generator, ExistingFileHelper existingFileHelper) {
@@ -18,7 +20,7 @@ public class ItemModelGenerator extends ItemModelProvider  {
     protected void registerModels() {
         this.generatePhialModel();
         ItemRegistration.PHIALS.keySet().forEach(this::generatePhial);
-        String emptyPhial = ForgeRegistries.ITEMS.getValue(new ResourceLocation("squirtgun:squirtphialitem")).asItem().toString();
+        String emptyPhial = Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(new ResourceLocation("squirtgun:squirtphialitem"))).asItem().toString();
         this.withExistingParent(String.format("item/%s", emptyPhial), this.modLoc("item/phial_model"));
     }
 
@@ -28,7 +30,7 @@ public class ItemModelGenerator extends ItemModelProvider  {
                 .texture("layer1", this.modLoc("item/phial_layer_1"));
     }
 
-    private void generatePhial(BasePhial phial) {
+    private void generatePhial(BasePhialItem phial) {
         this.withExistingParent(String.format("item/%s", phial), this.modLoc("item/phial_model"));
     }
 }

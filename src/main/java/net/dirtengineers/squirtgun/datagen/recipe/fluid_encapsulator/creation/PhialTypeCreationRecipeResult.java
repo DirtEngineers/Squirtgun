@@ -1,8 +1,8 @@
-package net.dirtengineers.squirtgun.datagen.recipe.fluid_encapsulator;
+package net.dirtengineers.squirtgun.datagen.recipe.fluid_encapsulator.creation;
 
 import com.google.gson.JsonObject;
-import net.dirtengineers.squirtgun.datagen.DatagenUtility;
 import net.dirtengineers.squirtgun.common.registry.RecipeRegistration;
+import net.dirtengineers.squirtgun.datagen.DatagenUtility;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
@@ -11,7 +11,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
-public class FluidEncapsulatorRecipeResult implements FinishedRecipe {
+public class PhialTypeCreationRecipeResult implements FinishedRecipe {
     private final String group;
     private final Advancement.Builder advancementBuilder;
     private final ResourceLocation id;
@@ -20,7 +20,7 @@ public class FluidEncapsulatorRecipeResult implements FinishedRecipe {
     private final FluidStack fluid;
     private final ItemStack result;
 
-    public FluidEncapsulatorRecipeResult(String pGroup, Advancement.Builder pBuilder, ResourceLocation pId, ResourceLocation pAdvancementId, ItemStack pPhial, FluidStack pFluid, ItemStack pResult) {
+    public PhialTypeCreationRecipeResult(String pGroup, Advancement.Builder pBuilder, ResourceLocation pId, ResourceLocation pAdvancementId, ItemStack pPhial, FluidStack pFluid, ItemStack pResult) {
         this.group = pGroup;
         this.advancementBuilder = pBuilder;
         this.id = pId;
@@ -43,7 +43,7 @@ public class FluidEncapsulatorRecipeResult implements FinishedRecipe {
         return this.id;
     }
 
-    public RecipeSerializer<?> getType() { return RecipeRegistration.FLUID_ENCAPSULATOR_SERIALIZER.get(); }
+    public RecipeSerializer<?> getType() { return RecipeRegistration.PHIAL_CREATION_SERIALIZER.get(); }
 
     public @Nullable JsonObject serializeAdvancement() {
         return this.advancementBuilder.serializeToJson();

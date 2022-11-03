@@ -14,9 +14,9 @@ public class LocalizationGenerator extends LanguageProvider {
     protected void addTranslations() {
         addManualTranslations();
         ItemRegistration.PHIALS.keySet().forEach(
-                magazine -> this.add(
-                        String.format("item.squirtgun.%s", magazine),
-                        setText(magazine.toString().replace('_', ' '), ' ')));
+                phial -> this.add(
+                        String.format("item.squirtgun.%s", phial),
+                        setText(phial.toString().replace('_', ' '), ' ')));
     }
 
     private void addManualTranslations(){
@@ -30,6 +30,7 @@ public class LocalizationGenerator extends LanguageProvider {
         this.add("key.squirtgun.no_phial", "No Phial");
         this.add("key.squirtgun.gun_display_ammo_status", "Toggle Ammunition Status Display");
         this.add("fluid.squirtgun.empty_fluid_name", "EMPTY");
+        this.add("tooltip.squirtgun.energy_requirement", "Requires %d FE/t");
     }
 
     private String setText(String text, char delimiter){

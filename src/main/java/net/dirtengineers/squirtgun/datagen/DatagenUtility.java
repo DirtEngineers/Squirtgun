@@ -1,7 +1,6 @@
 package net.dirtengineers.squirtgun.datagen;
 
 import com.google.gson.JsonObject;
-import net.dirtengineers.squirtgun.Squirtgun;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
@@ -10,11 +9,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.Objects;
 
 public class DatagenUtility {
-
-    public static ResourceLocation getLocation(ItemStack pItemStack, String pType) {
-        return new ResourceLocation(Squirtgun.MOD_ID,
-                String.format("%s/%s", pType, Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(pItemStack.getItem())).getPath()));
-    }
 
     public static void itemStackToJson(JsonObject pJson, String pKey, ItemStack pItemStack) {
         if (!pItemStack.isEmpty()) {

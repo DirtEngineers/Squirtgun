@@ -2,7 +2,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "squirtgun:fluid_encapsulator/ethanol_phial"
+        "recipe": "squirtgun:fluid_encapsulator/creation/create_bromine_phial"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -14,7 +14,7 @@
   ],
   "rewards": {
     "recipes": [
-      "squirtgun:ethanol_phial_phial"
+      "squirtgun:create_bromine_phial_phial"
     ]
   }
 }

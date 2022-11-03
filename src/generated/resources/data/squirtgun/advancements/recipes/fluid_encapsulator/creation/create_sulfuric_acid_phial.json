@@ -2,7 +2,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "squirtgun:fluid_encapsulator/carbon_disulfide_phial"
+        "recipe": "squirtgun:fluid_encapsulator/creation/create_sulfuric_acid_phial"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -14,7 +14,7 @@
   ],
   "rewards": {
     "recipes": [
-      "squirtgun:carbon_disulfide_phial_phial"
+      "squirtgun:create_sulfuric_acid_phial_phial"
     ]
   }
 }

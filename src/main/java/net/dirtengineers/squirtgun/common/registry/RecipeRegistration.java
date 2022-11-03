@@ -1,8 +1,8 @@
 package net.dirtengineers.squirtgun.common.registry;
 
 import net.dirtengineers.squirtgun.Squirtgun;
-import net.dirtengineers.squirtgun.common.recipe.fluid_encapsulator.FluidEncapsulatorRecipe;
-import net.dirtengineers.squirtgun.common.recipe.fluid_encapsulator.FluidEncapsulatorRecipeSerializer;
+import net.dirtengineers.squirtgun.common.recipe.fluid_encapsulator.creation.PhialTypeCreationRecipe;
+import net.dirtengineers.squirtgun.common.recipe.fluid_encapsulator.creation.PhialTypeCreationRecipeSerializer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -19,17 +19,16 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class RecipeRegistration {
-    private static final DeferredRegister<RecipeType<?>> RECIPE_TYPES;
+    private static final DeferredRegister<RecipeType<?>> FLUID_ENCAPSULATOR_RECIPE_TYPES;
     private static final DeferredRegister<RecipeSerializer<?>> SERIALIZERS;
-    public static RegistryObject<RecipeType<FluidEncapsulatorRecipe>> FLUID_ENCAPSULATOR_TYPE;
-    public static final RegistryObject<FluidEncapsulatorRecipeSerializer<FluidEncapsulatorRecipe>> FLUID_ENCAPSULATOR_SERIALIZER;
+    public static RegistryObject<RecipeType<PhialTypeCreationRecipe>> PHIAL_CREATION_RECIPE_TYPE;
+    public static final RegistryObject<PhialTypeCreationRecipeSerializer<PhialTypeCreationRecipe>> PHIAL_CREATION_SERIALIZER;
     private static final Map<RecipeType<? extends Recipe<Inventory>>, List<? extends Recipe<Inventory>>> recipesMap;
 
-    RecipeRegistration() {
-    }
+    RecipeRegistration() {}
 
     private static <T extends Recipe<Inventory>> RegistryObject<RecipeType<T>> registerRecipeType(String pType) {
-        return RECIPE_TYPES.register(pType, () -> new RecipeType<>() {
+        return FLUID_ENCAPSULATOR_RECIPE_TYPES.register(pType, () -> new RecipeType<>() {
             public String toString() {
                 return pType;
             }
@@ -46,16 +45,16 @@ public class RecipeRegistration {
     }
 
     public static void register(IEventBus eventBus) {
-        RECIPE_TYPES.register(eventBus);
+        FLUID_ENCAPSULATOR_RECIPE_TYPES.register(eventBus);
         SERIALIZERS.register(eventBus);
     }
 
     static {
-        RECIPE_TYPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, Squirtgun.MOD_ID);
+        FLUID_ENCAPSULATOR_RECIPE_TYPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, Squirtgun.MOD_ID);
         SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Squirtgun.MOD_ID);
-        FLUID_ENCAPSULATOR_TYPE = registerRecipeType("fluid_encapsulator");
-        FLUID_ENCAPSULATOR_SERIALIZER = SERIALIZERS.register("fluid_encapsulator", () -> {
-            return new FluidEncapsulatorRecipeSerializer(FluidEncapsulatorRecipe::new);
+        PHIAL_CREATION_RECIPE_TYPE = registerRecipeType("fluid_encapsulator_phial_creation");
+        PHIAL_CREATION_SERIALIZER = SERIALIZERS.register("fluid_encapsulator", () -> {
+            return new PhialTypeCreationRecipeSerializer<>(PhialTypeCreationRecipe::new);
         });
         recipesMap = new HashMap<>();
     }

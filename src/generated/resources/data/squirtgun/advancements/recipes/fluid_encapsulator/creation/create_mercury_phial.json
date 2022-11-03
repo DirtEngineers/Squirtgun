@@ -2,7 +2,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "squirtgun:fluid_encapsulator/epinephrine_phial"
+        "recipe": "squirtgun:fluid_encapsulator/creation/create_mercury_phial"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -14,7 +14,7 @@
   ],
   "rewards": {
     "recipes": [
-      "squirtgun:epinephrine_phial_phial"
+      "squirtgun:create_mercury_phial_phial"
     ]
   }
 }

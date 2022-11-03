@@ -21,5 +21,6 @@
   "key.squirtgun.gun_ammo_load": "Load Ammunition",
   "key.squirtgun.gun_display_ammo_status": "Toggle Ammunition Status Display",
   "key.squirtgun.no_phial": "No Phial",
-  "sounds.squirtgun.squirt_slug_hit": "EWWW!"
+  "sounds.squirtgun.squirt_slug_hit": "EWWW!",
+  "tooltip.squirtgun.energy_requirement": "Requires %d FE/t"
 }

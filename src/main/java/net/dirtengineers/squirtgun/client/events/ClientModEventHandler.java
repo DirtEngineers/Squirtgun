@@ -1,10 +1,12 @@
 package net.dirtengineers.squirtgun.client.events;
 
+import com.smashingmods.chemlib.api.Chemical;
 import com.smashingmods.chemlib.common.items.CompoundItem;
 import com.smashingmods.chemlib.common.items.ElementItem;
 import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.client.overlay.AmmunitionHudOverlay;
 import net.dirtengineers.squirtgun.client.render.SquirtSlugRenderer;
+import net.dirtengineers.squirtgun.common.item.BasePhialItem;
 import net.dirtengineers.squirtgun.common.registry.EntityRegistration;
 import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
 import net.minecraft.client.renderer.entity.EntityRenderers;
@@ -16,6 +18,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
+import java.util.Map;
 import java.util.Objects;
 
 import static net.dirtengineers.squirtgun.client.Keybinds.GUN_AMMO_STATUS_DISPLAY_KEY;
@@ -24,7 +27,7 @@ import static net.dirtengineers.squirtgun.client.Keybinds.GUN_LOAD_AMMO_KEY;
 @Mod.EventBusSubscriber(modid = Squirtgun.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientModEventHandler {
     @SubscribeEvent
-    public static void doSetup(FMLClientSetupEvent event){
+    public static void doSetup(FMLClientSetupEvent event) {
         EntityRenderers.register(EntityRegistration.SQUIRT_SLUG.get(), SquirtSlugRenderer::new);
     }
 
@@ -41,14 +44,15 @@ public class ClientModEventHandler {
 
     @SubscribeEvent
     public static void onItemColorHandlerEvent(RegisterColorHandlersEvent.Item event) {
-
-        ItemRegistration.PHIALS.forEach((phial, chemical) -> {
+        for (Map.Entry<BasePhialItem, Chemical> entry : ItemRegistration.PHIALS.entrySet()) {
+            BasePhialItem phial = entry.getKey();
+            Chemical chemical = entry.getValue();
             Objects.requireNonNull(phial);
-
-            if(chemical instanceof ElementItem)
-                event.register(((ElementItem)chemical)::getColor, phial);
-            else
-                event.register(((CompoundItem)chemical)::getColor, phial);
-                });
+            if (chemical instanceof ElementItem) {
+                event.register(((ElementItem) chemical)::getColor, phial);
+            } else if (chemical instanceof CompoundItem){
+                event.register(((CompoundItem) chemical)::getColor, phial);
+            }
+        }
     }
 }

@@ -1,4 +1,4 @@
-package net.dirtengineers.squirtgun.common.recipe.fluid_encapsulator;
+package net.dirtengineers.squirtgun.common.recipe.fluid_encapsulator.creation;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
@@ -15,10 +15,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class FluidEncapsulatorRecipeSerializer <T extends FluidEncapsulatorRecipe> implements RecipeSerializer<T> {
+public class PhialTypeCreationRecipeSerializer<T extends PhialTypeCreationRecipe> implements RecipeSerializer<T> {
     private final IFactory<T> factory;
 
-    public FluidEncapsulatorRecipeSerializer(IFactory<T> pFactory) { this.factory = pFactory; }
+    public PhialTypeCreationRecipeSerializer(IFactory<T> pFactory) { this.factory = pFactory; }
 
     public T fromJson(ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {
         String group = pSerializedRecipe.has("group") ? pSerializedRecipe.get("group").getAsString() : "fluid_encapsulator";
@@ -57,8 +57,8 @@ public class FluidEncapsulatorRecipeSerializer <T extends FluidEncapsulatorRecip
 
     public void toNetwork(FriendlyByteBuf pBuffer, T pRecipe) {
         pBuffer.writeUtf(pRecipe.getGroup());
-        pBuffer.writeItem(pRecipe.getInput1());
-        pBuffer.writeFluidStack(pRecipe.getInput2());
+        pBuffer.writeItem(pRecipe.getPhialInput());
+        pBuffer.writeFluidStack(pRecipe.getFluidInput());
         pBuffer.writeItem(pRecipe.getOutput());
     }
 

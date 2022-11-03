@@ -14,7 +14,7 @@ SQUIRTGUNITEM:
  Need advancements for item use
 
  make a custom keybind that opens a screen if you have the gun in your inventory.
- The screen should have a slot where you can put the magazine.
+ The screen should have a slot where you can put the phial.
 
  UPGRADE! -- Default manually load and auto-load being an upgrade.  Also allow player to toggle auto-load behavior in the gun's UI
 
@@ -23,6 +23,11 @@ SQUIRTGUNITEM:
 
    Machine block: lift from liquifier block, block entity, menu, and screen as example
 
-   //TODO: change "magazine" to "phial"
-   //TODO: raname "MagazineMachine" to "Fluid Encapsulator"
+   Recipes:
+   1.  Recipe for gun                                       -- DONE
+   2.  Recipe for generic phial item in crafting bench      -- DONE
+   3.  Recipe for phial types and fill (eg: HCl phial)      -- WORKING
+   4.  Recipes for phial upgrades
+   5.  Recipe for phial from raw materials in machine
+
    //TODO: translation for fluid encapsulator: "Dr. Clark's Fully Automatic Fluid Encapsulation Matrix"

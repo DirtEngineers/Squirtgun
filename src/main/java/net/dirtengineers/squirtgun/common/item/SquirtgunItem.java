@@ -1,8 +1,8 @@
 package net.dirtengineers.squirtgun.common.item;
 
 import net.dirtengineers.squirtgun.Squirtgun;
-import net.dirtengineers.squirtgun.common.entity.ammunition.SquirtSlug;
 import net.dirtengineers.squirtgun.client.TextUtility;
+import net.dirtengineers.squirtgun.common.entity.ammunition.SquirtSlug;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
@@ -15,7 +15,10 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.BowItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
@@ -34,9 +37,9 @@ public class SquirtgunItem extends BowItem {
     private final String PHIAL_TYPE_TAG = Squirtgun.MOD_ID + ".phial_type";
     private final String PHIAL_SHOTS_TAG = Squirtgun.MOD_ID + ".phial_shots";
 
-//    Change on loading new phial or firing slug
+//TODO:Change on loading new phial or firing slug
     private boolean statusChanged;
-    private BasePhial phial = null;
+    private BasePhialItem phial = null;
 
     public SquirtgunItem(Properties pProperties){
         super(pProperties);
@@ -44,11 +47,12 @@ public class SquirtgunItem extends BowItem {
     }
 
     private void PHIALLOADINGTEST(Level pLevel, Player pPlayer) {
-        if(phial == null){
-            phial = (BasePhial) Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(new ResourceLocation("squirtgun:hydrochloric_acid_phial"))).asItem();
-            phial.loadFluid(new FluidStack(phial.getOptionalFluid().orElse(Fluids.EMPTY), 1000));
+//        if(phial == null){
+            phial = (BasePhialItem) Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(new ResourceLocation("squirtgun:hydrochloric_acid_phial"))).asItem();
+            phial.loadFluid(new FluidStack(Objects.requireNonNull(ForgeRegistries.FLUIDS.getValue(new ResourceLocation("chemlib:hydrochloric_acid_fluid"))), 1000));
+//            phial.loadFluid(new FluidStack(phial.getOptionalFluid().orElse(Fluids.EMPTY), 1000));
             statusChanged = true;
-        }
+//        }
         if(pPlayer.getAbilities().instabuild && phial.getShotsAvailable() <= 0){
             phial.loadFluid(new FluidStack(phial.getOptionalFluid().orElse(Fluids.EMPTY), 1000));
             statusChanged = true;
@@ -143,8 +147,8 @@ public class SquirtgunItem extends BowItem {
         boolean result;
         if (this.phial == null)
             if (pPlayer.getAbilities().instabuild) {
-                BasePhial newMag =
-                        (BasePhial)
+                BasePhialItem newMag =
+                        (BasePhialItem)
                                 Objects.requireNonNull(ForgeRegistries
                                         .ITEMS
                                         .getValue(new ResourceLocation("squirtgun:nitric_acid_phial")))
@@ -168,8 +172,8 @@ public class SquirtgunItem extends BowItem {
         return (phial == null) ? new TranslatableContents("No Phial").getKey() : phial.getAmmoStatus();
     }
 
-    public BasePhial loadNewPhial(BasePhial pPhial){
-        BasePhial outMag = phial;
+    public BasePhialItem loadNewPhial(BasePhialItem pPhial){
+        BasePhialItem outMag = phial;
         phial = pPhial;
         statusChanged = true;
         return outMag;
@@ -188,7 +192,7 @@ public class SquirtgunItem extends BowItem {
     private void loadFromNBT(ItemStack pStack) {
         CompoundTag stackTag = pStack.getOrCreateTag();
         if (Objects.requireNonNull(stackTag).contains(PHIAL_TYPE_TAG) && stackTag.contains(PHIAL_SHOTS_TAG)) {
-            phial = (BasePhial)
+            phial = (BasePhialItem)
                     Objects.requireNonNull(
                             ForgeRegistries.ITEMS.getValue(
                                     new ResourceLocation(Squirtgun.MOD_ID + ":" + stackTag.getString(PHIAL_TYPE_TAG))

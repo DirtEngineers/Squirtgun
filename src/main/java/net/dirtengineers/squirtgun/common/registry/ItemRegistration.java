@@ -2,10 +2,7 @@ package net.dirtengineers.squirtgun.common.registry;
 
 import com.smashingmods.chemlib.api.Chemical;
 import net.dirtengineers.squirtgun.Squirtgun;
-import net.dirtengineers.squirtgun.common.item.BasePhial;
-import net.dirtengineers.squirtgun.common.item.GenericSlug;
-import net.dirtengineers.squirtgun.common.item.PhialItem;
-import net.dirtengineers.squirtgun.common.item.SquirtgunItem;
+import net.dirtengineers.squirtgun.common.item.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
@@ -35,7 +32,7 @@ public class ItemRegistration {
     public static final RegistryObject<Item> PHIAL_ITEM;
     public static final RegistryObject<Item> SQUIRTSLUGITEM;
     public static final RegistryObject<Item> SQUIRTGUNITEM;
-    public static Map<BasePhial, Chemical> PHIALS;
+    public static Map<BasePhialItem, Chemical> PHIALS;
     public static Map<Chemical, Fluid> CHEMICAL_FLUIDS;
     public static List<Chemical> ammunitionChemicals;
 
@@ -61,18 +58,18 @@ public class ItemRegistration {
     }
 
     private static void buildPhials(RegisterEvent pEvent){
-        ResourceLocation magLocation;
+        ResourceLocation phialLocation;
         for (Chemical chemical : ItemRegistration.ammunitionChemicals) {
-            magLocation =
+            phialLocation =
                     new ResourceLocation(
                             Squirtgun.MOD_ID,
                             String.format("%s_phial", chemical.getChemicalName()));
 
             pEvent.register(
                     ForgeRegistries.Keys.ITEMS,
-                    magLocation,
-                    () -> new BasePhial(chemical, BasePhial.UPGRADES.BASE));
-            PHIALS.put((BasePhial) ForgeRegistries.ITEMS.getValue(magLocation), chemical);
+                    phialLocation,
+                    () -> new BasePhialItem(chemical, BasePhial.CAPACITY_UPGRADE.BASE));
+            PHIALS.put((BasePhialItem) ForgeRegistries.ITEMS.getValue(phialLocation), chemical);
         }
     }
 
@@ -89,7 +86,7 @@ public class ItemRegistration {
         ITEM_PROPERTIES_WITH_TAB = new Item.Properties().tab(SQUIRTGUN_TAB).rarity(Rarity.COMMON).stacksTo(1);
         ITEM_PROPERTIES_NO_TAB = new Item.Properties().rarity(Rarity.COMMON).stacksTo(1);
         SQUIRTGUNITEMS = DeferredRegister.create(ForgeRegistries.ITEMS,  Squirtgun.MOD_ID);
-        PHIAL_ITEM = SQUIRTGUNITEMS.register("squirtphialitem", () -> new PhialItem(ITEM_PROPERTIES_WITH_TAB));
+        PHIAL_ITEM = SQUIRTGUNITEMS.register("squirtphialitem", () -> new EmptyPhialItem(ITEM_PROPERTIES_WITH_TAB));
         SQUIRTSLUGITEM = SQUIRTGUNITEMS.register("squirtslugitem", () -> new GenericSlug(ITEM_PROPERTIES_NO_TAB));
         SQUIRTGUNITEM = SQUIRTGUNITEMS.register("squirtgunitem", () -> new SquirtgunItem(ITEM_PROPERTIES_WITH_TAB));
         PHIALS = new HashMap<>();

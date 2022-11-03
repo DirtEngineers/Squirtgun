@@ -2,7 +2,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "squirtgun:fluid_encapsulator/hexane_phial"
+        "recipe": "squirtgun:fluid_encapsulator/creation/create_ethanol_phial"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -14,7 +14,7 @@
   ],
   "rewards": {
     "recipes": [
-      "squirtgun:hexane_phial_phial"
+      "squirtgun:create_ethanol_phial_phial"
     ]
   }
 }
