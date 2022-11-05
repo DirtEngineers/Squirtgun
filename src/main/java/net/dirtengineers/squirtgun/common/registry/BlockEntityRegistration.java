@@ -1,7 +1,8 @@
 package net.dirtengineers.squirtgun.common.registry;
 
+import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
-import net.dirtengineers.squirtgun.common.block.fluid_encapsulator.FluidEncapsulatorBlockEntity;
+import net.dirtengineers.squirtgun.common.block.EncapsulatorBlockEntity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -11,7 +12,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class BlockEntityRegistration {
     private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES;
-    public static final RegistryObject<BlockEntityType<FluidEncapsulatorBlockEntity>> FLUID_ENCAPSULATOR_BLOCK_ENTITY;
+    public static final RegistryObject<BlockEntityType<EncapsulatorBlockEntity>> FLUID_ENCAPSULATOR_BLOCK_ENTITY;
 
     public BlockEntityRegistration() {}
 
@@ -22,9 +23,9 @@ public class BlockEntityRegistration {
     static{
         BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, Squirtgun.MOD_ID);
         FLUID_ENCAPSULATOR_BLOCK_ENTITY = BLOCK_ENTITY_TYPES.register(
-                "fluid_encapsulator_block_entity",
+                Constants.encapsulatorBlockEntityName,
                 () -> BlockEntityType.Builder.of(
-                        FluidEncapsulatorBlockEntity::new,
-                        new Block[]{BlockRegistration.FLUID_ENCAPSULATOR.get()}).build(null));
+                        EncapsulatorBlockEntity::new,
+                        new Block[]{BlockRegistration.ENCAPSULATOR.get()}).build(null));
     }
 }

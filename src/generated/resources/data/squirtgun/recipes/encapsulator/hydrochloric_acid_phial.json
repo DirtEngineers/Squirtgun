@@ -1,0 +1,14 @@
+{
+  "type": "squirtgun:phial_creation_serializer",
+  "group": "squirtgun:encapsulator",
+  "input1": {
+    "item": "squirtgun:phial"
+  },
+  "input2": {
+    "amount": "1000",
+    "fluid": "chemlib:hydrochloric_acid_fluid"
+  },
+  "result": {
+    "item": "squirtgun:hydrochloric_acid_phial"
+  }
+}

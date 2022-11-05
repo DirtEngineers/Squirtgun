@@ -1,7 +1,8 @@
 package net.dirtengineers.squirtgun.common.registry;
 
+import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
-import net.dirtengineers.squirtgun.common.entity.ammunition.SquirtSlug;
+import net.dirtengineers.squirtgun.common.entity.SquirtSlug;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -22,9 +23,9 @@ public class EntityRegistration {
     static{
         SG_ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES,  Squirtgun.MOD_ID);
         SQUIRT_SLUG =
-                SG_ENTITIES.register("squirt_slug",
+                SG_ENTITIES.register(Constants.slugEntityEntityName,
                         () -> EntityType.Builder.of((EntityType.EntityFactory<SquirtSlug>) SquirtSlug::new,
-                                MobCategory.MISC).sized(0.5F, 0.5F).build("squirt_slug"));
+                                MobCategory.MISC).sized(0.5F, 0.5F).build(Constants.slugEntityEntityName));
     }
 }
 

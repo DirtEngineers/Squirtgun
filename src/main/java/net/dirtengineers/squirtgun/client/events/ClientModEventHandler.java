@@ -3,10 +3,11 @@ package net.dirtengineers.squirtgun.client.events;
 import com.smashingmods.chemlib.api.Chemical;
 import com.smashingmods.chemlib.common.items.CompoundItem;
 import com.smashingmods.chemlib.common.items.ElementItem;
+import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.client.overlay.AmmunitionHudOverlay;
 import net.dirtengineers.squirtgun.client.render.SquirtSlugRenderer;
-import net.dirtengineers.squirtgun.common.item.BasePhialItem;
+import net.dirtengineers.squirtgun.common.item.ChemicalPhial;
 import net.dirtengineers.squirtgun.common.registry.EntityRegistration;
 import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
 import net.minecraft.client.renderer.entity.EntityRenderers;
@@ -33,7 +34,7 @@ public class ClientModEventHandler {
 
     @SubscribeEvent
     public static void registerGuiOverlays(RegisterGuiOverlaysEvent event) {
-        event.registerAboveAll("ammunition_readout", AmmunitionHudOverlay.HUD_AMMUNITION);
+        event.registerAboveAll(Constants.hudOverlayId, AmmunitionHudOverlay.HUD_AMMUNITION);
     }
 
     @SubscribeEvent
@@ -44,8 +45,8 @@ public class ClientModEventHandler {
 
     @SubscribeEvent
     public static void onItemColorHandlerEvent(RegisterColorHandlersEvent.Item event) {
-        for (Map.Entry<BasePhialItem, Chemical> entry : ItemRegistration.PHIALS.entrySet()) {
-            BasePhialItem phial = entry.getKey();
+        for (Map.Entry<ChemicalPhial, Chemical> entry : ItemRegistration.PHIALS.entrySet()) {
+            ChemicalPhial phial = entry.getKey();
             Chemical chemical = entry.getValue();
             Objects.requireNonNull(phial);
             if (chemical instanceof ElementItem) {

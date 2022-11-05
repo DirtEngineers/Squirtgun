@@ -11,8 +11,8 @@
   "item.squirtgun.mercury_phial": "Mercury Phial",
   "item.squirtgun.nitric_acid_phial": "Nitric Acid Phial",
   "item.squirtgun.pentane_phial": "Pentane Phial",
+  "item.squirtgun.phial": "Empty Phial",
   "item.squirtgun.squirtgunitem": "Squirtgun",
-  "item.squirtgun.squirtphialitem": "Empty Phial",
   "item.squirtgun.sulfur_trioxide_phial": "Sulfur Trioxide Phial",
   "item.squirtgun.sulfuric_acid_phial": "Sulfuric Acid Phial",
   "item.squirtgun.water_phial": "Water Phial",
@@ -22,5 +22,6 @@
   "key.squirtgun.gun_display_ammo_status": "Toggle Ammunition Status Display",
   "key.squirtgun.no_phial": "No Phial",
   "sounds.squirtgun.squirt_slug_hit": "EWWW!",
+  "squirtgun.container.encapsulator": "Encapsulator",
   "tooltip.squirtgun.energy_requirement": "Requires %d FE/t"
 }

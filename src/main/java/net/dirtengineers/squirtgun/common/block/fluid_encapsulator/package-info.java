@@ -1,7 +1,0 @@
-@MethodsReturnNonnullByDefault
-@ParametersAreNonnullByDefault
-
-package net.dirtengineers.squirtgun.common.block.fluid_encapsulator;
-
-import net.minecraft.MethodsReturnNonnullByDefault;
-import javax.annotation.ParametersAreNonnullByDefault;

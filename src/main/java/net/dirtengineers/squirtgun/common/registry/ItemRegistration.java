@@ -1,6 +1,7 @@
 package net.dirtengineers.squirtgun.common.registry;
 
 import com.smashingmods.chemlib.api.Chemical;
+import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.common.item.*;
 import net.minecraft.resources.ResourceLocation;
@@ -21,7 +22,7 @@ import static com.smashingmods.chemlib.registry.ItemRegistry.getElements;
 
 
 public class ItemRegistration {
-    public static final CreativeModeTab SQUIRTGUN_TAB = new CreativeModeTab("squirtguntab") {
+    public static final CreativeModeTab SQUIRTGUN_TAB = new CreativeModeTab(Constants.squirtgunTabName) {
         public ItemStack makeIcon() {
             return new ItemStack(SQUIRTGUNITEM.get());
         }
@@ -29,10 +30,10 @@ public class ItemRegistration {
     public static final Item.Properties ITEM_PROPERTIES_NO_TAB;
     public static final Item.Properties ITEM_PROPERTIES_WITH_TAB;
     public static final DeferredRegister<Item> SQUIRTGUNITEMS;
-    public static final RegistryObject<Item> PHIAL_ITEM;
+    public static final RegistryObject<Item> PHIAL;
     public static final RegistryObject<Item> SQUIRTSLUGITEM;
     public static final RegistryObject<Item> SQUIRTGUNITEM;
-    public static Map<BasePhialItem, Chemical> PHIALS;
+    public static Map<ChemicalPhial, Chemical> PHIALS;
     public static Map<Chemical, Fluid> CHEMICAL_FLUIDS;
     public static List<Chemical> ammunitionChemicals;
 
@@ -40,7 +41,7 @@ public class ItemRegistration {
         for (Chemical chemical : ItemRegistration.ammunitionChemicals)
             if (chemical != null && chemical.getFluidTypeReference().isPresent()) {
                 String location = String.valueOf(chemical.getFluidTypeReference().get());
-                if (!Objects.equals(location, "minecraft:water")) location += "_fluid";
+                if (!Objects.equals(location, Constants.EMPTY_FLUID_NAME)) location += "_fluid";
                 ItemRegistration.CHEMICAL_FLUIDS.put(chemical, ForgeRegistries.FLUIDS.getValue(new ResourceLocation(location)));
             }
     }
@@ -68,8 +69,8 @@ public class ItemRegistration {
             pEvent.register(
                     ForgeRegistries.Keys.ITEMS,
                     phialLocation,
-                    () -> new BasePhialItem(chemical, BasePhial.CAPACITY_UPGRADE.BASE));
-            PHIALS.put((BasePhialItem) ForgeRegistries.ITEMS.getValue(phialLocation), chemical);
+                    () -> new ChemicalPhial(chemical, BasePhial.CAPACITY_UPGRADE.BASE));
+            PHIALS.put((ChemicalPhial) ForgeRegistries.ITEMS.getValue(phialLocation), chemical);
         }
     }
 
@@ -83,12 +84,12 @@ public class ItemRegistration {
     }
 
     static{
-        ITEM_PROPERTIES_WITH_TAB = new Item.Properties().tab(SQUIRTGUN_TAB).rarity(Rarity.COMMON).stacksTo(1);
+        ITEM_PROPERTIES_WITH_TAB = new Item.Properties().tab(SQUIRTGUN_TAB).rarity(Rarity.COMMON).stacksTo(64);
         ITEM_PROPERTIES_NO_TAB = new Item.Properties().rarity(Rarity.COMMON).stacksTo(1);
         SQUIRTGUNITEMS = DeferredRegister.create(ForgeRegistries.ITEMS,  Squirtgun.MOD_ID);
-        PHIAL_ITEM = SQUIRTGUNITEMS.register("squirtphialitem", () -> new EmptyPhialItem(ITEM_PROPERTIES_WITH_TAB));
-        SQUIRTSLUGITEM = SQUIRTGUNITEMS.register("squirtslugitem", () -> new GenericSlug(ITEM_PROPERTIES_NO_TAB));
-        SQUIRTGUNITEM = SQUIRTGUNITEMS.register("squirtgunitem", () -> new SquirtgunItem(ITEM_PROPERTIES_WITH_TAB));
+        PHIAL = SQUIRTGUNITEMS.register(Constants.phialItemName, () -> new EmptyPhialItem(ITEM_PROPERTIES_WITH_TAB));
+        SQUIRTSLUGITEM = SQUIRTGUNITEMS.register(Constants.slugItemName, () -> new GenericSlug(ITEM_PROPERTIES_NO_TAB));
+        SQUIRTGUNITEM = SQUIRTGUNITEMS.register(Constants.gunItemName, () -> new SquirtgunItem(ITEM_PROPERTIES_WITH_TAB));
         PHIALS = new HashMap<>();
         CHEMICAL_FLUIDS = new HashMap<>();
         ammunitionChemicals = new ArrayList<>();

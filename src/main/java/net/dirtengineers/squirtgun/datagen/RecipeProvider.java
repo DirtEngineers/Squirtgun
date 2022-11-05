@@ -1,7 +1,8 @@
 package net.dirtengineers.squirtgun.datagen;
 
+import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
-import net.dirtengineers.squirtgun.datagen.recipe.fluid_encapsulator.PhialTypeCreationAndPhialFillingRecipeProvider;
+import net.dirtengineers.squirtgun.datagen.recipe.PhialCreationAndFillingRecipeProvider;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
@@ -20,14 +21,14 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider {
     protected void buildCraftingRecipes(Consumer<FinishedRecipe> pConsumer) {
         this.generateGunRecipe(pConsumer);
         this.generateEmptyPhialRecipe(pConsumer);
-        PhialTypeCreationAndPhialFillingRecipeProvider.register(pConsumer);
+        PhialCreationAndFillingRecipeProvider.register(pConsumer);
     }
 
     private void generateGunRecipe(Consumer<FinishedRecipe> pConsumer){
         Item squirtgun = ItemRegistration.SQUIRTGUNITEM.get().asItem();
         ShapedRecipeBuilder
                 .shaped(squirtgun)
-                .group("Squirtgun")
+                .group(Squirtgun.MOD_ID)
                 .define('I', Items.IRON_INGOT)
                 .define('P', Items.PISTON)
                 .define('R', Items.REDSTONE)
@@ -44,7 +45,8 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider {
     private void generateEmptyPhialRecipe(Consumer<FinishedRecipe> pConsumer) {
         BucketItem bucketItem = (BucketItem) Items.BUCKET;
         ShapedRecipeBuilder
-                .shaped(ItemRegistration.PHIAL_ITEM.get().asItem())
+                .shaped(ItemRegistration.PHIAL.get().asItem())
+                .group(Squirtgun.MOD_ID)
                 .define('I', Items.IRON_INGOT)
                 .define('P', Items.PISTON)
                 .define('B', bucketItem)

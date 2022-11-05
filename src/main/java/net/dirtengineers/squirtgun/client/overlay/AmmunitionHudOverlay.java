@@ -1,5 +1,6 @@
 package net.dirtengineers.squirtgun.client.overlay;
 
+import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.common.item.SquirtgunItem;
 import net.dirtengineers.squirtgun.client.TextUtility;
 import net.minecraft.client.Minecraft;
@@ -27,7 +28,7 @@ public class AmmunitionHudOverlay {
                 if (Objects.equals(fluidName.getString(), "empty")) {
                     TextUtility.drawCenteredStringNoShadow(poseStack, font, fluidName, x, y - font.lineHeight);
                 } else {
-                    Component status = Component.literal(pSquirtgun.getAmmoStatus()).withStyle(TextUtility.HOVER_TEXT_STYLE);
+                    Component status = Component.literal(pSquirtgun.getAmmoStatus()).withStyle(Constants.HOVER_TEXT_STYLE);
                     TextUtility.drawCenteredStringNoShadow(poseStack, font, fluidName, x, y - font.lineHeight);
                     TextUtility.drawCenteredStringNoShadow(poseStack, font, status, x, y);
                 }

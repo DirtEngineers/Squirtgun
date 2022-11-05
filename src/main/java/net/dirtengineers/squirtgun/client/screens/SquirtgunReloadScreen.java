@@ -2,6 +2,7 @@ package net.dirtengineers.squirtgun.client.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.dirtengineers.squirtgun.Constants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -16,7 +17,7 @@ import net.minecraftforge.client.gui.widget.ExtendedButton;
 @OnlyIn(Dist.CLIENT)
 public class SquirtgunReloadScreen extends Screen {
     public SquirtgunReloadScreen() {
-        super(MutableComponent.create(new TranslatableContents("item.squirtgun.gun_functionality")));
+        super(MutableComponent.create(new TranslatableContents(Constants.gunFunctionality)));
     }
 
     @Override
@@ -28,7 +29,7 @@ public class SquirtgunReloadScreen extends Screen {
         drawCenteredString(
                 pPoseStack,
                 Minecraft.getInstance().font,
-                MutableComponent.create(new TranslatableContents("item.squirtgun.gun_functionality")).withStyle(ChatFormatting.BOLD),
+                MutableComponent.create(new TranslatableContents(Constants.gunFunctionality)).withStyle(ChatFormatting.BOLD),
                 width / 2,
                 12,
                 0xFFFFFF);

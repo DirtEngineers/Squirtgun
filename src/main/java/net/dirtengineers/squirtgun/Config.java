@@ -26,15 +26,13 @@ public class Config {
     }
 
     public static class Common {
-        private static final String categoryFluidEncapsulator = "fluid_encapsulator";
-        public static final String fluidEncapsulatorPhialCreationRecipeLocationPrefix = "fluid_encapsulator/creation/";
-        public static final String fluidEncapsulatorPhialCreationAdvancementLocationPrefix = "recipes/fluid_encapsulator/creation/";
         public static ForgeConfigSpec.IntValue encapsulatorEnergyCapacity;
         public static ForgeConfigSpec.IntValue encapsulatorEnergyPerTick;
         public static ForgeConfigSpec.IntValue encapsulatorTicksPerOperation;
         public static ForgeConfigSpec.IntValue encapsulatorFluidCapacity;
+
         public Common(ForgeConfigSpec.Builder builder) {
-            builder.comment("Fluid Encapsulator").push(categoryFluidEncapsulator);
+            builder.comment("Fluid Encapsulator").push(Constants.categoryEncapsulator);
             encapsulatorEnergyCapacity = builder.comment(
                     "Maximum energy capacity for the Fluid Encapsulator.")
                     .comment("Default: 100000 (100k FE)")

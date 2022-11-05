@@ -16,7 +16,7 @@ SQUIRTGUNITEM:
  make a custom keybind that opens a screen if you have the gun in your inventory.
  The screen should have a slot where you can put the phial.
 
- UPGRADE! -- Default manually load and auto-load being an upgrade.  Also allow player to toggle auto-load behavior in the gun's UI
+ UPGRADE! -- Default manually load and autoload being an upgrade.  Also allow player to toggle auto-load behavior in the gun's UI
 
    look at making base magazine abstract
    look into making an interface for magazine upgrades.  Also toggle on/off
@@ -31,3 +31,9 @@ SQUIRTGUNITEM:
    5.  Recipe for phial from raw materials in machine
 
    //TODO: translation for fluid encapsulator: "Dr. Clark's Fully Automatic Fluid Encapsulation Matrix"
+   https://www.curseforge.com/minecraft/mc-mods/alchemylib/files
+
+   call the empty phial just phial all others chemical-phial
+   filled_chemicalname_phial.json for filled phial recipe names
+
+   check config for extra constants

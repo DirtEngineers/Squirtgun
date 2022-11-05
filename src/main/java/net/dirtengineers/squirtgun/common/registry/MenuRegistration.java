@@ -1,7 +1,8 @@
 package net.dirtengineers.squirtgun.common.registry;
 
+import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
-import net.dirtengineers.squirtgun.common.block.fluid_encapsulator.FluidEncapsulatorMenu;
+import net.dirtengineers.squirtgun.common.block.EncapsulatorMenu;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
@@ -13,7 +14,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class MenuRegistration {
     public static final DeferredRegister<MenuType<?>> MENU_TYPES;
-    public static final RegistryObject<MenuType<FluidEncapsulatorMenu>> FLUID_ENCAPSULATOR_MENU;
+    public static final RegistryObject<MenuType<EncapsulatorMenu>> ENCAPSULATOR_MENU;
 
     MenuRegistration(){}
 
@@ -27,6 +28,6 @@ public class MenuRegistration {
 
     static {
         MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, Squirtgun.MOD_ID);
-        FLUID_ENCAPSULATOR_MENU = registerMenuType(FluidEncapsulatorMenu::new, "fluid_encapsulator_menu");
+        ENCAPSULATOR_MENU = registerMenuType(EncapsulatorMenu::new, Constants.encapsulatorMenuName);
     }
 }

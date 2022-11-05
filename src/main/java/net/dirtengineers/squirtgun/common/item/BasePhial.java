@@ -2,7 +2,7 @@ package net.dirtengineers.squirtgun.common.item;
 
 import com.smashingmods.chemlib.api.Chemical;
 import com.smashingmods.chemlib.registry.FluidRegistry;
-import net.dirtengineers.squirtgun.common.entity.ammunition.SquirtSlug;
+import net.dirtengineers.squirtgun.common.entity.SquirtSlug;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluid;

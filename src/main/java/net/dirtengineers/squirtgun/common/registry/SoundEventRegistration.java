@@ -1,5 +1,6 @@
 package net.dirtengineers.squirtgun.common.registry;
 
+import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -23,6 +24,6 @@ public class SoundEventRegistration {
 
     static {
         SOUND_EVENTS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, Squirtgun.MOD_ID);
-        SQUIRT_SLUG_HIT = registerSoundEvent("squirt_slug_hit");
+        SQUIRT_SLUG_HIT = registerSoundEvent(Constants.SlugHitSoundName);
     }
 }
