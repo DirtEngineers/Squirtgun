@@ -48,9 +48,10 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity {
     }
 
     private void testing() {
+//        getFluidStorage().setFluid(new FluidStack(Objects.requireNonNull(ForgeRegistries.FLUIDS.getValue(new ResourceLocation("chemlib:sulfuric_acid_fluid"))), testFluidAmount));
         if (getEnergyHandler().getEnergyStored() <= 0 || getFluidStorage().getFluidAmount() <= 0) {
             getEnergyHandler().setEnergy(testEnergyAmount);
-            getFluidStorage().setFluid(new FluidStack(Objects.requireNonNull(ForgeRegistries.FLUIDS.getValue(new ResourceLocation("chemlib:hydrochloric_acid_fluid"))), testFluidAmount));
+            getFluidStorage().setFluid(new FluidStack(Objects.requireNonNull(ForgeRegistries.FLUIDS.getValue(new ResourceLocation("chemlib:nitric_acid_fluid"))), testFluidAmount));
         }
     }
 
@@ -70,18 +71,18 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity {
 
     @Override
     public boolean canProcessRecipe() {
-        if (currentRecipe == null || getEnergyHandler().getEnergyStored() >= Config.Common.encapsulatorEnergyPerTick.get()) {
+        if (currentRecipe == null || getInputHandler().getStackInSlot(0).isEmpty()) {
             return false;
         } else {
             if (currentRecipe instanceof PhialRecipe) {
-                return getInputHandler().getStackInSlot(0) != ItemStack.EMPTY
+                return  getEnergyHandler().getEnergyStored() >= Config.Common.encapsulatorEnergyPerTick.get()
                         && getInputHandler().getStackInSlot(0).getItem() instanceof BasePhial phial
                         && getFluidStorage().getFluidStack().getFluid() == ((PhialRecipe) currentRecipe).getFluidInput().getFluid()
                         && getFluidStorage().getFluidStack().getAmount() >= phial.getCapacityInMb()
-                        && phial instanceof EmptyPhialItem ?
+                        && (phial instanceof EmptyPhialItem ?
                         getFluidStorage().getFluidStack().getAmount() >= ((PhialRecipe) currentRecipe).getFluidInput().getAmount()
-                        : getFluidStorage().getFluidStack().getAmount() >= ((BasePhial) getInputHandler().getStackInSlot(0).getItem()).getCapacityInMb();
-
+                        : getFluidStorage().getFluidStack().getAmount() >= ((BasePhial) getInputHandler().getStackInSlot(0).getItem()).getCapacityInMb())
+                        && getOutputHandler().isItemValid(FILLED_PHIAL_OUTPUT_SLOT, new ItemStack(((PhialRecipe) currentRecipe).getOutput().getItem()));
             } else {
                 return false;
             }
@@ -90,10 +91,10 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity {
 
     @Override
     public void processRecipe() {
-        if (this.getProgress() < this.maxProgress) {
-            this.incrementProgress();
+        if (this.getProgress() < maxProgress) {
+            incrementProgress();
         } else {
-            if (this.currentRecipe instanceof PhialRecipe) {
+            if (currentRecipe instanceof PhialRecipe) {
                 createNewPhial();
             }
         }
@@ -102,14 +103,11 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity {
     }
 
     private void createNewPhial() {
-        int fluidAmount = ((PhialRecipe) this.currentRecipe).getFluidInput().getAmount();
+        int fluidAmount = ((PhialRecipe) currentRecipe).getFluidInput().getAmount();
         this.setProgress(0);
-        this.getFluidStorage().setAmount(this.getFluidStorage().getFluidAmount() - fluidAmount);
+        this.getFluidStorage().setAmount(getFluidStorage().getFluidAmount() - fluidAmount);
         this.getInputHandler().decrementSlot(0, 1);
-
-        ItemStack outputStack = ((PhialRecipe) this.currentRecipe).getOutput().copy();
-        outputStack.setCount(1);
-        ((ChemicalPhial) outputStack.getItem()).loadFluid(((PhialRecipe) this.currentRecipe).getFluidInput().copy());
+        ItemStack outputStack = ((PhialRecipe) currentRecipe).getOutput().copy();
         this.getOutputHandler().insertItem(FILLED_PHIAL_OUTPUT_SLOT, outputStack, false);
     }
 
@@ -137,7 +135,7 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity {
 
     @Override
     public AbstractProcessingRecipe getRecipe() {
-        return this.currentRecipe;
+        return currentRecipe;
     }
 
     ///////////////////////////////////////
@@ -179,7 +177,8 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity {
 
             @Override
             public boolean isItemValid(int slot, @Nonnull ItemStack pItemStack) {
-                return false;
+                return pItemStack.getItem().toString().equals(this.getStackInSlot(0).getItem().toString())
+                        || this.getStackInSlot(0).isEmpty();
             }
         };
     }
