@@ -30,6 +30,7 @@ public class Constants {
     public static final String emptyFluidNameKey = "fluid.squirtgun.empty_fluid_name";
     public static final String phialItemNameTranslationPrefix = "item.squirtgun.";
     public static final String encapsulatorMenuScreenTitle = String.format("%s.container.encapsulator", Squirtgun.MOD_ID);
+    public static final String encapsulatorBlockNameKey = String.format("block.%s.%s", Squirtgun.MOD_ID, encapsulatorBlockName);
 
     // general
     public static String EMPTY_FLUID_NAME = "minecraft:empty";

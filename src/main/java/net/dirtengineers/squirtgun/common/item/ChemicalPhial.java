@@ -45,11 +45,6 @@ public class ChemicalPhial extends BasePhial {
     }
 
     @Override
-    public boolean hasAmmunition(Player pPlayer) {
-        return shotsAvailable > 0 || pPlayer.getAbilities().instabuild;
-    }
-
-    @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         super.appendHoverText(
                 pStack,

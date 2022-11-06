@@ -28,9 +28,10 @@ public abstract class BasePhial extends Item {
     public BasePhial(Properties pProperties) {
         super(pProperties);
         chemical = null;
-        shotsAvailable = baseMaxShots;
-        maxShots = 0;
+        shotsAvailable = 0;
+        maxShots = baseMaxShots;
         optionalFluid = Optional.empty();
+        capacityUpgrade = CAPACITY_UPGRADE.BASE;
     }
 
     protected void applyUpgrades() {
@@ -39,6 +40,15 @@ public abstract class BasePhial extends Item {
             case DOUBLESHOTS -> maxShots = baseMaxShots * 2;
             case TRIPLESHOTS -> maxShots = baseMaxShots * 3;
         }
+    }
+
+    public void setCapacityUpgrade(CAPACITY_UPGRADE pUpgrade) {
+        capacityUpgrade = pUpgrade;
+        applyUpgrades();
+    }
+
+    public CAPACITY_UPGRADE getCapacityUpgrade() {
+        return capacityUpgrade;
     }
 
     public FluidStack loadFluid(FluidStack pFluidStack) {
@@ -87,7 +97,7 @@ public abstract class BasePhial extends Item {
     }
 
     public boolean hasAmmunition(Player pPlayer) {
-        return false;
+        return shotsAvailable > 0 || pPlayer.getAbilities().instabuild;
     }
 
     public String getAmmoStatus() {
@@ -98,5 +108,7 @@ public abstract class BasePhial extends Item {
         return shotsAvailable;
     }
 
-    public int getCapacityInMb() { return this.maxShots * SquirtSlug.shotSize; }
+    public int getFluidCapacityInMb() { return maxShots * SquirtSlug.shotSize; }
+
+    public int getFluidUsed() { return (maxShots - shotsAvailable)  * SquirtSlug.shotSize; }
 }

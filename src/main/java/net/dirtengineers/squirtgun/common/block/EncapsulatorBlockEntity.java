@@ -8,7 +8,6 @@ import com.smashingmods.alchemylib.api.storage.ProcessingSlotHandler;
 import net.dirtengineers.squirtgun.Config;
 import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.common.item.BasePhial;
-import net.dirtengineers.squirtgun.common.item.ChemicalPhial;
 import net.dirtengineers.squirtgun.common.item.EmptyPhialItem;
 import net.dirtengineers.squirtgun.common.recipe.PhialRecipe;
 import net.dirtengineers.squirtgun.common.registry.BlockEntityRegistration;
@@ -39,7 +38,7 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity {
     List<AbstractProcessingRecipe> recipes;
     private AbstractProcessingRecipe currentRecipe;
     private static final int testEnergyAmount = 100000;
-    private static final int testFluidAmount = 50000;
+    private static final int testFluidAmount = 100000;
 
     public EncapsulatorBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
         super(Squirtgun.MOD_ID, BlockEntityRegistration.FLUID_ENCAPSULATOR_BLOCK_ENTITY.get(), pWorldPosition, pBlockState);
@@ -49,10 +48,10 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity {
 
     private void testing() {
 //        getFluidStorage().setFluid(new FluidStack(Objects.requireNonNull(ForgeRegistries.FLUIDS.getValue(new ResourceLocation("chemlib:sulfuric_acid_fluid"))), testFluidAmount));
-        if (getEnergyHandler().getEnergyStored() <= 0 || getFluidStorage().getFluidAmount() <= 0) {
-            getEnergyHandler().setEnergy(testEnergyAmount);
-            getFluidStorage().setFluid(new FluidStack(Objects.requireNonNull(ForgeRegistries.FLUIDS.getValue(new ResourceLocation("chemlib:nitric_acid_fluid"))), testFluidAmount));
-        }
+//        if (getEnergyHandler().getEnergyStored() <= Config.Common.encapsulatorTicksPerOperation.get() || getFluidStorage().getFluidAmount() <= 5000) {
+            getEnergyHandler().setEnergy(getEnergyHandler().getMaxEnergyStored());
+            getFluidStorage().setFluid(new FluidStack(Objects.requireNonNull(ForgeRegistries.FLUIDS.getValue(new ResourceLocation("chemlib:nitric_acid_fluid"))), getFluidStorage().getCapacity()));
+//        }
     }
 
     @Override
@@ -78,10 +77,10 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity {
                 return  getEnergyHandler().getEnergyStored() >= Config.Common.encapsulatorEnergyPerTick.get()
                         && getInputHandler().getStackInSlot(0).getItem() instanceof BasePhial phial
                         && getFluidStorage().getFluidStack().getFluid() == ((PhialRecipe) currentRecipe).getFluidInput().getFluid()
-                        && getFluidStorage().getFluidStack().getAmount() >= phial.getCapacityInMb()
+                        && getFluidStorage().getFluidStack().getAmount() >= phial.getFluidCapacityInMb()
                         && (phial instanceof EmptyPhialItem ?
                         getFluidStorage().getFluidStack().getAmount() >= ((PhialRecipe) currentRecipe).getFluidInput().getAmount()
-                        : getFluidStorage().getFluidStack().getAmount() >= ((BasePhial) getInputHandler().getStackInSlot(0).getItem()).getCapacityInMb())
+                        : getFluidStorage().getFluidStack().getAmount() >= ((BasePhial) getInputHandler().getStackInSlot(0).getItem()).getFluidCapacityInMb())
                         && getOutputHandler().isItemValid(FILLED_PHIAL_OUTPUT_SLOT, new ItemStack(((PhialRecipe) currentRecipe).getOutput().getItem()));
             } else {
                 return false;
@@ -95,27 +94,23 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity {
             incrementProgress();
         } else {
             if (currentRecipe instanceof PhialRecipe) {
-                createNewPhial();
+                setProgress(0);
+                getFluidStorage().getFluidStack().shrink(((BasePhial) getInputHandler().getStackInSlot(0).getItem()).getFluidUsed());
+                getInputHandler().decrementSlot(0, 1);
+                getOutputHandler().insertItem(FILLED_PHIAL_OUTPUT_SLOT, ((PhialRecipe) currentRecipe).getOutput().copy(), false);
             }
         }
         this.getEnergyHandler().extractEnergy(Config.Common.encapsulatorEnergyPerTick.get(), false);
         this.setChanged();
     }
 
-    private void createNewPhial() {
-        int fluidAmount = ((PhialRecipe) currentRecipe).getFluidInput().getAmount();
-        this.setProgress(0);
-        this.getFluidStorage().setAmount(getFluidStorage().getFluidAmount() - fluidAmount);
-        this.getInputHandler().decrementSlot(0, 1);
-        ItemStack outputStack = ((PhialRecipe) currentRecipe).getOutput().copy();
-        this.getOutputHandler().insertItem(FILLED_PHIAL_OUTPUT_SLOT, outputStack, false);
+    private void phialBuildTest()
+    {
+        ((BasePhial) getInputHandler().getStackInSlot(0).getItem()).setCapacityUpgrade(BasePhial.CAPACITY_UPGRADE.BASE);
     }
 
     public void setChanged() {
         updateRecipe();
-        //check if can process
-        //set Can Process
-
         super.setChanged();
     }
 
@@ -151,7 +146,6 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity {
 
     ///////////////////////////////////////
     // ITEMS
-    //TODO: CompactorBlockEntity example
     @Override
     public ProcessingSlotHandler initializeInputHandler() {
         return new ProcessingSlotHandler(1) {
@@ -162,7 +156,7 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity {
 
             @Override
             public boolean isItemValid(int slot, @Nonnull ItemStack pItemStack) {
-                return pItemStack.getItem() instanceof ChemicalPhial || pItemStack.getItem() instanceof EmptyPhialItem;
+                return pItemStack.getItem() instanceof BasePhial;
             }
         };
     }
@@ -200,7 +194,6 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity {
         return super.onBlockActivated(pLevel, pBlockPos, pPlayer, pHand);
     }
 
-    //TODO: WRITE STUFF!
     @Override
     public @Nullable AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
         return new EncapsulatorMenu(pContainerId, pInventory, this);

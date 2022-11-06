@@ -18,8 +18,8 @@ public class EncapsulatorMenu extends AbstractProcessingMenu {
         this(pContainerId, pInventory, Objects.requireNonNull(pInventory.player.level.getBlockEntity(pBuffer.readBlockPos())));
     }
 
-    protected EncapsulatorMenu(int pContainerId, Inventory pInventory, BlockEntity pBlockEntity) {
-        super(MenuRegistration.ENCAPSULATOR_MENU.get(), pContainerId, pInventory, pBlockEntity, 1, 0);
+    public EncapsulatorMenu(int pContainerId, Inventory pInventory, BlockEntity pBlockEntity) {
+        super(MenuRegistration.ENCAPSULATOR_MENU.get(), pContainerId, pInventory, pBlockEntity, 1, 1);
         EncapsulatorBlockEntity blockEntity = (EncapsulatorBlockEntity)pBlockEntity;
         ProcessingSlotHandler inputHandler = blockEntity.getInputHandler();
         ProcessingSlotHandler outputHandler = blockEntity.getOutputHandler();

@@ -32,7 +32,8 @@ public class LocalizationGenerator extends LanguageProvider {
         this.add("key.squirtgun.gun_display_ammo_status", "Toggle Ammunition Status Display");
         this.add("fluid.squirtgun.empty_fluid_name", "EMPTY");
         this.add("tooltip.squirtgun.energy_requirement", "Requires %d FE/t");
-        this.add(Constants.encapsulatorMenuScreenTitle, "Encapsulator");
+        this.add(Constants.encapsulatorMenuScreenTitle, "Dr. Clark's Fully Automatic Fluid Encapsulation Matrix");
+        this.add(Constants.encapsulatorBlockNameKey, "Dr. Clark's Fully Automatic Fluid Encapsulation Matrix");
     }
 
     private String setText(String text, char delimiter){

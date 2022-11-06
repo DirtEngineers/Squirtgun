@@ -1,4 +1,5 @@
 {
+  "block.squirtgun.encapsulator_block": "Dr. Clark's Fully Automatic Fluid Encapsulation Matrix",
   "fluid.squirtgun.empty_fluid_name": "EMPTY",
   "item.squirtgun.acetic_acid_phial": "Acetic Acid Phial",
   "item.squirtgun.bromine_phial": "Bromine Phial",
@@ -22,6 +23,6 @@
   "key.squirtgun.gun_display_ammo_status": "Toggle Ammunition Status Display",
   "key.squirtgun.no_phial": "No Phial",
   "sounds.squirtgun.squirt_slug_hit": "EWWW!",
-  "squirtgun.container.encapsulator": "Encapsulator",
+  "squirtgun.container.encapsulator": "Dr. Clark's Fully Automatic Fluid Encapsulation Matrix",
   "tooltip.squirtgun.energy_requirement": "Requires %d FE/t"
 }

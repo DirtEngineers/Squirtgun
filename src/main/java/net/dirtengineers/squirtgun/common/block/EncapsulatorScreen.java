@@ -23,9 +23,9 @@ public class EncapsulatorScreen extends AbstractProcessingScreen<EncapsulatorMen
 
     public EncapsulatorScreen(EncapsulatorMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
+        this.displayData.add(new EnergyDisplayData(pMenu.getBlockEntity(), 12, 12, 16, 54));
+        this.displayData.add(new FluidDisplayData((AbstractFluidBlockEntity)pMenu.getBlockEntity(), 48, 12, 16, 54));
         this.displayData.add(new ProgressDisplayData(pMenu.getBlockEntity(), 114, 35, 60, 9, Direction2D.RIGHT));
-        this.displayData.add(new EnergyDisplayData(pMenu.getBlockEntity(), 12, 20, 16, 46));//54
-        this.displayData.add(new FluidDisplayData((AbstractFluidBlockEntity)pMenu.getBlockEntity(), 48, 20, 16, 46));
     }
 
     public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
