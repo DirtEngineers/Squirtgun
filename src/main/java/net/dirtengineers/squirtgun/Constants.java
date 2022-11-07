@@ -28,6 +28,7 @@ public class Constants {
     // translation keys
     public static final String gunFunctionality = "item.squirtgun.gun_functionality";
     public static final String emptyFluidNameKey = "fluid.squirtgun.empty_fluid_name";
+    public static final String encapsulatorEnergyRequirementTooltipKey = "tooltip.squirtgun.energy_requirement";
     public static final String phialItemNameTranslationPrefix = "item.squirtgun.";
     public static final String encapsulatorMenuScreenTitle = String.format("%s.container.encapsulator", Squirtgun.MOD_ID);
     public static final String encapsulatorBlockNameKey = String.format("block.%s.%s", Squirtgun.MOD_ID, encapsulatorBlockName);

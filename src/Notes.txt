@@ -30,7 +30,6 @@ SQUIRTGUNITEM:
    4.  Recipes for phial upgrades
    5.  Recipe for phial from raw materials in machine
 
-   //TODO: translation for fluid encapsulator: "Dr. Clark's Fully Automatic Fluid Encapsulation Matrix"
    https://www.curseforge.com/minecraft/mc-mods/alchemylib/files
 
    call the empty phial just phial all others chemical-phial

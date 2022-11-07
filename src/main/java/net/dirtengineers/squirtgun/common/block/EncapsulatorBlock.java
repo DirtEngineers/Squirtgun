@@ -2,6 +2,7 @@ package net.dirtengineers.squirtgun.common.block;
 
 import com.smashingmods.alchemylib.api.block.AbstractProcessingBlock;
 import net.dirtengineers.squirtgun.Config;
+import net.dirtengineers.squirtgun.Constants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -51,11 +52,9 @@ public class EncapsulatorBlock extends AbstractProcessingBlock {
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
         super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
-        //TODO: Address atomizerEnergyPerTick
-        pTooltip.add(MutableComponent.create(new TranslatableContents("tooltip.squirtgun.energy_requirement", Config.Common.encapsulatorEnergyPerTick.get())));
+        pTooltip.add(MutableComponent.create(new TranslatableContents(Constants.encapsulatorEnergyRequirementTooltipKey, Config.Common.encapsulatorEnergyPerTick.get())));
     }
 
-    //TODO: Figure this out
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (!pLevel.isClientSide()) {

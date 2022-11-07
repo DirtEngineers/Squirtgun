@@ -8,6 +8,7 @@ import com.smashingmods.alchemylib.api.storage.ProcessingSlotHandler;
 import net.dirtengineers.squirtgun.Config;
 import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.common.item.BasePhial;
+import net.dirtengineers.squirtgun.common.item.ChemicalPhial;
 import net.dirtengineers.squirtgun.common.item.EmptyPhialItem;
 import net.dirtengineers.squirtgun.common.recipe.PhialRecipe;
 import net.dirtengineers.squirtgun.common.registry.BlockEntityRegistration;
@@ -31,7 +32,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-//TODO: change to extend AbstractFluidBlockEntity
 public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity {
     private static final int FILLED_PHIAL_OUTPUT_SLOT = 0;
     private final int maxProgress;
@@ -95,18 +95,16 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity {
         } else {
             if (currentRecipe instanceof PhialRecipe) {
                 setProgress(0);
-                getFluidStorage().getFluidStack().shrink(((BasePhial) getInputHandler().getStackInSlot(0).getItem()).getFluidUsed());
+                ItemStack outputStack = ((PhialRecipe) currentRecipe).getOutput().copy();
+                int fluidTransferAmount = ((ChemicalPhial) outputStack.getItem()).getFluidUsed();
+                ((ChemicalPhial) outputStack.getItem()).loadFluid(new FluidStack(getFluidStorage().getFluidStack().getFluid(), fluidTransferAmount));
+                getFluidStorage().getFluidStack().shrink(fluidTransferAmount);
                 getInputHandler().decrementSlot(0, 1);
-                getOutputHandler().insertItem(FILLED_PHIAL_OUTPUT_SLOT, ((PhialRecipe) currentRecipe).getOutput().copy(), false);
+                getOutputHandler().insertItem(FILLED_PHIAL_OUTPUT_SLOT, outputStack, false);
             }
         }
         this.getEnergyHandler().extractEnergy(Config.Common.encapsulatorEnergyPerTick.get(), false);
         this.setChanged();
-    }
-
-    private void phialBuildTest()
-    {
-        ((BasePhial) getInputHandler().getStackInSlot(0).getItem()).setCapacityUpgrade(BasePhial.CAPACITY_UPGRADE.BASE);
     }
 
     public void setChanged() {
