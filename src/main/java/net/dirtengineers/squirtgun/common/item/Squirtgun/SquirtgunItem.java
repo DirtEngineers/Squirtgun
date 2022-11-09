@@ -86,9 +86,9 @@ public class SquirtgunItem extends BowItem {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
-        PHIALLOADINGTEST(pLevel, pPlayer);
+//        PHIALLOADINGTEST(pLevel, pPlayer);
 
-        ItemStack itemstack = pPlayer.getItemInHand(pHand);
+         ItemStack itemstack = pPlayer.getItemInHand(pHand);
         // Only perform the shift action
         if (pPlayer.isShiftKeyDown()) {
             if (!pLevel.isClientSide) {
@@ -211,7 +211,7 @@ public class SquirtgunItem extends BowItem {
 
     private void loadFromNBT(ItemStack pStack) {
         CompoundTag stackTag = pStack.getOrCreateTag();
-        if (Objects.requireNonNull(stackTag).contains(Constants.PHIAL_TYPE_TAG) && stackTag.contains(Constants.PHIAL_SHOTS_TAG)) {
+        if (Objects.requireNonNull(stackTag).contains(Constants.PHIAL_TYPE_TAG) && stackTag.contains(Constants.PHIAL_SHOTS_AVAILABLE_TAG)) {
             phial = (ChemicalPhial)
                     Objects.requireNonNull(
                             ForgeRegistries.ITEMS.getValue(
@@ -219,7 +219,7 @@ public class SquirtgunItem extends BowItem {
                             )
                     ).asItem();
             phial.loadFluid(new FluidStack(phial.getOptionalFluid().orElse(Fluids.EMPTY),
-                    stackTag.getInt(Constants.PHIAL_SHOTS_TAG) * SquirtSlug.shotSize));
+                    stackTag.getInt(Constants.PHIAL_SHOTS_AVAILABLE_TAG) * SquirtSlug.shotSize));
             pStack.setTag(stackTag);
             statusChanged = false;
         }
@@ -230,7 +230,7 @@ public class SquirtgunItem extends BowItem {
         CompoundTag tag = pStack.getOrCreateTag();
         if(phial != null) {
             tag.putString(Constants.PHIAL_TYPE_TAG, phial.toString());
-            tag.putInt(Constants.PHIAL_SHOTS_TAG, phial.getShotsAvailable());
+            tag.putInt(Constants.PHIAL_SHOTS_AVAILABLE_TAG, phial.getShotsAvailable());
         }
         pStack.setTag(tag);
         statusChanged = false;

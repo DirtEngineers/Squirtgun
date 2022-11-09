@@ -47,7 +47,8 @@ public class Constants {
 
     //NBT
     public static final String PHIAL_TYPE_TAG = Squirtgun.MOD_ID + ".phial_type";
-    public static final String PHIAL_SHOTS_TAG = Squirtgun.MOD_ID + ".phial_shots";
+    public static final String PHIAL_SHOTS_AVAILABLE_TAG = Squirtgun.MOD_ID + ".phial_shots";
+    public static final String PHIAL_UPGRADE_TAG = Squirtgun.MOD_ID + ".phial_upgrade";
 
     //Recipes
     public static final String encapsulatorRecipeGroupName = String.format("%s:encapsulator", Squirtgun.MOD_ID);

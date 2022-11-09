@@ -1,6 +1,9 @@
 package net.dirtengineers.squirtgun.common.item;
 
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -14,8 +17,19 @@ public class EmptyPhialItem extends BasePhial {
     }
 
     @Override
+    public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pItemSlot, boolean pIsSelected) {}
+
+    @Override
+    public void setStatusChanged(){}
+
+    @Override
     public FluidStack loadFluid(FluidStack pFluidStack){
         return pFluidStack;
+    }
+
+    @Override
+    public boolean isFluidValid(FluidStack pFluidStack) {
+        return false;
     }
 
     @Override
