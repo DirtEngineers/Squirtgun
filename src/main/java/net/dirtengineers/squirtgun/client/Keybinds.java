@@ -15,10 +15,8 @@ public class Keybinds {
                     , GLFW.GLFW_KEY_Y
                     , Constants.KEY_CATEGORY_MOD);
 
-    public static final KeyMapping GUN_LOAD_AMMO_KEY =
-            new KeyMapping(Constants.KEY_GUN_LOAD_AMMO
-                    , KeyConflictContext.IN_GAME
-                    , InputConstants.Type.KEYSYM
-                    , GLFW.GLFW_KEY_G
-                    , Constants.KEY_CATEGORY_MOD);
+    public static final KeyMapping shiftClickGuiBinding =
+            new KeyMapping(Constants.openGunGui,
+                    InputConstants.UNKNOWN.getValue(),
+                    Constants.squirtgunItemGroup);
 }

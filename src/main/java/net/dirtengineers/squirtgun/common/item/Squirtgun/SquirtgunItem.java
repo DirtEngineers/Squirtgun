@@ -1,9 +1,13 @@
-package net.dirtengineers.squirtgun.common.item;
+package net.dirtengineers.squirtgun.common.item.Squirtgun;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
+import net.dirtengineers.squirtgun.client.Keybinds;
 import net.dirtengineers.squirtgun.client.TextUtility;
+import net.dirtengineers.squirtgun.client.screens.ModScreens;
 import net.dirtengineers.squirtgun.common.entity.SquirtSlug;
+import net.dirtengineers.squirtgun.common.item.ChemicalPhial;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
@@ -16,10 +20,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BowItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
@@ -85,10 +86,26 @@ public class SquirtgunItem extends BowItem {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
-
         PHIALLOADINGTEST(pLevel, pPlayer);
 
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
+        // Only perform the shift action
+        if (pPlayer.isShiftKeyDown()) {
+            if (!pLevel.isClientSide) {
+                GunProperties.setCanFire(itemstack, true);
+            }
+
+            if (pLevel.isClientSide) {
+                if (Keybinds.shiftClickGuiBinding.getKey() == InputConstants.UNKNOWN) {
+                    ModScreens.openGunSettingsScreen(itemstack);
+                    return InteractionResultHolder.pass(itemstack);
+                }
+            }
+
+            // INTENTIONALLY LEFT IN. I DON'T HAVE THE TIME TO FIX THIS ISSUE ATM
+            // @todo: migrate keybinding setting onto gadget so I can set a tag on the item
+            return InteractionResultHolder.pass(itemstack);
+        }
 
         boolean hasAmmo = hasAmmunition(pPlayer);
 
@@ -107,6 +124,7 @@ public class SquirtgunItem extends BowItem {
     @Override
     public void releaseUsing(ItemStack pStack, Level pLevel, LivingEntity pEntityLiving, int pTimeLeft) {
         if (pEntityLiving instanceof Player player) {
+
             boolean flag = player.getAbilities().instabuild || EnchantmentHelper.getTagEnchantmentLevel(Enchantments.INFINITY_ARROWS, pStack) > 0;
 
             boolean hasAmmo = hasAmmunition(player);
@@ -119,32 +137,35 @@ public class SquirtgunItem extends BowItem {
 //            Infinity slugs?
 //            boolean bInfinityAmmo = bInstabuild || (itemstack.getItem() instanceof SquirtSlugItem && ((SquirtSlugItem)itemstack.getItem()).isInfinite(itemstack, pStack, player));
 
-            if(hasAmmo) {
-            if (!pLevel.isClientSide) {
-                SquirtSlug slug = phial.makeSlugToFire(pLevel, player);
-                statusChanged = !((Player)pEntityLiving).getAbilities().instabuild;
-                if (slug.hasEffects()) slug.setBaseDamage(0D);
-                slug.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 3.0F, 1.0F);
-                pLevel.addFreshEntity(slug);
+            if (hasAmmo) {
+                if (!pLevel.isClientSide) {
+                    SquirtSlug slug = phial.makeSlugToFire(pLevel, player);
+                    statusChanged = !((Player) pEntityLiving).getAbilities().instabuild;
+                    if (slug.hasEffects()) slug.setBaseDamage(0D);
+                    slug.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 3.0F, 1.0F);
+                    pLevel.addFreshEntity(slug);
+                }
+                pLevel.playSound(
+                        null,
+                        player.getX(),
+                        player.getY(),
+                        player.getZ(),
+                        SoundEvents.ARROW_SHOOT,
+                        SoundSource.PLAYERS,
+                        1.0F,
+                        1.0F / (pLevel.getRandom().nextFloat() * 0.4F + 1.2F) + 0.5F
+                );
+                player.awardStat(Stats.ITEM_USED.get(this));
             }
-            pLevel.playSound(
-                    null,
-                    player.getX(),
-                    player.getY(),
-                    player.getZ(),
-                    SoundEvents.ARROW_SHOOT,
-                    SoundSource.PLAYERS,
-                    1.0F,
-                    1.0F / (pLevel.getRandom().nextFloat() * 0.4F + 1.2F) + 0.5F
-            );
-            player.awardStat(Stats.ITEM_USED.get(this));
-            }
+        }
+        if (!pLevel.isClientSide) {
+            GunProperties.setCanFire(pStack, true);
         }
     }
 
     private boolean hasAmmunition(Player pPlayer) {
         boolean result;
-        if (this.phial == null)
+        if (phial == null) {
             if (pPlayer.getAbilities().instabuild) {
                 ChemicalPhial newMag =
                         (ChemicalPhial)
@@ -155,10 +176,10 @@ public class SquirtgunItem extends BowItem {
                 newMag.loadFluid(new FluidStack(newMag.getOptionalFluid().orElse(Fluids.EMPTY), 1000));
                 phial = newMag;
                 statusChanged = true;
-                result = this.phial.hasAmmunition(pPlayer);
+                result = phial.hasAmmunition(pPlayer);
             } else
                 result = false;
-        else
+        } else
             result = phial.hasAmmunition(pPlayer);
         return result;
     }
@@ -213,5 +234,16 @@ public class SquirtgunItem extends BowItem {
         }
         pStack.setTag(tag);
         statusChanged = false;
+    }
+
+    public static ItemStack getGun(Player player) {
+        ItemStack heldItem = player.getMainHandItem();
+        if (!(heldItem.getItem() instanceof SquirtgunItem)) {
+            heldItem = player.getOffhandItem();
+            if (!(heldItem.getItem() instanceof SquirtgunItem)) {
+                return ItemStack.EMPTY;
+            }
+        }
+        return heldItem;
     }
 }

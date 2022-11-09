@@ -21,7 +21,7 @@ public class LocalizationGenerator extends LanguageProvider {
     }
 
     private void addManualTranslations(){
-        this.add("itemGroup.squirtguntab", "Squirtgun");
+        this.add(Constants.squirtgunTabItemGroup, "Squirtgun");
         this.add(String.format("item.squirtgun.%s", Constants.gunItemName), "Squirtgun");
         this.add(String.format("item.squirtgun.%s", Constants.phialItemName), "Empty Phial");
         this.add("item.squirtgun.gun_functionality", "Squirtgun reload/settings");
@@ -34,6 +34,8 @@ public class LocalizationGenerator extends LanguageProvider {
         this.add("tooltip.squirtgun.energy_requirement", "Requires %d FE/t");
         this.add(Constants.encapsulatorMenuScreenTitle, "Dr. Clark's Fully Automatic Fluid Encapsulation Matrix");
         this.add(Constants.encapsulatorBlockNameKey, "Dr. Clark's Fully Automatic Fluid Encapsulation Matrix");
+        this.add(Constants.openGunGui, "Open Squirtgun Settings");
+        this.add(Constants.squirtgunItemGroup, "Squirtgun");
     }
 
     private String setText(String text, char delimiter){

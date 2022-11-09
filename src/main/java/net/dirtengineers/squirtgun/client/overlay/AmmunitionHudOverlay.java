@@ -1,7 +1,7 @@
 package net.dirtengineers.squirtgun.client.overlay;
 
 import net.dirtengineers.squirtgun.Constants;
-import net.dirtengineers.squirtgun.common.item.SquirtgunItem;
+import net.dirtengineers.squirtgun.common.item.Squirtgun.SquirtgunItem;
 import net.dirtengineers.squirtgun.client.TextUtility;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;

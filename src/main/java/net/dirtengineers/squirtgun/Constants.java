@@ -32,14 +32,18 @@ public class Constants {
     public static final String phialItemNameTranslationPrefix = "item.squirtgun.";
     public static final String encapsulatorMenuScreenTitle = String.format("%s.container.encapsulator", Squirtgun.MOD_ID);
     public static final String encapsulatorBlockNameKey = String.format("block.%s.%s", Squirtgun.MOD_ID, encapsulatorBlockName);
+    public static final String openGunGui = String.format("%s.text.open_gui", Squirtgun.MOD_ID);
 
     // general
     public static String EMPTY_FLUID_NAME = "minecraft:empty";
 
     //Keybinds
     public static final String KEY_CATEGORY_MOD = "key.category.squirtgun";
-    public static final String KEY_GUN_LOAD_AMMO = "key.squirtgun.gun_ammo_load";
     public static final String KEY_GUN_AMMO_STATUS_DISPLAY = "key.squirtgun.gun_display_ammo_status";
+
+    //Item Groups
+    public static final String squirtgunTabItemGroup = "itemGroup.squirtguntab";
+    public static final String squirtgunItemGroup = "itemGroup.squirtgun";
 
     //NBT
     public static final String PHIAL_TYPE_TAG = Squirtgun.MOD_ID + ".phial_type";

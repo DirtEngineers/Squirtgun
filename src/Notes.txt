@@ -3,9 +3,7 @@ ideas on custom projectile https://forums.minecraftforge.net/topic/116267-projec
 
 https://forums.minecraftforge.net/topic/116264-how-to-recoil-for-a-gun-mod/
 
-Set up a custom sound for the ammunition firing and for it impacting
-
-loading/reloading?
+Set up a custom sound for the ammunition firing
 
 allow later modders to add liquid ammunition via tags -- maybe
 
@@ -18,7 +16,6 @@ SQUIRTGUNITEM:
 
  UPGRADE! -- Default manually load and autoload being an upgrade.  Also allow player to toggle auto-load behavior in the gun's UI
 
-   look at making base magazine abstract
    look into making an interface for magazine upgrades.  Also toggle on/off
 
    Machine block: lift from liquifier block, block entity, menu, and screen as example
@@ -30,9 +27,27 @@ SQUIRTGUNITEM:
    4.  Recipes for phial upgrades
    5.  Recipe for phial from raw materials in machine
 
-   https://www.curseforge.com/minecraft/mc-mods/alchemylib/files
+https://www.curseforge.com/minecraft/mc-mods/alchemylib/files
 
-   call the empty phial just phial all others chemical-phial
-   filled_chemicalname_phial.json for filled phial recipe names
+https://www.curseforge.com/minecraft/mc-mods/sophisticated-backpacks
 
-   check config for extra constants
+Loading/storage strategies:
+The bag:
+
+Make an item, right click on it to use it and it opens a screen.
+The screen has a set number of slots using an item handler, similar to the input and output slots of the encapsulator machine.
+It can hold only phials.
+The gun has it's own gui when you use it.
+Select the phial to use from the bag in your gun. Something like that.
+
+shift-right-click with the gun in hand to open UI
+Populate slots from existing player inventory -- no empties
+Also input-type slot with gun icon
+Player selects phial and drags to the gun.
+Gun is loaded with new phial.  Old phial returned to inventory
+
+Leather bandolier with brass filigree trim
+
+Upgrade strategy
+
+

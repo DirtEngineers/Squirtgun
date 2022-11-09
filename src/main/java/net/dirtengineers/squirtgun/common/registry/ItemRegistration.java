@@ -4,6 +4,7 @@ import com.smashingmods.chemlib.api.Chemical;
 import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.common.item.*;
+import net.dirtengineers.squirtgun.common.item.Squirtgun.SquirtgunItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
