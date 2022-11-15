@@ -11,13 +11,6 @@ SQUIRTGUNITEM:
  Need sounds for various actions
  Need advancements for item use
 
- make a custom keybind that opens a screen if you have the gun in your inventory.
- The screen should have a slot where you can put the phial.
-
- UPGRADE! -- Default manually load and autoload being an upgrade.  Also allow player to toggle auto-load behavior in the gun's UI
-
-   look into making an interface for magazine upgrades.  Also toggle on/off
-
    Machine block: lift from liquifier block, block entity, menu, and screen as example
 
    Recipes:
@@ -33,21 +26,64 @@ https://www.curseforge.com/minecraft/mc-mods/sophisticated-backpacks
 
 Loading/storage strategies:
 The bag:
-
 Make an item, right click on it to use it and it opens a screen.
 The screen has a set number of slots using an item handler, similar to the input and output slots of the encapsulator machine.
 It can hold only phials.
 The gun has it's own gui when you use it.
 Select the phial to use from the bag in your gun. Something like that.
 
-shift-right-click with the gun in hand to open UI
-Populate slots from existing player inventory -- no empties
-Also input-type slot with gun icon
-Player selects phial and drags to the gun.
-Gun is loaded with new phial.  Old phial returned to inventory
+Load/Reload:
+shift + right-click opens the screen                                                                                        DONE
+Top section two buttons, one with the gun and one with the gun's current phial -- both are disabled                         DONE
+Next section is a table of buttons of phials from player inventory -- only one of each, no dupes and no EmptyPhialItems     DONE
 
+When the player clicks on one of the table phials, it exchanges with the one in the gun.
+Modify gun and player inventory at that time.
+
+-- Instead of recreating ALL of the buttons after the swap
+Keep a reference to the gun's phial button in the screen object                                         DONE
+Remove THAT button, create a new one based upon the selected phial, and add to addRenderableWidget      DONE
+Do the same for the selected phial button, only create it from the phial just removed from the gun.     DONE
+Remember to update the phials list accordingly                                                          DONE
+If phial removed from the gun is a EmptyPhialItem, simply update the layout                             DONE
+
+Gun uses that KIND of phial until all non-empty ones are exhausted.
+
+What then?
+
+Doing some testing I noticed that loading the actual gun like this is probably not the best plan.
+Or, continue to do it like that and load up a fresh one from the inventory on closing.
+I plan on looping through the inventory and collecting references to all ItemStacks with the appropriate phials and loading the first one with most ammunition
+Shrink that stack by 1.
+Then add the old one to the inventory into a stack of that kind if one exists.
+/////
+IMPORTANT! Phial colors don't match between inventory and reload screen
 Leather bandolier with brass filigree trim
 
-Upgrade strategy
+Upgrade strategy:
+-- Default manually load and autoload being an upgrade.  Also allow player to toggle auto-load behavior in the gun's UI
+-- Default gun capacity 10 shot.  Upgrades to capacity
+
+
+SET SHADER COLOR BACK TO DEFAULT AFTER RENDERING!
+public static void setShaderColor(int pColor) {
+        float alpha = (pColor >> 24 & 255) / 255f;
+        float red = (pColor >> 16 & 255) / 255f;
+        float green = (pColor >> 8 & 255) / 255f;
+        float blue = (pColor & 255) / 255f;
+        RenderSystem.setShaderColor(red, green, blue, alpha);
+    }
+Utility command in AbstractProcessingScreen.
+
+!!!!!!!!!!  GUN CAN'T INITIALIZE CHEMLIB WATER!
+Fix: Disallow chemlib:water
+Load minecraft:water instead
+Consider honey and lava
+
+Look into custom mob effects for fluids
+
+https://maven.tamaized.com/#/releases/smashingmods/alchemylib
+
+
 
 

@@ -1,5 +1,6 @@
 package net.dirtengineers.squirtgun.common.registry;
 
+import net.dirtengineers.squirtgun.common.network.SquirtgunPacketHandler;
 import net.minecraftforge.eventbus.api.IEventBus;
 
 public class Registry {
@@ -12,5 +13,6 @@ public class Registry {
         SoundEventRegistration.register(modEventBus);
         MenuRegistration.register(modEventBus);
         RecipeRegistration.register(modEventBus);
+        SquirtgunPacketHandler.register();
     }
 }

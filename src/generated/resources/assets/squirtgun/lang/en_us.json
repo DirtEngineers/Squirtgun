@@ -17,6 +17,7 @@
   "item.squirtgun.sulfur_trioxide_phial": "Sulfur Trioxide Phial",
   "item.squirtgun.sulfuric_acid_phial": "Sulfuric Acid Phial",
   "item.squirtgun.water_phial": "Water Phial",
+  "itemGroup.squirtgun": "Squirtgun",
   "itemGroup.squirtguntab": "Squirtgun",
   "key.category.squirtgun": "Squirtgun",
   "key.squirtgun.gun_ammo_load": "Load Ammunition",
@@ -24,5 +25,8 @@
   "key.squirtgun.no_phial": "No Phial",
   "sounds.squirtgun.squirt_slug_hit": "EWWW!",
   "squirtgun.container.encapsulator": "Dr. Clark's Fully Automatic Fluid Encapsulation Matrix",
+  "squirtgun.reload_screen.current_ammunition": "Current Ammunition: %s",
+  "squirtgun.reload_screen.inventory_warning": "No room in inventory for %s",
+  "squirtgun.text.open_gui": "Open Squirtgun Settings",
   "tooltip.squirtgun.energy_requirement": "Requires %d FE/t"
 }

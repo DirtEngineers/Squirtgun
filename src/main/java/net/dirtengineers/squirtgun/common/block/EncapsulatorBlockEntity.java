@@ -96,9 +96,7 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity {
             if (currentRecipe instanceof PhialRecipe) {
                 setProgress(0);
                 ItemStack outputStack = ((PhialRecipe) currentRecipe).getOutput().copy();
-                int fluidTransferAmount = ((ChemicalPhial) outputStack.getItem()).getFluidUsed();
-                ((ChemicalPhial) outputStack.getItem()).loadFluid(new FluidStack(getFluidStorage().getFluidStack().getFluid(), fluidTransferAmount));
-                getFluidStorage().getFluidStack().shrink(fluidTransferAmount);
+                getFluidStorage().getFluidStack().shrink(((ChemicalPhial) outputStack.getItem()).getFluidCapacityInMb());
                 getInputHandler().decrementSlot(0, 1);
                 getOutputHandler().insertItem(FILLED_PHIAL_OUTPUT_SLOT, outputStack, false);
             }
