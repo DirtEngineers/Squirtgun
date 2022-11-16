@@ -1,5 +1,6 @@
 package net.dirtengineers.squirtgun.client.events;
 
+import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.client.Keybinds;
 import net.dirtengineers.squirtgun.client.overlay.AmmunitionHudOverlay;
@@ -47,7 +48,13 @@ public class ClientForgeEventHandler {
                 }
             }
             if (GUN_AMMO_STATUS_DISPLAY_KEY.consumeClick() && player.getItemInHand(player.getUsedItemHand()).getItem() instanceof SquirtgunItem) {
-                AmmunitionHudOverlay.displaySetting = AmmunitionHudOverlay.displaySetting.getNext();
+                if(AmmunitionHudOverlay.displaySetting == Constants.HUD_DISPLAY_SETTING.ON) {
+                    AmmunitionHudOverlay.resetFadeTicks();
+                    AmmunitionHudOverlay.displaySetting = Constants.HUD_DISPLAY_SETTING.FADE;
+                }
+                if(AmmunitionHudOverlay.displaySetting == Constants.HUD_DISPLAY_SETTING.OFF) {
+                    AmmunitionHudOverlay.displaySetting = Constants.HUD_DISPLAY_SETTING.ON;
+                }
                 AmmunitionHudOverlay.display = !AmmunitionHudOverlay.display;
             }
         }

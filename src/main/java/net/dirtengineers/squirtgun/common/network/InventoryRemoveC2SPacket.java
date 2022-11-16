@@ -9,36 +9,35 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public class GunReloadInventoryC2SPacket {
-
+public class InventoryRemoveC2SPacket {
     int inventorySlot;
-    ItemStack incomingStack;
+    ItemStack removeStack;
 
-    public GunReloadInventoryC2SPacket(int pSlot, ItemStack pStack) {
+
+    public InventoryRemoveC2SPacket(int pSlot, ItemStack pStack) {
         this.inventorySlot = pSlot;
-        this.incomingStack = pStack;
+        this.removeStack = pStack;
     }
 
-    public GunReloadInventoryC2SPacket(FriendlyByteBuf pBuffer) {
+    public InventoryRemoveC2SPacket(FriendlyByteBuf pBuffer) {
         this.inventorySlot = pBuffer.readInt();
-        this.incomingStack = pBuffer.readItem();
+        this.removeStack = pBuffer.readItem();
     }
 
     public void encode(FriendlyByteBuf pBuffer) {
         pBuffer.writeInt(this.inventorySlot);
-        pBuffer.writeItem(this.incomingStack);
+        pBuffer.writeItem(this.removeStack);
     }
 
-    public static void handle(GunReloadInventoryC2SPacket pPacket, Supplier<NetworkEvent.Context> pContext) {
+    public static void handle(InventoryRemoveC2SPacket pPacket, Supplier<NetworkEvent.Context> pContext) {
         pContext.get().enqueueWork(() -> {
             Player player = pContext.get().getSender();
             Objects.requireNonNull(player);
             if(pPacket.inventorySlot == Constants.OFF_HAND_INDEX){
-                player.getInventory().offhand.add(pPacket.incomingStack);
-            } else if(pPacket.inventorySlot == Constants.DROP_ITEM_INDEX){
-                player.drop(pPacket.incomingStack, false);
+                player.getInventory().offhand.get(0).setCount(0);
+//                player.getInventory().offhand.remove(0);
             } else {
-                player.getInventory().add(pPacket.inventorySlot, pPacket.incomingStack);
+                player.getInventory().removeItem(pPacket.inventorySlot, 1);
             }
         });
         pContext.get().setPacketHandled(true);

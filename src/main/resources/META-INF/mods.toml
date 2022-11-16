@@ -23,7 +23,7 @@ displayName="SquirtGun" #mandatory
 # A file name (in the root of the mod JAR) containing a logo for display
 #logoFile="examplemod.png" #optional
 # A text field displayed in the mod UI
-credits="Metric assloads of caffiene and nicotine" #optional
+credits="The developers associated with Akliz Server Hosting.  Kaupenjoe's YouTube tutorials. Metric assloads of caffiene and nicotine" #optional
 # A text field displayed in the mod UI
 authors="Dirt Engineers" #optional
 # Display Test controls the display for your mod in the server connection screen

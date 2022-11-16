@@ -33,7 +33,6 @@ import java.util.Set;
 public class SquirtSlug extends AbstractArrow {
 
     private double baseDamage = 2.0D;
-    public static final int shotSize = 100;
     private int life;
     private Fluid ammoType;
     private Chemical chemical;

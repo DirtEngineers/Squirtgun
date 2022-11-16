@@ -11,18 +11,25 @@ import net.minecraftforge.network.simple.SimpleChannel;
 public class SquirtgunPacketHandler {
     private static int PACKET_ID = 0;
     private static final String PROTOCOL_VERSION = "1.0";
-    public static SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(new ResourceLocation(Squirtgun.MOD_ID, "main"), () -> {
-        return PROTOCOL_VERSION;
-    }, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
+    public static SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
+            new ResourceLocation(Squirtgun.MOD_ID, "main")
+            , () -> PROTOCOL_VERSION
+            , PROTOCOL_VERSION::equals
+            , PROTOCOL_VERSION::equals);
 
     public SquirtgunPacketHandler() {
     }
 
     public static void register() {
-        INSTANCE.messageBuilder(GunReloadInventoryC2SPacket.class, PACKET_ID++, NetworkDirection.PLAY_TO_SERVER)
-                .decoder(GunReloadInventoryC2SPacket::new)
-                .encoder(GunReloadInventoryC2SPacket::encode)
-                .consumerNetworkThread(GunReloadInventoryC2SPacket::handle)
+        INSTANCE.messageBuilder(InventoryInsertC2SPacket.class, PACKET_ID++, NetworkDirection.PLAY_TO_SERVER)
+                .decoder(InventoryInsertC2SPacket::new)
+                .encoder(InventoryInsertC2SPacket::encode)
+                .consumerNetworkThread(InventoryInsertC2SPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(InventoryRemoveC2SPacket.class, PACKET_ID++, NetworkDirection.PLAY_TO_SERVER)
+                .decoder(InventoryRemoveC2SPacket::new)
+                .encoder(InventoryRemoveC2SPacket::encode)
+                .consumerNetworkThread(InventoryRemoveC2SPacket::handle)
                 .add();
     }
 

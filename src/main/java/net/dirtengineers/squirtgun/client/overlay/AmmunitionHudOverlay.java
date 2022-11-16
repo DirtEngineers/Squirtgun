@@ -15,16 +15,18 @@ public class AmmunitionHudOverlay {
     private static final int maxFadeTicks = 200;
     public static boolean display = true;
     public static Constants.HUD_DISPLAY_SETTING displaySetting = Constants.HUD_DISPLAY_SETTING.ON;
+
+    public static void resetFadeTicks() {
+        fadeTicks = 0;
+    }
+
     public static final IGuiOverlay HUD_AMMUNITION = (gui, poseStack, partialTick, width, height) -> {
         if(AmmunitionHudOverlay.displaySetting == Constants.HUD_DISPLAY_SETTING.FADE) {
             fadeTicks ++;
             if(fadeTicks >= maxFadeTicks) {
                 AmmunitionHudOverlay.displaySetting = Constants.HUD_DISPLAY_SETTING.OFF;
-                fadeTicks = 0;
+                resetFadeTicks();
             }
-        }
-        if(AmmunitionHudOverlay.displaySetting == Constants.HUD_DISPLAY_SETTING.ON) {
-            fadeTicks = 0;
         }
 
         if(AmmunitionHudOverlay.displaySetting != Constants.HUD_DISPLAY_SETTING.OFF) {

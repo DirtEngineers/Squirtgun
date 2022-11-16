@@ -16,7 +16,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.List;
 
 public class PhialReloadScreenButton extends Button {
-    //TODO: Change from BasePhial to ItemStack
     ItemStack targetStack;
     private final ResourceLocation texture;
 
@@ -25,31 +24,22 @@ public class PhialReloadScreenButton extends Button {
         this.texture = alternateTexture != null ? alternateTexture : Constants.phialReloadScreenButtonTexture;
     }
 
-    public PhialReloadScreenButton(int pX, int pY, int pWidth, int pHeight, Component pMessage, ResourceLocation alternateTexture, OnPress pOnPress, OnTooltip pOnTooltip) {
-        super(pX, pY, pWidth, pHeight, pMessage, pOnPress, pOnTooltip);
-        this.texture = alternateTexture != null ? alternateTexture : Constants.phialReloadScreenButtonTexture;
-    }
+//    public PhialReloadScreenButton(int pX, int pY, int pWidth, int pHeight, Component pMessage, ResourceLocation alternateTexture, OnPress pOnPress, OnTooltip pOnTooltip) {
+//        super(pX, pY, pWidth, pHeight, pMessage, pOnPress, pOnTooltip);
+//        this.texture = alternateTexture != null ? alternateTexture : Constants.phialReloadScreenButtonTexture;
+//    }
 
     @Override
     public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-//        fill(pPoseStack, this.x, this.y, this.x + this.width, this.y + this.height, Color.TRANSLUCENT);//0XFFFFFFFF);
 
-//        RenderSystem.setShaderTexture(0, texture);
-//        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-//        this.setFGColor(0x00FF00);
-//        blit(pPoseStack, this.x, this.y, 0, 0, this.width, this.height, this.width, this.height);
+        this.setFGColor(0x8000FF00);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, texture);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, alpha);
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.enableDepthTest();
+        RenderSystem.setShaderColor(0X01, 0X01, 0X01, alpha);
+//        RenderSystem.enableBlend();
+//        RenderSystem.defaultBlendFunc();
+//        RenderSystem.enableDepthTest();
         blit(pPoseStack, this.x, this.y, 0, 0, this.width, this.height, this.width, this.height);
-    }
-
-    @Override
-    public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY){
-        super.renderToolTip(pPoseStack, pMouseX, pMouseY);
     }
 
     public ItemStack getTargetStack() {

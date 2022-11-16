@@ -1,7 +1,7 @@
 package net.dirtengineers.squirtgun.common.item;
 
 import com.smashingmods.chemlib.api.Chemical;
-import net.dirtengineers.squirtgun.common.entity.SquirtSlug;
+import net.dirtengineers.squirtgun.Constants;
 import net.minecraft.world.item.Item;
 
 public abstract class BasePhial extends Item {
@@ -46,7 +46,7 @@ public abstract class BasePhial extends Item {
     }
 
     public int getFluidCapacityInMb() {
-        return maxShots * SquirtSlug.shotSize;
+        return maxShots * Constants.SLUG_SHOT_SIZE_MB;
     }
 
     public Chemical getChemical() {
