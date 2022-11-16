@@ -36,7 +36,7 @@ public class SquirtgunReloadScreen extends Screen {
     int yShift = xShift;
     int centerX;
     int centerY;
-    int destinationSlot = Integer.MAX_VALUE;
+    int destinationSlot = Constants.DROP_ITEM_INDEX;
     int inventoryWarningYpos;
     final int buttonColumns = 5;
     boolean showInventoryWarning = false;
@@ -259,15 +259,14 @@ public class SquirtgunReloadScreen extends Screen {
                     phials.sort(Comparator.comparing(s -> s.getDescriptionId().toLowerCase()));
                 }
                 setInventorySlotForPlacement();
-                showInventoryWarning = destinationSlot == Integer.MAX_VALUE;
+                showInventoryWarning = destinationSlot == Constants.DROP_ITEM_INDEX;
                 UpdateLayout();
             }
         }
     }
 
     private void setInventorySlotForPlacement() {
-        ItemStack pPhial = new ItemStack(ForgeRegistries.ITEMS.getValue(ItemRegistration.PHIAL.getId()), 1);
-        destinationSlot = Integer.MAX_VALUE;
+       destinationSlot = Constants.DROP_ITEM_INDEX;
         ItemStack stack;
         for (int slotNumber = 0; slotNumber < Objects.requireNonNull(player).getInventory().items.size(); ++slotNumber) {
             stack = player.getInventory().items.get(slotNumber);
@@ -279,7 +278,7 @@ public class SquirtgunReloadScreen extends Screen {
         }
         // no appropriate stacks in inventory
         // Any empties NOT in the hotbar?
-        if (destinationSlot == Integer.MAX_VALUE) {
+        if (destinationSlot == Constants.DROP_ITEM_INDEX) {
             for (int slotNumber = 9; slotNumber < player.getInventory().items.size(); ++slotNumber) {
                 if (player.getInventory().items.get(slotNumber).isEmpty()) {
                     destinationSlot = slotNumber;
@@ -288,7 +287,7 @@ public class SquirtgunReloadScreen extends Screen {
             }
         }
         // Hotbar, then?
-        if (destinationSlot == Integer.MAX_VALUE) {
+        if (destinationSlot == Constants.DROP_ITEM_INDEX) {
             for (int slotNumber = 0; slotNumber < 8; ++slotNumber) {
                 if (player.getInventory().items.get(slotNumber).isEmpty()) {
                     destinationSlot = slotNumber;
@@ -297,8 +296,8 @@ public class SquirtgunReloadScreen extends Screen {
             }
         }
         //Off hand perhaps?
-        if (destinationSlot == Integer.MAX_VALUE) {
-            destinationSlot = player.getInventory().offhand.get(0).isEmpty() ? -1 : Integer.MAX_VALUE;
+        if (destinationSlot == Constants.DROP_ITEM_INDEX) {
+            destinationSlot = player.getInventory().offhand.get(0).isEmpty() ? Constants.OFF_HAND_INDEX : Constants.DROP_ITEM_INDEX;
         }
     }
 }

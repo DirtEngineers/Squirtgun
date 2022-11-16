@@ -42,6 +42,8 @@ public class Constants {
 
     // general
     public static String EMPTY_FLUID_NAME = "minecraft:empty";
+    public static int DROP_ITEM_INDEX = Integer.MAX_VALUE;
+    public static int OFF_HAND_INDEX = -1;
 
     //Keybinds
     public static final String KEY_CATEGORY_MOD = "key.category.squirtgun";
@@ -61,4 +63,16 @@ public class Constants {
 
     //Text style
     public static final Style HOVER_TEXT_STYLE = Style.EMPTY.withFont(Style.DEFAULT_FONT).withColor(ChatFormatting.YELLOW);
+
+    public enum HUD_DISPLAY_SETTING {
+        OFF,
+        ON,
+        FADE;
+
+        HUD_DISPLAY_SETTING() {}
+
+        public HUD_DISPLAY_SETTING getNext() {
+            return values()[(ordinal() + 1) % values().length];
+        }
+    }
 }

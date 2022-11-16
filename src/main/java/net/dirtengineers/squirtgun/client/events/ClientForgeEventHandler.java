@@ -46,8 +46,8 @@ public class ClientForgeEventHandler {
                     ModScreens.openGunSettingsScreen();
                 }
             }
-            if (GUN_AMMO_STATUS_DISPLAY_KEY.consumeClick() &&
-                    player.getItemInHand(player.getUsedItemHand()).getItem() instanceof SquirtgunItem) {
+            if (GUN_AMMO_STATUS_DISPLAY_KEY.consumeClick() && player.getItemInHand(player.getUsedItemHand()).getItem() instanceof SquirtgunItem) {
+                AmmunitionHudOverlay.displaySetting = AmmunitionHudOverlay.displaySetting.getNext();
                 AmmunitionHudOverlay.display = !AmmunitionHudOverlay.display;
             }
         }

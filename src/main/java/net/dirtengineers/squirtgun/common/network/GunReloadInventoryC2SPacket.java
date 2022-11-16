@@ -1,5 +1,6 @@
 package net.dirtengineers.squirtgun.common.network;
 
+import net.dirtengineers.squirtgun.Constants;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -32,11 +33,12 @@ public class GunReloadInventoryC2SPacket {
         pContext.get().enqueueWork(() -> {
             Player player = pContext.get().getSender();
             Objects.requireNonNull(player);
-
-            switch (pPacket.inventorySlot) {
-                case -1 -> player.getInventory().offhand.add(pPacket.incomingStack);
-                case Integer.MAX_VALUE -> player.drop(pPacket.incomingStack, false);
-                default -> player.getInventory().add(pPacket.inventorySlot, pPacket.incomingStack);
+            if(pPacket.inventorySlot == Constants.OFF_HAND_INDEX){
+                player.getInventory().offhand.add(pPacket.incomingStack);
+            } else if(pPacket.inventorySlot == Constants.DROP_ITEM_INDEX){
+                player.drop(pPacket.incomingStack, false);
+            } else {
+                player.getInventory().add(pPacket.inventorySlot, pPacket.incomingStack);
             }
         });
         pContext.get().setPacketHandled(true);
