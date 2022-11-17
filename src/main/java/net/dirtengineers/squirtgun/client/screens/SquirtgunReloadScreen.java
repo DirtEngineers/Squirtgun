@@ -101,8 +101,9 @@ public class SquirtgunReloadScreen extends Screen {
 
         this.children().forEach(e -> {
             if (e instanceof PhialReloadScreenButton btn) {
-                if (btn.isMouseOver(pMouseX, pMouseY))
+                if (btn.isMouseOver(pMouseX, pMouseY)) {
                     renderTooltip(pPoseStack, btn.getTooltip(), pMouseX, pMouseY);
+                }
             }
         });
     }
@@ -114,8 +115,7 @@ public class SquirtgunReloadScreen extends Screen {
 
     @Override
     public void onClose() {
-        //TODO: REMOVE LOADED PHIAL FROM INVENTORY
-        // WHAT IF PLAYER CLOSES WITHOUT SELECTING A PHIAL?
+        //TODO: WHAT IF PLAYER CLOSES WITHOUT SELECTING A PHIAL?
         if (player != null) {
             if (((ChemicalPhial) phialSwapStack.getItem()).getChemical() != actualGun.getChemical()) {
                 ItemStack removeStack = phialSwapStack.copy();// phial to remove from inventory
@@ -248,7 +248,7 @@ public class SquirtgunReloadScreen extends Screen {
                     , MutableComponent.create(new TranslatableContents(actualGun.getDescriptionId())).withStyle(Style.EMPTY.withFont(Style.DEFAULT_FONT))
                     , new ResourceLocation(Squirtgun.MOD_ID, "textures/item/squirtgun.png")
                     , pButton -> this.swapPhials((PhialReloadScreenButton)pButton));
-            gunButton.setTargetStack(null);
+            gunButton.setTargetStack(new ItemStack(actualGun));
             gunButton.active = false;
         }
     }

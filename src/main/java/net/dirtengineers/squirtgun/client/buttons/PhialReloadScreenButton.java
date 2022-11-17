@@ -1,10 +1,8 @@
 package net.dirtengineers.squirtgun.client.buttons;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.dirtengineers.squirtgun.Constants;
+import com.smashingmods.alchemylib.api.blockentity.container.FakeItemRenderer;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -17,29 +15,30 @@ import java.util.List;
 
 public class PhialReloadScreenButton extends Button {
     ItemStack targetStack;
-    private final ResourceLocation texture;
+//    private final ResourceLocation texture;
 
     public PhialReloadScreenButton(int pX, int pY, int pWidth, int pHeight, Component pMessage, ResourceLocation alternateTexture, OnPress pOnPress) {
         super(pX, pY, pWidth, pHeight, pMessage, pOnPress);
-        this.texture = alternateTexture != null ? alternateTexture : Constants.phialReloadScreenButtonTexture;
-    }
-
-//    public PhialReloadScreenButton(int pX, int pY, int pWidth, int pHeight, Component pMessage, ResourceLocation alternateTexture, OnPress pOnPress, OnTooltip pOnTooltip) {
-//        super(pX, pY, pWidth, pHeight, pMessage, pOnPress, pOnTooltip);
 //        this.texture = alternateTexture != null ? alternateTexture : Constants.phialReloadScreenButtonTexture;
-//    }
+    }
 
     @Override
     public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-
-        this.setFGColor(0x8000FF00);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, texture);
-        RenderSystem.setShaderColor(0X01, 0X01, 0X01, alpha);
-//        RenderSystem.enableBlend();
-//        RenderSystem.defaultBlendFunc();
-//        RenderSystem.enableDepthTest();
-        blit(pPoseStack, this.x, this.y, 0, 0, this.width, this.height, this.width, this.height);
+        if(this.getTargetStack() != null) {
+            FakeItemRenderer.renderFakeItem(this.getTargetStack(), this.x, this.y);
+        }
+//        Color activeColor = this.active ? Color.GREEN : Color.RED;
+//        fill(pPoseStack, this.x, this.y, this.x + this.width, this.y + this.height, Color.TRANSLUCENT);
+//
+//
+//
+//        RenderSystem.setShaderColor(1, 1, 1, 1);
+//        RenderSystem.setShaderTexture(0, texture);
+//        blit(pPoseStack, this.x, this.y, 0, 0, 16, 16, 16, 16);
+//        fill(pPoseStack, this.x, this.y, this.x + this.width, this.y + this.height, ((this.active ? 0x68000000 : 0x9B000000)) + activeColor.getRGB());
+//        RenderSystem.setShaderTexture(0, texture);
+//        blit(pPoseStack, this.x, this.y, 0, 0, this.width, this.height, this.width, this.height);
+//        this.packedFGColor = 0X00_FF00;
     }
 
     public ItemStack getTargetStack() {
