@@ -46,9 +46,6 @@ public static void setShaderColor(int pColor) {
     }
 Utility command in AbstractProcessingScreen.
 
-!!!!!!!!!!  GUN CAN'T INITIALIZE CHEMLIB WATER!
-Fix: Disallow chemlib:water
-Load minecraft:water instead
 Consider honey and lava
 
 Look into custom mob effects for fluids

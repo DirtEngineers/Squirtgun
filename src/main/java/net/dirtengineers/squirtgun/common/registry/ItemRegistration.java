@@ -42,7 +42,9 @@ public class ItemRegistration {
         for (Chemical chemical : ItemRegistration.ammunitionChemicals)
             if (chemical != null && chemical.getFluidTypeReference().isPresent()) {
                 String location = String.valueOf(chemical.getFluidTypeReference().get());
-                if (!Objects.equals(location, Constants.EMPTY_FLUID_NAME)) location += "_fluid";
+                if (!Objects.equals(location, Constants.EMPTY_FLUID_NAME) && !Objects.equals(chemical.getChemicalName(), "water")) {
+                    location += "_fluid";
+                }
                 ItemRegistration.CHEMICAL_FLUIDS.put(chemical, ForgeRegistries.FLUIDS.getValue(new ResourceLocation(location)));
             }
     }
