@@ -16,9 +16,17 @@ public class Constants {
     public static final String gunItemName = "squirtgunitem";
     public static final String squirtgunTabName = "squirtguntab";
     public static final String encapsulatorMenuName = "encapsulator_menu";
-    public static final String SlugHitSoundName = "squirt_slug_hit";
     public static final String phialCreationSerializerName = "phial_creation_serializer";
     public static final String phialCreationRecipeName = "phial_creation_recipe";
+
+    // sound events
+    public static final String SlugHitSoundName = "squirt_slug_hit";
+    public static final String ReloadScreenCloseSoundName = "reload_screen_close";
+    public static final String PhialSwapSoundName = "phial_swap";
+    public static final String GunUseSoundName = "gun_use";
+    public static final String GunFireSoundName = "gun_fire";
+    public static final String PhialCompleteSoundName = "phial_complete";
+    public static final String EncapsulatorProcessingSoundName = "encapsulator_processing";
 
     // resource locations
     public static final String slugTextureLocation = "textures/entity/projectile/blank_slug.png";

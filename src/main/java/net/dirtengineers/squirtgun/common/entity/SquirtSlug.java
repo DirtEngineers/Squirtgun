@@ -83,15 +83,18 @@ public class SquirtSlug extends AbstractArrow {
     protected void doPostHurtEffects(LivingEntity pLiving) {
         super.doPostHurtEffects(pLiving);
         Entity entity = this.getEffectSource();
-
-        for(MobEffectInstance mobeffectinstance : this.effects) {
-            pLiving.addEffect(
-                    new MobEffectInstance(mobeffectinstance.getEffect(),
-                            Math.max(mobeffectinstance.getDuration() / 8, 1),
-                            mobeffectinstance.getAmplifier(),
-                            mobeffectinstance.isAmbient(),
-                            mobeffectinstance.isVisible()),
-                    entity);
+        if(chemical.getChemicalName().equals("milk")) {
+            pLiving.removeAllEffects();
+        } else {
+            for(MobEffectInstance mobeffectinstance : this.effects) {
+                pLiving.addEffect(
+                        new MobEffectInstance(mobeffectinstance.getEffect(),
+                                Math.max(mobeffectinstance.getDuration() / 8, 1),
+                                mobeffectinstance.getAmplifier(),
+                                mobeffectinstance.isAmbient(),
+                                mobeffectinstance.isVisible()),
+                        entity);
+            }
         }
     }
 
@@ -151,13 +154,22 @@ public class SquirtSlug extends AbstractArrow {
     @Override
     protected void onHitBlock(BlockHitResult pResult) {
         super.onHitBlock(pResult);
-        this.setSoundEvent(SoundEventRegistration.SQUIRT_SLUG_HIT.get());
+        onHit();
     }
 
     @Override
     protected void onHitEntity(EntityHitResult pResult) {
         super.onHitEntity(pResult);
+        onHit();
         this.life = 0;
+    }
+
+    protected void onHit() {
+//        if(chemical.getChemicalName().equals("lava")) {
+//            // TODO: spawn flowing lava
+//        }
+        //TODO: Refactor sound events
+        this.setSoundEvent(SoundEventRegistration.SQUIRT_SLUG_HIT.get());
     }
 
     @Override
@@ -167,6 +179,11 @@ public class SquirtSlug extends AbstractArrow {
 
     private void updateColor() {
         int pValue = this.ammoType == null ? -1 : IClientFluidTypeExtensions.of(this.ammoType).getTintColor();
+        if (pValue == -1) {
+            pValue = this.chemical.getColor();
+        } else {
+            pValue = -1;
+        }
         this.entityData.set(ID_EFFECT_COLOR, pValue);
     }
 

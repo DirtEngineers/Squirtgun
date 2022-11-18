@@ -12,6 +12,7 @@ import net.dirtengineers.squirtgun.common.network.InventoryInsertC2SPacket;
 import net.dirtengineers.squirtgun.common.network.InventoryRemoveC2SPacket;
 import net.dirtengineers.squirtgun.common.network.SquirtgunPacketHandler;
 import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
+import net.dirtengineers.squirtgun.common.registry.SoundEventRegistration;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -68,8 +69,9 @@ public class SquirtgunReloadScreen extends Screen {
     @Override
     public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         renderBackground(pPoseStack);
+        //RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(0XFF, 0XFF, 0XFF, 128.0F);
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
 
         String swapPhialName = MutableComponent.create(new TranslatableContents(phialSwapStack.getItem().getDescriptionId())).getString();
@@ -109,6 +111,21 @@ public class SquirtgunReloadScreen extends Screen {
     }
 
     @Override
+    public void renderBackground(PoseStack pPoseStack, int pVOffset) {
+        if(this.minecraft != null) {
+            if (this.minecraft.level != null) {
+                // 0X3FEF_EFF0  to 0X2FEF_EFF0
+                // 0X3FEF_EFF0  to 0X2FEF_EFF0
+                // From the super class
+                this.fillGradient(pPoseStack, 0, 0, this.width, this.height, -0X3FEFEFF0, -0X9FEFEFF0);
+                net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.ScreenEvent.BackgroundRendered(this, pPoseStack));
+            } else {
+                this.renderDirtBackground(pVOffset);
+            }
+        }
+    }
+
+    @Override
     public boolean isPauseScreen() {
         return false;
     }
@@ -124,6 +141,7 @@ public class SquirtgunReloadScreen extends Screen {
                     SquirtgunPacketHandler.sendToServer(new InventoryInsertC2SPacket(destinationSlot, insertStack));
                     destinationSlot = removeStack.getCount() == offhandLocationIndex ? Constants.OFF_HAND_INDEX : removeStack.getCount() ;
                     SquirtgunPacketHandler.sendToServer(new InventoryRemoveC2SPacket(destinationSlot, removeStack));
+                    player.playSound(SoundEventRegistration.RELOAD_SCREEN_CLOSE.get());
                 }
             }
         }
@@ -278,6 +296,9 @@ public class SquirtgunReloadScreen extends Screen {
                 setInventorySlotForPlacement();
                 showInventoryWarning = destinationSlot == Constants.DROP_ITEM_INDEX;
                 UpdateLayout();
+                if(player.level.isClientSide) {
+                    player.playSound(SoundEventRegistration.PHIAL_SWAP.get());
+                }
             }
         }
     }

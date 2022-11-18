@@ -9,13 +9,13 @@ import net.dirtengineers.squirtgun.common.entity.SquirtSlug;
 import net.dirtengineers.squirtgun.common.item.BasePhial;
 import net.dirtengineers.squirtgun.common.item.ChemicalPhial;
 import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
+import net.dirtengineers.squirtgun.common.registry.SoundEventRegistration;
 import net.dirtengineers.squirtgun.util.TextUtility;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
@@ -54,31 +54,6 @@ public class SquirtgunItem extends BowItem {
         statusChanged = true;
     }
 
-    private void PHIALLOADINGTEST(Level pLevel, Player pPlayer) {
-//        phial.setShotsToZero();
-//        ItemStack phailStack = new ItemStack(
-//                Objects.requireNonNull(
-//                        ForgeRegistries.ITEMS.getValue(new ResourceLocation("squirtgun:hydrochloric_acid_phial"))).asItem(), 1);
-//        ((ChemicalPhial) phailStack.getItem()).loadFluid(new FluidStack(Objects.requireNonNull(ForgeRegistries.FLUIDS.getValue(new ResourceLocation("chemlib:hydrochloric_acid_fluid"))), 1000));
-//        this.phial = (ChemicalPhial) phailStack.getItem();
-//        ItemStack testStack =
-//                this.loadNewPhial(
-//                        new ItemStack(
-//                                Objects.requireNonNull(
-//                                        ForgeRegistries.ITEMS.getValue(new ResourceLocation("squirtgun:hydrochloric_acid_phial"))).asItem(), 1)
-//                );
-////        if(phialStack == null){
-//        phial = (ChemicalPhial) Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(new ResourceLocation("squirtgun:hydrochloric_acid_phial"))).asItem();
-//        phial.loadFluid(new FluidStack(Objects.requireNonNull(ForgeRegistries.FLUIDS.getValue(new ResourceLocation("chemlib:hydrochloric_acid_fluid"))), 1000));
-////            phial.loadFluid(new FluidStack(phial.getOptionalFluid().orElse(Fluids.EMPTY), 1000));
-//        statusChanged = true;
-////        }
-//        if (pPlayer.getAbilities().instabuild && phial.getShotsAvailable() <= 0) {
-//            phial.loadFluid(new FluidStack(phial.getOptionalFluid().orElse(Fluids.EMPTY), 1000));
-//            statusChanged = true;
-//        }
-    }
-
     @Override
     public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pItemSlot, boolean pIsSelected) {
         if (!pLevel.isClientSide) {//ForgeRegistries.FLUIDS.getValue(new ResourceLocation("chemlib:hydrochloric_acid_fluid"))
@@ -104,8 +79,6 @@ public class SquirtgunItem extends BowItem {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
-//        PHIALLOADINGTEST(pLevel, pPlayer);
-
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
         // Only perform the shift action
         if (pPlayer.isShiftKeyDown()) {
@@ -135,6 +108,16 @@ public class SquirtgunItem extends BowItem {
             return InteractionResultHolder.fail(itemstack);
         } else {
             pPlayer.startUsingItem(pHand);
+            pLevel.playSound(
+                    pPlayer,
+                    pPlayer.getX(),
+                    pPlayer.getY(),
+                    pPlayer.getZ(),
+                    SoundEventRegistration.GUN_USE.get(),
+                    SoundSource.PLAYERS,
+                    1.0F,
+                    1.0F / (pLevel.getRandom().nextFloat() * 0.4F + 1.2F) + 0.5F
+            );
             return InteractionResultHolder.consume(itemstack);
         }
     }
@@ -171,7 +154,7 @@ public class SquirtgunItem extends BowItem {
                         player.getX(),
                         player.getY(),
                         player.getZ(),
-                        SoundEvents.ARROW_SHOOT,
+                        SoundEventRegistration.GUN_FIRE.get(),
                         SoundSource.PLAYERS,
                         1.0F,
                         1.0F / (pLevel.getRandom().nextFloat() * 0.4F + 1.2F) + 0.5F
@@ -217,7 +200,6 @@ public class SquirtgunItem extends BowItem {
     }
 
     public ItemStack loadNewPhial(ItemStack pStack) {
-        //TODO: Does this work like this?
         if (pStack.isEmpty() || !(pStack.getItem() instanceof ChemicalPhial)) {
             return pStack;
         }
@@ -227,6 +209,7 @@ public class SquirtgunItem extends BowItem {
         if (isChemicalValid(((BasePhial) pStack.getItem()).getChemical())) {
             this.chemical = ((BasePhial) pStack.getItem()).getChemical();
             shotsAvailable = Math.min(((BasePhial) pStack.getItem()).getShotsAvailable(), maxShots);
+            statusChanged = true;
             return new ItemStack(ForgeRegistries.ITEMS.getValue(ItemRegistration.PHIAL.getId()), 1);
         } else {
             return pStack;

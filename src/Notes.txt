@@ -5,8 +5,6 @@ https://forums.minecraftforge.net/topic/116264-how-to-recoil-for-a-gun-mod/
 
 Set up a custom sound for the ammunition firing
 
-allow later modders to add liquid ammunition via tags -- maybe
-
 SQUIRTGUNITEM:
  Need sounds for various actions
  Need advancements for item use
@@ -22,31 +20,24 @@ SQUIRTGUNITEM:
 
 https://www.curseforge.com/minecraft/mc-mods/alchemylib/files
 
-/////
-IMPORTANT! Phial colors don't match between inventory and reload screen
 Leather bandolier with brass filigree trim
 
 Upgrade strategy:
 Gun ->
 1.  Autoload. Gun uses that KIND of phial until all non-empty ones are exhausted.  Allow player to toggle behavior in gun UI
 2.  Upgrades for gun shot capacity
+3.  Multiple slugs/shot
+4.  3-round burst
+5.  fully automatic
 
 Phial ->
 1.  Upgrades for capacity
 2.  Possible upgrades for mob effects?
+3.  Ability to load potions
 
 
-SET SHADER COLOR BACK TO DEFAULT AFTER RENDERING!
-public static void setShaderColor(int pColor) {
-        float alpha = (pColor >> 24 & 255) / 255f;
-        float red = (pColor >> 16 & 255) / 255f;
-        float green = (pColor >> 8 & 255) / 255f;
-        float blue = (pColor & 255) / 255f;
-        RenderSystem.setShaderColor(red, green, blue, alpha);
-    }
-Utility command in AbstractProcessingScreen.
-
-Consider honey and lava
+Consider honey
+Also consider potions
 
 Look into custom mob effects for fluids
 Migrate effects for fluids to a separate JSON for later modder support
@@ -56,6 +47,7 @@ Migrate effects for fluids to a separate JSON for later modder support
 4.  make association with chemicals in CommonSetupEvent
 
 https://maven.tamaized.com/#/releases/smashingmods/alchemylib
+
 
 
 

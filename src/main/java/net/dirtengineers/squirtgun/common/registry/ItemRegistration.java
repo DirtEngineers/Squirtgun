@@ -3,7 +3,10 @@ package net.dirtengineers.squirtgun.common.registry;
 import com.smashingmods.chemlib.api.Chemical;
 import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
-import net.dirtengineers.squirtgun.common.item.*;
+import net.dirtengineers.squirtgun.common.item.BasePhial;
+import net.dirtengineers.squirtgun.common.item.ChemicalPhial;
+import net.dirtengineers.squirtgun.common.item.EmptyPhialItem;
+import net.dirtengineers.squirtgun.common.item.GenericSlug;
 import net.dirtengineers.squirtgun.common.item.Squirtgun.SquirtgunItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
@@ -38,11 +41,16 @@ public class ItemRegistration {
     public static Map<Chemical, Fluid> CHEMICAL_FLUIDS;
     public static List<Chemical> ammunitionChemicals;
 
-    public static void buildChemical_Fluids(){
+    public static void buildChemical_Fluids() {
         for (Chemical chemical : ItemRegistration.ammunitionChemicals)
             if (chemical != null && chemical.getFluidTypeReference().isPresent()) {
                 String location = String.valueOf(chemical.getFluidTypeReference().get());
-                if (!Objects.equals(location, Constants.EMPTY_FLUID_NAME) && !Objects.equals(chemical.getChemicalName(), "water")) {
+                //TODO: Make a list chemicals to NOT append "_fluid" to.
+                // preferably in the CompoundRegistration
+                if (!Objects.equals(location, Constants.EMPTY_FLUID_NAME)
+                        && !Objects.equals(chemical.getChemicalName(), "water")
+                        && !Objects.equals(chemical.getChemicalName(), "milk")
+                        && !Objects.equals(chemical.getChemicalName(), "lava")) {
                     location += "_fluid";
                 }
                 ItemRegistration.CHEMICAL_FLUIDS.put(chemical, ForgeRegistries.FLUIDS.getValue(new ResourceLocation(location)));
@@ -50,7 +58,7 @@ public class ItemRegistration {
     }
 
     public static void registerPhialsAndSlugs(RegisterEvent pEvent) {
-        if(pEvent.getRegistryKey() == ForgeRegistries.Keys.ITEMS) {
+        if (pEvent.getRegistryKey() == ForgeRegistries.Keys.ITEMS) {
             ItemRegistration.SetAmmunitionChemicals();
             ItemRegistration.buildPhials(pEvent);
         }
@@ -61,7 +69,7 @@ public class ItemRegistration {
         ItemRegistration.ammunitionChemicals.addAll(getElements().stream().filter(element -> element.getMatterState() == LIQUID).toList());
     }
 
-    private static void buildPhials(RegisterEvent pEvent){
+    private static void buildPhials(RegisterEvent pEvent) {
         ResourceLocation phialLocation;
         for (Chemical chemical : ItemRegistration.ammunitionChemicals) {
             phialLocation =
@@ -81,15 +89,15 @@ public class ItemRegistration {
         SQUIRTGUNITEMS.register(block.getId().getPath(), () -> new BlockItem(block.get(), ITEM_PROPERTIES_WITH_TAB));
     }
 
-    public static void register(IEventBus eventbus){
+    public static void register(IEventBus eventbus) {
         BlockRegistration.BLOCKS.getEntries().forEach(ItemRegistration::fromBlock);
         SQUIRTGUNITEMS.register(eventbus);
     }
 
-    static{
+    static {
         ITEM_PROPERTIES_WITH_TAB = new Item.Properties().tab(SQUIRTGUN_TAB).rarity(Rarity.COMMON).stacksTo(64);
         ITEM_PROPERTIES_NO_TAB = new Item.Properties().rarity(Rarity.COMMON).stacksTo(1);
-        SQUIRTGUNITEMS = DeferredRegister.create(ForgeRegistries.ITEMS,  Squirtgun.MOD_ID);
+        SQUIRTGUNITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Squirtgun.MOD_ID);
         PHIAL = SQUIRTGUNITEMS.register(Constants.phialItemName, () -> new EmptyPhialItem(ITEM_PROPERTIES_WITH_TAB));
         SQUIRTSLUGITEM = SQUIRTGUNITEMS.register(Constants.slugItemName, () -> new GenericSlug(ITEM_PROPERTIES_NO_TAB));
         SQUIRTGUNITEM = SQUIRTGUNITEMS.register(Constants.gunItemName, () -> new SquirtgunItem(ITEM_PROPERTIES_WITH_TAB));

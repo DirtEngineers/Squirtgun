@@ -26,7 +26,15 @@ public class LocalizationGenerator extends LanguageProvider {
         this.add(String.format("item.squirtgun.%s", Constants.gunItemName), "Squirtgun");
         this.add(String.format("item.squirtgun.%s", Constants.phialItemName), "Empty Phial");
         this.add("item.squirtgun.gun_functionality", "Squirtgun reload/settings");
+        this.add("item.chemlib.milk", "Milk");
+        this.add("item.chemlib.lava", "Lava");
         this.add("sounds.squirtgun.squirt_slug_hit", "EWWW!");
+        this.add("sounds.squirtgun.reload_screen_close", "YEEEEHAAAA!");
+        this.add("sounds.squirtgun.phial_swap", "Phial Swapped");
+        this.add("sounds.squirtgun.gun_use", "Ready to roll!");
+        this.add("sounds.squirtgun.gun_fire", "BOOM!");
+        this.add("sounds.squirtgun.phial_complete", "Ding!  Fries are done.");
+        this.add("sounds.squirtgun.encapsulator_processing", "Time to make the doughnuts.");
         this.add("key.category.squirtgun", "Squirtgun");
         this.add("key.squirtgun.gun_ammo_load", "Load Ammunition");
         this.add("key.squirtgun.gun_display_ammo_status", "Toggle Ammunition Status Display");

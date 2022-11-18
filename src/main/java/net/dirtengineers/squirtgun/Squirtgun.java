@@ -5,6 +5,7 @@ import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
 import net.dirtengineers.squirtgun.common.registry.MenuRegistration;
 import net.dirtengineers.squirtgun.common.registry.Registry;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -29,6 +30,7 @@ public class Squirtgun {
         modEventBus.addListener(ItemRegistration::registerPhialsAndSlugs);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.COMMON_SPEC);
         Config.loadConfig(Config.COMMON_SPEC, FMLPaths.CONFIGDIR.get().resolve(String.format("%s-common.toml", Squirtgun.MOD_ID)));
+        ForgeMod.enableMilkFluid();
     }
 
     @SubscribeEvent

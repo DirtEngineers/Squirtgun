@@ -4,5 +4,41 @@
     "sounds": [
       "squirtgun:slug_hit"
     ]
+  },
+  "reload_screen_close": {
+    "subtitle": "sounds.squirtgun.reload_screen_close",
+    "sounds": [
+      "squirtgun:reload_screen_close"
+    ]
+  },
+  "phial_swap": {
+    "subtitle": "sounds.squirtgun.phial_swap",
+    "sounds": [
+      "squirtgun:phial_swap"
+    ]
+  },
+  "gun_use": {
+    "subtitle": "sounds.squirtgun.gun_use",
+    "sounds": [
+      "squirtgun:gun_use"
+    ]
+  },
+  "gun_fire": {
+    "subtitle": "sounds.squirtgun.gun_fire",
+    "sounds": [
+      "squirtgun:gun_fire"
+    ]
+  },
+  "phial_complete": {
+    "subtitle": "sounds.squirtgun.phial_complete",
+    "sounds": [
+      "squirtgun:phial_complete"
+    ]
+  },
+  "encapsulator_processing": {
+    "subtitle": "sounds.squirtgun.encapsulator_processing",
+    "sounds": [
+      "squirtgun:encapsulator_processing"
+    ]
   }
 }
