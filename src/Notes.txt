@@ -35,6 +35,8 @@ Phial ->
 2.  Possible upgrades for mob effects?
 3.  Ability to load potions
 
+Effects on blocks?  Need something like a pH scale to chemicals (chemlib)
+
 
 Consider honey
 Also consider potions
@@ -48,6 +50,30 @@ Migrate effects for fluids to a separate JSON for later modder support
 
 https://maven.tamaized.com/#/releases/smashingmods/alchemylib
 
+RELEASE TASKS:
+Get and install models/textures for gun and encapsulator
+Change sounds -- Audacity libraries!
+Make phial buttons use the default MC background
+Making the phials into buttons would work too, give them a button-y background
+Using the button background from default Minecraft would let it automatically change with texture packs as well
+
+Arcana — Today at 9:46 PM
+General play testing.  Test with different mods.
+Make sure everything looks nice, textures are good. Your reload menu didn't have a textured background.
+Make sure everything makes sense to a user or has some way of describing how to do it.
+Write a description for the mod page.
+
+I need to talk to you some time about how I am registering milk and lava as fluids.
+
+reload screen -> max rows == 9                                                                                  DONE
+Kill current ammo caption.  build a goddamned tooltip, bitch!                                                   DONE
+8 pixels of padding between things like the inner edge of the bg                                                PENDING ARTWORK
+render loaded phial in selection pool as well as in swap stack.  Loaded phial in pool disabled for selection    DONE
+phials in a linked list.  Keep the index of the one in the swap stack.                                          DONE
+Add note to bottom of reload screen reminding player that reloaded phial will be completely emptied
+
+
+API-ify chemlib
 
 
 

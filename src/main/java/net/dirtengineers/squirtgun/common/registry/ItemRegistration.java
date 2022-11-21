@@ -3,10 +3,7 @@ package net.dirtengineers.squirtgun.common.registry;
 import com.smashingmods.chemlib.api.Chemical;
 import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
-import net.dirtengineers.squirtgun.common.item.BasePhial;
-import net.dirtengineers.squirtgun.common.item.ChemicalPhial;
-import net.dirtengineers.squirtgun.common.item.EmptyPhialItem;
-import net.dirtengineers.squirtgun.common.item.GenericSlug;
+import net.dirtengineers.squirtgun.common.item.*;
 import net.dirtengineers.squirtgun.common.item.Squirtgun.SquirtgunItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
@@ -33,10 +30,12 @@ public class ItemRegistration {
     };
     public static final Item.Properties ITEM_PROPERTIES_NO_TAB;
     public static final Item.Properties ITEM_PROPERTIES_WITH_TAB;
+    public static final Item.Properties ITEM_PROPERTIES_WITH_TAB_STACK_TO_ONE;
     public static final DeferredRegister<Item> SQUIRTGUNITEMS;
     public static final RegistryObject<Item> PHIAL;
     public static final RegistryObject<Item> SQUIRTSLUGITEM;
     public static final RegistryObject<Item> SQUIRTGUNITEM;
+//    public static final RegistryObject<Item> TEST_ARTICLE_ITEM;
     public static Map<ChemicalPhial, Chemical> PHIALS;
     public static Map<Chemical, Fluid> CHEMICAL_FLUIDS;
     public static List<Chemical> ammunitionChemicals;
@@ -96,11 +95,13 @@ public class ItemRegistration {
 
     static {
         ITEM_PROPERTIES_WITH_TAB = new Item.Properties().tab(SQUIRTGUN_TAB).rarity(Rarity.COMMON).stacksTo(64);
+        ITEM_PROPERTIES_WITH_TAB_STACK_TO_ONE = new Item.Properties().tab(SQUIRTGUN_TAB).rarity(Rarity.COMMON).stacksTo(1);
         ITEM_PROPERTIES_NO_TAB = new Item.Properties().rarity(Rarity.COMMON).stacksTo(1);
         SQUIRTGUNITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Squirtgun.MOD_ID);
         PHIAL = SQUIRTGUNITEMS.register(Constants.phialItemName, () -> new EmptyPhialItem(ITEM_PROPERTIES_WITH_TAB));
         SQUIRTSLUGITEM = SQUIRTGUNITEMS.register(Constants.slugItemName, () -> new GenericSlug(ITEM_PROPERTIES_NO_TAB));
-        SQUIRTGUNITEM = SQUIRTGUNITEMS.register(Constants.gunItemName, () -> new SquirtgunItem(ITEM_PROPERTIES_WITH_TAB));
+        SQUIRTGUNITEM = SQUIRTGUNITEMS.register(Constants.gunItemName, () -> new SquirtgunItem(ITEM_PROPERTIES_WITH_TAB_STACK_TO_ONE));
+//        TEST_ARTICLE_ITEM = SQUIRTGUNITEMS.register("test_article_item", () -> new TestArticleItem(ITEM_PROPERTIES_WITH_TAB_STACK_TO_ONE));
         PHIALS = new HashMap<>();
         CHEMICAL_FLUIDS = new HashMap<>();
         ammunitionChemicals = new ArrayList<>();

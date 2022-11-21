@@ -26,10 +26,18 @@
   "key.category.squirtgun": "Squirtgun",
   "key.squirtgun.gun_ammo_load": "Load Ammunition",
   "key.squirtgun.gun_display_ammo_status": "Toggle Ammunition Status Display",
+  "sounds.squirtgun.encapsulator_processing": "Time to make the doughnuts.",
+  "sounds.squirtgun.gun_fire": "BOOM!",
+  "sounds.squirtgun.gun_use": "Ready to roll!",
+  "sounds.squirtgun.phial_complete": "Ding!  Fries are done.",
+  "sounds.squirtgun.phial_swap": "Phial Swapped",
+  "sounds.squirtgun.reload_screen_close": "YEEEEHAAAA!",
   "sounds.squirtgun.squirt_slug_hit": "EWWW!",
   "squirtgun.container.encapsulator": "Dr. Clark's Fully Automatic Fluid Encapsulation Matrix",
   "squirtgun.reload_screen.current_ammunition": "Current Ammunition: ",
   "squirtgun.reload_screen.inventory_warning": "No room in inventory for ",
   "squirtgun.text.open_gui": "Open Squirtgun Settings",
-  "tooltip.squirtgun.energy_requirement": "Requires %d FE/t"
+  "tooltip.squirtgun.energy_requirement": "Requires %d FE/t",
+  "tooltip.squirtgun.gui.phial_ammo_loss": "Warning: Currrently loaded ammo will be lost upon change.",
+  "tooltip.squirtgun.gui.phial_is_loaded": "Loaded"
 }

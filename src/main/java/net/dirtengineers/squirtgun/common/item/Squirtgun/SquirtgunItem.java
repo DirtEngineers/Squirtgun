@@ -34,6 +34,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 
 import static net.dirtengineers.squirtgun.common.registry.ItemRegistration.CHEMICAL_FLUIDS;
 import static net.dirtengineers.squirtgun.common.registry.ItemRegistration.ammunitionChemicals;
@@ -44,8 +45,6 @@ public class SquirtgunItem extends BowItem {
     int maxShots;
     int baseMaxShots = 10;
     Chemical chemical;
-
-    //TODO:Change on loading new phial or firing slug
     private boolean statusChanged;
 
     public SquirtgunItem(Properties pProperties) {
@@ -56,12 +55,11 @@ public class SquirtgunItem extends BowItem {
 
     @Override
     public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pItemSlot, boolean pIsSelected) {
-        if (!pLevel.isClientSide) {//ForgeRegistries.FLUIDS.getValue(new ResourceLocation("chemlib:hydrochloric_acid_fluid"))
-            if (chemical == null && statusChanged)
-                loadFromNBT(pStack);
-            if (this.statusChanged)
-                setTag(pStack);
-        }
+        //ForgeRegistries.FLUIDS.getValue(new ResourceLocation("chemlib:hydrochloric_acid_fluid"))
+        if (chemical == null && statusChanged)
+            loadFromNBT(pStack);
+        if (this.statusChanged)
+            setTag(pStack);
     }
 
     @Override
@@ -183,11 +181,12 @@ public class SquirtgunItem extends BowItem {
     }
 
     private boolean hasAmmunition(Player pPlayer) {
-        if (pPlayer.getAbilities().instabuild && chemical == null) {
-            chemical = (Chemical) ForgeRegistries.ITEMS.getValue(new ResourceLocation("chemlib:hydrochloric_acid"));
-            shotsAvailable = maxShots;
-            statusChanged = true;
-        }
+//        if (pPlayer.getAbilities().instabuild && chemical == null) {
+//            this.loadNewPhial(new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation("item.squirtgun.hydrochloric_acid_phial")), 1));
+//            chemical = (Chemical) ForgeRegistries.ITEMS.getValue(new ResourceLocation("chemlib:hydrochloric_acid"));
+//            shotsAvailable = maxShots;
+//            statusChanged = true;
+//        }
         return shotsAvailable > 0 || pPlayer.getAbilities().instabuild;
     }
 
@@ -227,9 +226,18 @@ public class SquirtgunItem extends BowItem {
 
     private void loadFromNBT(ItemStack pStack) {
         CompoundTag stackTag = pStack.getOrCreateTag();
-        shotsAvailable = stackTag.contains(Constants.SHOTS_AVAILABLE_TAG) ? stackTag.getInt(Constants.SHOTS_AVAILABLE_TAG) : 0;
-        maxShots = stackTag.contains(Constants.MAX_SHOTS_TAG) ? stackTag.getInt(Constants.MAX_SHOTS_TAG) : 0;
-        chemical = stackTag.contains(Constants.CHEMICAL_TAG) ? (Chemical) ForgeRegistries.ITEMS.getValue(new ResourceLocation(stackTag.getString(Constants.CHEMICAL_TAG))) : null;
+        shotsAvailable = (stackTag.contains(Constants.SHOTS_AVAILABLE_TAG)
+                && !Objects.requireNonNull(stackTag.get(Constants.SHOTS_AVAILABLE_TAG)).getAsString().equals(""))
+                ? stackTag.getInt(Constants.SHOTS_AVAILABLE_TAG)
+                : 0;
+        maxShots = (stackTag.contains(Constants.MAX_SHOTS_TAG)
+                && !Objects.requireNonNull(stackTag.get(Constants.MAX_SHOTS_TAG)).getAsString().equals(""))
+                ? stackTag.getInt(Constants.MAX_SHOTS_TAG)
+                : ((SquirtgunItem) pStack.getItem()).baseMaxShots;
+        chemical = (stackTag.contains(Constants.CHEMICAL_TAG)
+                && !Objects.requireNonNull(stackTag.get(Constants.CHEMICAL_TAG)).getAsString().equals(""))
+                ? (Chemical) ForgeRegistries.ITEMS.getValue(new ResourceLocation(stackTag.getString(Constants.CHEMICAL_TAG)))
+                : null;
     }
 
     private void setTag(ItemStack pStack) {

@@ -14,8 +14,10 @@ import net.dirtengineers.squirtgun.common.recipe.PhialRecipe;
 import net.dirtengineers.squirtgun.common.registry.BlockEntityRegistration;
 import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
 import net.dirtengineers.squirtgun.common.registry.RecipeRegistration;
+import net.dirtengineers.squirtgun.common.registry.SoundEventRegistration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -91,6 +93,9 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity {
     @Override
     public void processRecipe() {
         if (this.getProgress() < maxProgress) {
+            if(this.getProgress() == 1) {
+                Objects.requireNonNull(this.getLevel()).playSound(null, this.getBlockPos(), SoundEventRegistration.ENCAPSULATOR_PROCESSING.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
+            }
             incrementProgress();
         } else {
             if (currentRecipe instanceof PhialRecipe) {
@@ -99,6 +104,7 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity {
                 getFluidStorage().getFluidStack().shrink(((ChemicalPhial) outputStack.getItem()).getFluidCapacityInMb());
                 getInputHandler().decrementSlot(0, 1);
                 getOutputHandler().insertItem(FILLED_PHIAL_OUTPUT_SLOT, outputStack, false);
+                Objects.requireNonNull(this.getLevel()).playSound(null, this.getBlockPos(), SoundEventRegistration.PHIAL_COMPLETE.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
             }
         }
         this.getEnergyHandler().extractEnergy(Config.Common.encapsulatorEnergyPerTick.get(), false);

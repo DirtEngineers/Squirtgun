@@ -31,6 +31,18 @@ public class SquirtgunPacketHandler {
                 .encoder(InventoryRemoveC2SPacket::encode)
                 .consumerNetworkThread(InventoryRemoveC2SPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(GetReloadPhialsListC2SPacket.class, PACKET_ID++, NetworkDirection.PLAY_TO_SERVER)
+                .decoder(GetReloadPhialsListC2SPacket::new)
+                .encoder(GetReloadPhialsListC2SPacket::encode)
+                .consumerNetworkThread((pPacket, pContext) -> {
+                    GetReloadPhialsListC2SPacket.handle(pContext);
+                })
+                .add();
+        INSTANCE.messageBuilder(SendReloadPhialsListS2PPacket.class, PACKET_ID++, NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SendReloadPhialsListS2PPacket::new)
+                .encoder(SendReloadPhialsListS2PPacket::encode)
+                .consumerNetworkThread(SendReloadPhialsListS2PPacket::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message) {

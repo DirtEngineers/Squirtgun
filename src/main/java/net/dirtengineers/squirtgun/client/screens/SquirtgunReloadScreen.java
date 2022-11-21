@@ -5,24 +5,24 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.client.buttons.PhialReloadScreenButton;
+import net.dirtengineers.squirtgun.common.item.BasePhial;
 import net.dirtengineers.squirtgun.common.item.ChemicalPhial;
 import net.dirtengineers.squirtgun.common.item.EmptyPhialItem;
 import net.dirtengineers.squirtgun.common.item.Squirtgun.SquirtgunItem;
-import net.dirtengineers.squirtgun.common.network.InventoryInsertC2SPacket;
-import net.dirtengineers.squirtgun.common.network.InventoryRemoveC2SPacket;
-import net.dirtengineers.squirtgun.common.network.SquirtgunPacketHandler;
+import net.dirtengineers.squirtgun.common.network.*;
 import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
 import net.dirtengineers.squirtgun.common.registry.SoundEventRegistration;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -34,34 +34,47 @@ import java.util.*;
 public class SquirtgunReloadScreen extends Screen {
     int buttonHeight = 16;
     int buttonWidth = 16;
-    int xShift = (int) Math.floor(buttonWidth * 1.5);
+    int xShift = (int) Math.floor(buttonWidth + 3);
     int yShift = xShift;
     int centerX;
     int centerY;
+    final int maxButtonColumns = 9;
+    int buttonRows = 0;
+    int bgWidth = 250;
+    int bgHeight = 162;
+    private int bgOffsetY = 2;
+    private final int titleOffsetY = 12;
+    private final int CurrentAmmoOffsetY = 32;
+    private final int topRowOffsetY = 30;
+    private final int phialTableOffsetY = 70;
+    private int phialTableBottom = 0;
+    private final ResourceLocation BG_LOCATION = new ResourceLocation("textures/gui/demo_background.png");
+    private final ResourceLocation INVENTORY_LOCATION = new ResourceLocation("textures/gui/container/creative_inventory/tab_item_search.png");
     int destinationSlot = Constants.DROP_ITEM_INDEX;
     int offhandLocationIndex = -1;
-    int inventoryWarningYpos;
-    final int buttonColumns = 5;
-    boolean showInventoryWarning = false;
     PhialReloadScreenButton gunButton;
-    private final List<ItemStack> phials = new ArrayList<>();
+    private final LinkedList<ItemStack> phials = new LinkedList<>();
     private ItemStack phialSwapStack = ItemStack.EMPTY;
     private SquirtgunItem actualGun;
-    private final Player player = Minecraft.getInstance().player;
+    private static final Player player = Minecraft.getInstance().player;
+    public static volatile boolean hasInventory;
 
     public SquirtgunReloadScreen() {
         super(MutableComponent.create(new TranslatableContents(Constants.gunFunctionality)));
     }
 
+    public static void updateTest(boolean pUpdateTest) {
+        hasInventory = pUpdateTest;
+    }
+
     @Override
     protected void init() {
-        centerX = width / 2;
-        centerY = height / 2;
         actualGun = (SquirtgunItem) SquirtgunItem.getGun(Minecraft.getInstance().player).getItem();
-        if(player != null) {
+        if (player != null) {
             offhandLocationIndex = player.getInventory().items.size() + 1;
         }
-        makeGunButton();
+//        hasInventory = false;
+//        SquirtgunPacketHandler.sendToServer(new GetReloadPhialsListC2SPacket());
         populatePhialsList();
         UpdateLayout();
     }
@@ -69,38 +82,23 @@ public class SquirtgunReloadScreen extends Screen {
     @Override
     public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         renderBackground(pPoseStack);
-        //RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(0XFF, 0XFF, 0XFF, 128.0F);
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
 
-        String swapPhialName = MutableComponent.create(new TranslatableContents(phialSwapStack.getItem().getDescriptionId())).getString();
         drawCenteredString(
                 pPoseStack
                 , Minecraft.getInstance().font
-                , MutableComponent.create(new TranslatableContents(Constants.gunFunctionality)).withStyle(ChatFormatting.BOLD)
+                , MutableComponent.create(new TranslatableContents(Constants.gunFunctionality)).setStyle(Style.EMPTY.withFont(Style.DEFAULT_FONT)
+                        .withColor(ChatFormatting.WHITE)).withStyle(ChatFormatting.BOLD)
                 , centerX
-                , 12
+                , bgOffsetY + titleOffsetY
                 , 0xFFFFFF);
         drawCenteredString(
                 pPoseStack
                 , Minecraft.getInstance().font
-                , MutableComponent.create(Component.literal(Component.translatable(Constants.reloadScreenCurrentAmmunition).getString() + swapPhialName).getContents())
-                        .getString()
+                , MutableComponent.create(new TranslatableContents(Constants.gunGuiPhialAmmoLossWarning)).withStyle(Constants.LOADED_PHIAL_TEXT_STYLE)
                 , centerX
-                , centerY - (yShift * 3)
+                , phialTableBottom
                 , 0xFFFFFF);
-        if (showInventoryWarning) {
-            drawCenteredString(
-                    pPoseStack
-                    , Minecraft.getInstance().font
-                    , MutableComponent.create(Component.literal(Component.translatable(Constants.reloadScreenInventoryWarning).getString() + swapPhialName).getContents())
-                            .withStyle(ChatFormatting.BOLD).getString()
-                    , centerX
-                    , inventoryWarningYpos
-                    , 0xFFFFFF);
-        }
-
         this.children().forEach(e -> {
             if (e instanceof PhialReloadScreenButton btn) {
                 if (btn.isMouseOver(pMouseX, pMouseY)) {
@@ -112,17 +110,13 @@ public class SquirtgunReloadScreen extends Screen {
 
     @Override
     public void renderBackground(PoseStack pPoseStack, int pVOffset) {
-        if(this.minecraft != null) {
-            if (this.minecraft.level != null) {
-                // 0X3FEF_EFF0  to 0X2FEF_EFF0
-                // 0X3FEF_EFF0  to 0X2FEF_EFF0
-                // From the super class
-                this.fillGradient(pPoseStack, 0, 0, this.width, this.height, -0X3FEFEFF0, -0X9FEFEFF0);
-                net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.ScreenEvent.BackgroundRendered(this, pPoseStack));
-            } else {
-                this.renderDirtBackground(pVOffset);
-            }
-        }
+        super.renderBackground(pPoseStack, pVOffset);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.enableDepthTest();
+        RenderSystem.setShaderTexture(0, BG_LOCATION);
+        this.blit(pPoseStack, centerX - bgWidth / 2, bgOffsetY, 0, 0, bgWidth, bgHeight);
     }
 
     @Override
@@ -132,14 +126,14 @@ public class SquirtgunReloadScreen extends Screen {
 
     @Override
     public void onClose() {
-        //TODO: WHAT IF PLAYER CLOSES WITHOUT SELECTING A PHIAL?
         if (player != null) {
-            if (((ChemicalPhial) phialSwapStack.getItem()).getChemical() != actualGun.getChemical()) {
+            if (((BasePhial) phialSwapStack.getItem()).getChemical() != actualGun.getChemical()) {
                 ItemStack removeStack = phialSwapStack.copy();// phial to remove from inventory
                 ItemStack insertStack = actualGun.loadNewPhial(phialSwapStack);
-                if(insertStack.getItem() instanceof EmptyPhialItem) {
+                if (insertStack.getItem() instanceof EmptyPhialItem) {
+                    setInventorySlotForPlacement();
                     SquirtgunPacketHandler.sendToServer(new InventoryInsertC2SPacket(destinationSlot, insertStack));
-                    destinationSlot = removeStack.getCount() == offhandLocationIndex ? Constants.OFF_HAND_INDEX : removeStack.getCount() ;
+                    destinationSlot = removeStack.getCount() == offhandLocationIndex ? Constants.OFF_HAND_INDEX : removeStack.getCount();
                     SquirtgunPacketHandler.sendToServer(new InventoryRemoveC2SPacket(destinationSlot, removeStack));
                     player.playSound(SoundEventRegistration.RELOAD_SCREEN_CLOSE.get());
                 }
@@ -150,16 +144,20 @@ public class SquirtgunReloadScreen extends Screen {
 
     private void UpdateLayout() {
         clearWidgets();
-        addRenderableWidget(gunButton);
+        centerX = width / 2;
+        centerY = height / 2;
+        makeGunButton();
         makeSwapStackButton();
         fillPhialTable();
     }
 
+
+    //TODO: make a packet with reply to sender
     private void populatePhialsList() {
         if (player != null) {
             phials.clear();
-            for(int pSlot = 0; pSlot < player.getInventory().items.size(); pSlot++) {
-                if(player.getInventory().items.get(pSlot).getItem() instanceof ChemicalPhial) {
+            for (int pSlot = 0; pSlot < player.getInventory().items.size(); pSlot++) {
+                if (player.getInventory().items.get(pSlot).getItem() instanceof ChemicalPhial) {
                     ItemStack tempStack = player.getInventory().items.get(pSlot).copy();
                     tempStack.setCount(pSlot);
                     addToPhials(tempStack);
@@ -170,71 +168,58 @@ public class SquirtgunReloadScreen extends Screen {
                 tempStack.setCount(offhandLocationIndex);
                 addToPhials(tempStack);
             }
-            Optional<ChemicalPhial> phial = ItemRegistration.PHIALS
-                    .entrySet()
-                    .stream()
-                    .filter(entry -> actualGun.getChemical().equals(entry.getValue()))
-                    .findFirst()
-                    .map(Map.Entry::getKey);
 
-            phialSwapStack = phial.map(
+            //Get from gun
+            Optional<BasePhial> phialOptional = Optional.of((BasePhial) Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(ItemRegistration.PHIAL.getId())));
+            if (actualGun.getChemical() != null) {
+                phialOptional = ItemRegistration.PHIALS
+                        .entrySet()
+                        .stream()
+                        .filter(entry -> actualGun.getChemical().equals(entry.getValue()))
+                        .findFirst()
+                        .map(Map.Entry::getKey);
+            }
+            phialSwapStack = phialOptional.map(
                             chemicalPhial -> new ItemStack(chemicalPhial, 1))
                     .orElseGet(() -> new ItemStack(ForgeRegistries.ITEMS.getValue(ItemRegistration.PHIAL.getId()), 1));
-            removeFromPhials(phialSwapStack);
+            phials.sort(new ItemStackComparator());
 
-            if (!phials.isEmpty()) {
-                phials.sort(Comparator.comparing(s -> s.getDescriptionId().toLowerCase()));
+            if (!ForgeRegistries.ITEMS.getResourceKey(phialSwapStack.getItem()).equals(ForgeRegistries.ITEMS.getResourceKey(ItemRegistration.PHIAL.get()))) {
+                addToPhials(phialSwapStack.copy());
             }
         }
-    }
-
-    private void addToPhials(ItemStack pStack) {
-        if (!phialsContainsStack(pStack)) {
-            phials.add(pStack);
-        }
-    }
-
-    private void removeFromPhials(ItemStack pStack){
-        ItemStack forRemoval = ItemStack.EMPTY;
-        for(ItemStack phialStack : phials) {
-            if(phialStack.getItem().getDescriptionId().equals(pStack.getItem().getDescriptionId())) {
-                forRemoval = phialStack;
-            }
-        }
-        if(forRemoval != ItemStack.EMPTY) {
-            phials.remove(forRemoval);
-        }
-    }
-
-    private boolean phialsContainsStack(ItemStack pStack) {
-        for(ItemStack phialStack : phials) {
-            if(phialStack.getItem().getDescriptionId().equals(pStack.getItem().getDescriptionId())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private void fillPhialTable() {
-        int index = 0;
-        int xPos = calculateLeftOffset(buttonColumns);
-        int yPos = centerY;
+        int buttonsInRow = 0;
+        buttonRows = 0;
+        int xPos = centerX - calculateLeftOffset(maxButtonColumns);
+        int yPos = bgOffsetY + phialTableOffsetY;
 
         for (ItemStack phial : phials) {
-            PhialReloadScreenButton btn = makePhialButton(phial, xPos + (index * xShift), yPos);
-            addRenderableWidget(btn);
-
+            addRenderableWidget(makePhialButton(
+                    phial
+                    , false
+                    , xPos + (buttonsInRow * (xShift))
+                    , yPos));
             // Spaces the buttons
-            index++;
-            if (index % buttonColumns == 0) {
-                index = 0;
-                yPos += yShift;
+            buttonsInRow++;
+            if (buttonsInRow % maxButtonColumns == 0) {
+                buttonsInRow = 0;
+                buttonRows++;
+                yPos += yShift + 1;
             }
         }
-        inventoryWarningYpos = yPos + yShift;
+        phialTableBottom = yPos + (2 * yShift);
     }
 
-    private PhialReloadScreenButton makePhialButton(ItemStack pPhialStack, int pX, int pY) {
+    private int calculateLeftOffset(int pColumns) {
+        int buttonColumns = Math.min(phials.size(), pColumns);
+        return (int) (xShift * (buttonColumns * 0.5));
+    }
+
+    private PhialReloadScreenButton makePhialButton(ItemStack pPhialStack, boolean isSwapStack, int pX, int pY) {
+        boolean isSameAsSwapStack = ItemStackComparator.getItemPath(pPhialStack).compareToIgnoreCase(ItemStackComparator.getItemPath(phialSwapStack)) == 0;
         PhialReloadScreenButton btn = new PhialReloadScreenButton(
                 pX
                 , pY
@@ -242,61 +227,42 @@ public class SquirtgunReloadScreen extends Screen {
                 , buttonHeight
                 , MutableComponent.create(new TranslatableContents(pPhialStack.getItem().getDescriptionId())).withStyle(Style.EMPTY.withFont(Style.DEFAULT_FONT))
                 , null
-                , pButton -> this.swapPhials((PhialReloadScreenButton)pButton));
+                , pButton -> this.swapPhials((PhialReloadScreenButton) pButton));
         btn.setTargetStack(pPhialStack);
+        btn.active = !isSameAsSwapStack;
+        btn.setDisplayLoadedMessage(isSameAsSwapStack && !isSwapStack);
         return btn;
     }
 
     private void makeSwapStackButton() {
         PhialReloadScreenButton btn = makePhialButton(
                 phialSwapStack
+                , true
                 , centerX + (buttonWidth)
-                , centerY - (yShift * 2));
-        btn.active = false;
+                , bgOffsetY + topRowOffsetY);
         addRenderableWidget(btn);
     }
 
     private void makeGunButton() {
-        if (gunButton == null) {
-            gunButton = new PhialReloadScreenButton(
-                    centerX - (buttonWidth * 2)
-                    , centerY - (yShift * 2)
-                    , buttonWidth
-                    , buttonHeight
-                    , MutableComponent.create(new TranslatableContents(actualGun.getDescriptionId())).withStyle(Style.EMPTY.withFont(Style.DEFAULT_FONT))
-                    , new ResourceLocation(Squirtgun.MOD_ID, "textures/item/squirtgun.png")
-                    , pButton -> this.swapPhials((PhialReloadScreenButton)pButton));
-            gunButton.setTargetStack(new ItemStack(actualGun));
-            gunButton.active = false;
-        }
-    }
-
-    private int calculateLeftOffset(int pColumns) {
-        int columns = Math.min(phials.size(), pColumns);
-        int leftShift = (int) Math.floor((double) columns / 2) * (xShift);
-        if (columns % 2 == 1) {
-            leftShift += Math.floor((double) xShift / 2);
-        }
-        return centerX - leftShift;
+        gunButton = new PhialReloadScreenButton(
+                centerX - (buttonWidth * 2)
+                , bgOffsetY + topRowOffsetY
+                , buttonWidth
+                , buttonHeight
+                , MutableComponent.create(new TranslatableContents(actualGun.getDescriptionId())).withStyle(Style.EMPTY.withFont(Style.DEFAULT_FONT))
+                , new ResourceLocation(Squirtgun.MOD_ID, "textures/item/squirtgun.png")
+                , pButton -> this.swapPhials((PhialReloadScreenButton) pButton));
+        gunButton.setTargetStack(new ItemStack(actualGun));
+        gunButton.active = false;
+        addRenderableWidget(gunButton);
     }
 
     private void swapPhials(PhialReloadScreenButton pButton) {
         if (pButton.getTargetStack() != null && player != null) {
             if (pButton.getTargetStack().getItem() instanceof ChemicalPhial) {
-                ItemStack tempStack = phialSwapStack.copy();
                 phialSwapStack = pButton.getTargetStack().copy();
-                removeFromPhials(pButton.getTargetStack());
-
-                if (tempStack.getItem() instanceof ChemicalPhial) {
-                    addToPhials(tempStack);
-                }
-                if (!phials.isEmpty()) {
-                    phials.sort(Comparator.comparing(s -> s.getDescriptionId().toLowerCase()));
-                }
-                setInventorySlotForPlacement();
-                showInventoryWarning = destinationSlot == Constants.DROP_ITEM_INDEX;
                 UpdateLayout();
-                if(player.level.isClientSide) {
+                if (player.level.isClientSide) {
                     player.playSound(SoundEventRegistration.PHIAL_SWAP.get());
                 }
             }
@@ -304,7 +270,7 @@ public class SquirtgunReloadScreen extends Screen {
     }
 
     private void setInventorySlotForPlacement() {
-       destinationSlot = Constants.DROP_ITEM_INDEX;
+        destinationSlot = Constants.DROP_ITEM_INDEX;
         ItemStack stack;
         for (int slotNumber = 0; slotNumber < Objects.requireNonNull(player).getInventory().items.size(); ++slotNumber) {
             stack = player.getInventory().items.get(slotNumber);
@@ -336,6 +302,34 @@ public class SquirtgunReloadScreen extends Screen {
         //Off hand perhaps?
         if (destinationSlot == Constants.DROP_ITEM_INDEX) {
             destinationSlot = player.getInventory().offhand.get(0).isEmpty() ? Constants.OFF_HAND_INDEX : Constants.DROP_ITEM_INDEX;
+        }
+    }
+
+    private void addToPhials(ItemStack pStack) {
+        if (phialsGetStackIndex(pStack) < 0) {
+            phials.add(pStack);
+        }
+    }
+
+    private int phialsGetStackIndex(ItemStack pStack) {
+        for (ItemStack phial : phials) {
+            if (ForgeRegistries.ITEMS.getResourceKey(phial.getItem()).equals(ForgeRegistries.ITEMS.getResourceKey(pStack.getItem()))) {
+                return phials.indexOf(phial);
+            }
+        }
+        return -1;
+    }
+
+    static class ItemStackComparator implements Comparator<ItemStack> {
+
+        @Override
+        public int compare(ItemStack itemStack1, ItemStack itemStack2) {
+            return Integer.compare(getItemPath(itemStack1).compareToIgnoreCase(getItemPath(itemStack2)), 0);
+        }
+
+        public static String getItemPath(ItemStack pStack) {
+            ResourceKey<Item> key = ForgeRegistries.ITEMS.getResourceKey(pStack.getItem()).orElse(null);
+            return key != null ? key.location().getPath() : "";
         }
     }
 }
