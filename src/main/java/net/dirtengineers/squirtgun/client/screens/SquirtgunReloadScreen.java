@@ -5,6 +5,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.client.buttons.PhialReloadScreenButton;
+import net.dirtengineers.squirtgun.client.capabilities.SquirtgunCapabilities;
+import net.dirtengineers.squirtgun.client.capabilities.squirtgun.IAmmunitionCapability;
 import net.dirtengineers.squirtgun.common.item.BasePhial;
 import net.dirtengineers.squirtgun.common.item.ChemicalPhial;
 import net.dirtengineers.squirtgun.common.item.EmptyPhialItem;
@@ -55,7 +57,9 @@ public class SquirtgunReloadScreen extends Screen {
     PhialReloadScreenButton gunButton;
     private final LinkedList<ItemStack> phials = new LinkedList<>();
     private ItemStack phialSwapStack = ItemStack.EMPTY;
-    private SquirtgunItem actualGun;
+//    private ItemStack pGunStack;
+//    private SquirtgunItem actualGun;
+//    private IAmmunitionCapability ammunitionHandler;
     private static final Player player = Minecraft.getInstance().player;
     public static volatile boolean hasInventory;
 
@@ -69,7 +73,6 @@ public class SquirtgunReloadScreen extends Screen {
 
     @Override
     protected void init() {
-        actualGun = (SquirtgunItem) SquirtgunItem.getGun(Minecraft.getInstance().player).getItem();
         if (player != null) {
             offhandLocationIndex = player.getInventory().items.size() + 1;
         }
@@ -127,9 +130,10 @@ public class SquirtgunReloadScreen extends Screen {
     @Override
     public void onClose() {
         if (player != null) {
-            if (((BasePhial) phialSwapStack.getItem()).getChemical() != actualGun.getChemical()) {
+            IAmmunitionCapability ammunitionHandler = SquirtgunItem.getPlayerGun(player).getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO, null).orElse(null);
+            if (((BasePhial) phialSwapStack.getItem()).getChemical() != ammunitionHandler.getChemical()) {
                 ItemStack removeStack = phialSwapStack.copy();// phial to remove from inventory
-                ItemStack insertStack = actualGun.loadNewPhial(phialSwapStack);
+                ItemStack insertStack = SquirtgunItem.loadNewPhial(player, phialSwapStack);
                 if (insertStack.getItem() instanceof EmptyPhialItem) {
                     setInventorySlotForPlacement();
                     SquirtgunPacketHandler.sendToServer(new InventoryInsertC2SPacket(destinationSlot, insertStack));
@@ -171,11 +175,13 @@ public class SquirtgunReloadScreen extends Screen {
 
             //Get from gun
             Optional<BasePhial> phialOptional = Optional.of((BasePhial) Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(ItemRegistration.PHIAL.getId())));
-            if (actualGun.getChemical() != null) {
+            IAmmunitionCapability ammunitionHandler = player.getItemInHand(player.getUsedItemHand()).getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO).orElse(null);
+//                    SquirtgunItem.getPlayerGun(player).getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO, null).orElse(null);
+            if (ammunitionHandler.getChemical() != null) {
                 phialOptional = ItemRegistration.PHIALS
                         .entrySet()
                         .stream()
-                        .filter(entry -> actualGun.getChemical().equals(entry.getValue()))
+                        .filter(entry -> ammunitionHandler.getChemical().equals(entry.getValue()))
                         .findFirst()
                         .map(Map.Entry::getKey);
             }
@@ -244,15 +250,16 @@ public class SquirtgunReloadScreen extends Screen {
     }
 
     private void makeGunButton() {
+        ItemStack gunStack = SquirtgunItem.getPlayerGun(Minecraft.getInstance().player);
         gunButton = new PhialReloadScreenButton(
                 centerX - (buttonWidth * 2)
                 , bgOffsetY + topRowOffsetY
                 , buttonWidth
                 , buttonHeight
-                , MutableComponent.create(new TranslatableContents(actualGun.getDescriptionId())).withStyle(Style.EMPTY.withFont(Style.DEFAULT_FONT))
+                , MutableComponent.create(new TranslatableContents(gunStack.getItem().getDescriptionId())).withStyle(Style.EMPTY.withFont(Style.DEFAULT_FONT))
                 , new ResourceLocation(Squirtgun.MOD_ID, "textures/item/squirtgun.png")
                 , pButton -> this.swapPhials((PhialReloadScreenButton) pButton));
-        gunButton.setTargetStack(new ItemStack(actualGun));
+        gunButton.setTargetStack(gunStack);
         gunButton.active = false;
         addRenderableWidget(gunButton);
     }

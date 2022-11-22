@@ -42,7 +42,7 @@ public class ClientForgeEventHandler {
         Player player = mineCraft.player;
         if (player != null) {
             if (Keybinds.shiftClickGuiBinding.consumeClick() && Minecraft.getInstance().screen == null) {
-                ItemStack gun = SquirtgunItem.getGun(Minecraft.getInstance().player);
+                ItemStack gun = SquirtgunItem.getPlayerGun(Minecraft.getInstance().player);
                 if (!gun.isEmpty()) {
                     ModScreens.openGunSettingsScreen();
                 }

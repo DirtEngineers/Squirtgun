@@ -4,9 +4,11 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.smashingmods.chemlib.api.Chemical;
 import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.client.Keybinds;
+import net.dirtengineers.squirtgun.client.capabilities.SquirtgunCapabilities;
+import net.dirtengineers.squirtgun.client.capabilities.squirtgun.AmmunitionCapabilityProvider;
+import net.dirtengineers.squirtgun.client.capabilities.squirtgun.IAmmunitionCapability;
 import net.dirtengineers.squirtgun.client.screens.ModScreens;
 import net.dirtengineers.squirtgun.common.entity.SquirtSlug;
-import net.dirtengineers.squirtgun.common.item.BasePhial;
 import net.dirtengineers.squirtgun.common.item.ChemicalPhial;
 import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
 import net.dirtengineers.squirtgun.common.registry.SoundEventRegistration;
@@ -30,59 +32,63 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
-
-import static net.dirtengineers.squirtgun.common.registry.ItemRegistration.CHEMICAL_FLUIDS;
-import static net.dirtengineers.squirtgun.common.registry.ItemRegistration.ammunitionChemicals;
 
 
 public class SquirtgunItem extends BowItem {
-    int shotsAvailable;
-    int maxShots;
-    int baseMaxShots = 10;
-    Chemical chemical;
-    private boolean statusChanged;
 
     public SquirtgunItem(Properties pProperties) {
         super(pProperties);
-        maxShots = baseMaxShots;
-        statusChanged = true;
+    }
+
+    @javax.annotation.Nullable
+    @Override
+    public ICapabilityProvider initCapabilities(ItemStack pStack, @javax.annotation.Nullable CompoundTag nbt) {
+        return new AmmunitionCapabilityProvider(pStack);
     }
 
     @Override
     public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pItemSlot, boolean pIsSelected) {
-        //ForgeRegistries.FLUIDS.getValue(new ResourceLocation("chemlib:hydrochloric_acid_fluid"))
-        if (chemical == null && statusChanged)
-            loadFromNBT(pStack);
-        if (this.statusChanged)
-            setTag(pStack);
+
     }
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        IAmmunitionCapability ammunitionHandler = pStack.getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO).orElse(null);
         pTooltipComponents.add(
                 Component.literal(
                                 TextUtility.buildAmmoStatus(
-                                        chemical == null ?
+                                        ammunitionHandler.getChemical() == null ?
                                                 MutableComponent.create(new TranslatableContents(Constants.emptyFluidNameKey)).getString()
-                                                : getAmmoStatus()
+                                                : ammunitionHandler.getAmmoStatus()
                                         , MutableComponent.create(new TranslatableContents(this.getDescriptionId())).getString()))
                         .withStyle(Constants.HOVER_TEXT_STYLE));
+
+
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
+    }
+
+    private void loadingTest(ItemStack pGunStack) {
+        IAmmunitionCapability ammunitionHandler = pGunStack.getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO, null).orElse(null);
+        ammunitionHandler.setChemical((Chemical) ForgeRegistries.ITEMS.getValue(new ResourceLocation("chemlib:hydrochloric_acid")));
+        ammunitionHandler.setShotsAvailable(6);
     }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
+
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
+
+        loadingTest(itemstack);
         // Only perform the shift action
         if (pPlayer.isShiftKeyDown()) {
-            if (!pLevel.isClientSide) {
-                GunProperties.setCanFire(itemstack, true);
-            }
+//            if (!pLevel.isClientSide) {
+//                GunProperties.setCanFire(itemstack, true);
+//            }
 
             if (pLevel.isClientSide) {
                 if (Keybinds.shiftClickGuiBinding.getKey() == InputConstants.UNKNOWN) {
@@ -96,7 +102,7 @@ public class SquirtgunItem extends BowItem {
             return InteractionResultHolder.pass(itemstack);
         }
 
-        boolean hasAmmo = hasAmmunition(pPlayer);
+        boolean hasAmmo = itemstack.getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO, null).orElse(null).hasAmmunition();
 
         net.minecraftforge.common.ForgeHooks.getProjectile(pPlayer, itemstack, hasAmmo ? new ItemStack(ItemRegistration.SQUIRTSLUGITEM.get()) : ItemStack.EMPTY);
         InteractionResultHolder<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(itemstack, pLevel, pPlayer, pHand, hasAmmo);
@@ -126,7 +132,7 @@ public class SquirtgunItem extends BowItem {
 
             boolean flag = player.getAbilities().instabuild || EnchantmentHelper.getTagEnchantmentLevel(Enchantments.INFINITY_ARROWS, pStack) > 0;
 
-            boolean hasAmmo = hasAmmunition(player);
+            boolean hasAmmo = pStack.getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO, null).orElse(null).hasAmmunition();
             net.minecraftforge.common.ForgeHooks.getProjectile(pEntityLiving, pStack, hasAmmo ? new ItemStack(ItemRegistration.SQUIRTSLUGITEM.get()) : ItemStack.EMPTY);
 
             int i = getUseDuration(pStack) - pTimeLeft;
@@ -138,7 +144,7 @@ public class SquirtgunItem extends BowItem {
 
             if (hasAmmo) {
                 if (!pLevel.isClientSide) {
-                    SquirtSlug slug = makeSlugToFire(pLevel, player);
+                    SquirtSlug slug = makeSlugToFire(pStack, pLevel, player);
                     if (slug != null) {
                         if (slug.hasEffects()) {
                             slug.setBaseDamage(0D);
@@ -160,63 +166,18 @@ public class SquirtgunItem extends BowItem {
                 player.awardStat(Stats.ITEM_USED.get(this));
             }
         }
-        if (!pLevel.isClientSide) {
-            GunProperties.setCanFire(pStack, true);
+    }
+
+    public SquirtSlug makeSlugToFire(ItemStack pStack, Level pLevel, LivingEntity pEntityLiving) {
+        if (pStack.getItem() instanceof SquirtgunItem) {
+            IAmmunitionCapability ammunitionHandler = pStack.getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO, null).orElse(null);
+            if (ammunitionHandler.getChemical() == null) {
+                return null;
+            }
+            ammunitionHandler.decrementShots();
+            return new SquirtSlug(pEntityLiving, pLevel, ammunitionHandler.getChemical());
         }
-    }
-
-    private SquirtSlug makeSlugToFire(Level pLevel, LivingEntity pEntityLiving) {
-        if ((chemical == null) || !hasAmmunition((Player) pEntityLiving)) {
-            return null;
-        }
-        consumeAmmunition((Player) pEntityLiving);
-        return new SquirtSlug(pEntityLiving, pLevel, CHEMICAL_FLUIDS.get(this.chemical), chemical);
-    }
-
-    private void consumeAmmunition(Player pPlayer) {
-        if (!pPlayer.getAbilities().instabuild) {
-            shotsAvailable--;
-            statusChanged = true;
-        }
-    }
-
-    private boolean hasAmmunition(Player pPlayer) {
-//        if (pPlayer.getAbilities().instabuild && chemical == null) {
-//            this.loadNewPhial(new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation("item.squirtgun.hydrochloric_acid_phial")), 1));
-//            chemical = (Chemical) ForgeRegistries.ITEMS.getValue(new ResourceLocation("chemlib:hydrochloric_acid"));
-//            shotsAvailable = maxShots;
-//            statusChanged = true;
-//        }
-        return shotsAvailable > 0 || pPlayer.getAbilities().instabuild;
-    }
-
-    public Chemical getChemical() {
-        return chemical;
-    }
-
-    public String getAmmoStatus() {
-        return (chemical == null) ? "---" : String.format("%s/%s", shotsAvailable, maxShots);
-    }
-
-    public ItemStack loadNewPhial(ItemStack pStack) {
-        if (pStack.isEmpty() || !(pStack.getItem() instanceof ChemicalPhial)) {
-            return pStack;
-        }
-        if(((ChemicalPhial) pStack.getItem()).getChemical() == chemical) {
-            return pStack;
-        }
-        if (isChemicalValid(((BasePhial) pStack.getItem()).getChemical())) {
-            this.chemical = ((BasePhial) pStack.getItem()).getChemical();
-            shotsAvailable = Math.min(((BasePhial) pStack.getItem()).getShotsAvailable(), maxShots);
-            statusChanged = true;
-            return new ItemStack(ForgeRegistries.ITEMS.getValue(ItemRegistration.PHIAL.getId()), 1);
-        } else {
-            return pStack;
-        }
-    }
-
-    private boolean isChemicalValid(Chemical chemical) {
-        return ammunitionChemicals.contains(chemical) || chemical == null;
+        return null;
     }
 
     @Override
@@ -224,33 +185,7 @@ public class SquirtgunItem extends BowItem {
         return UseAnim.BOW;
     }
 
-    private void loadFromNBT(ItemStack pStack) {
-        CompoundTag stackTag = pStack.getOrCreateTag();
-        shotsAvailable = (stackTag.contains(Constants.SHOTS_AVAILABLE_TAG)
-                && !Objects.requireNonNull(stackTag.get(Constants.SHOTS_AVAILABLE_TAG)).getAsString().equals(""))
-                ? stackTag.getInt(Constants.SHOTS_AVAILABLE_TAG)
-                : 0;
-        maxShots = (stackTag.contains(Constants.MAX_SHOTS_TAG)
-                && !Objects.requireNonNull(stackTag.get(Constants.MAX_SHOTS_TAG)).getAsString().equals(""))
-                ? stackTag.getInt(Constants.MAX_SHOTS_TAG)
-                : ((SquirtgunItem) pStack.getItem()).baseMaxShots;
-        chemical = (stackTag.contains(Constants.CHEMICAL_TAG)
-                && !Objects.requireNonNull(stackTag.get(Constants.CHEMICAL_TAG)).getAsString().equals(""))
-                ? (Chemical) ForgeRegistries.ITEMS.getValue(new ResourceLocation(stackTag.getString(Constants.CHEMICAL_TAG)))
-                : null;
-    }
-
-    private void setTag(ItemStack pStack) {
-        CompoundTag tag = pStack.getOrCreateTag();
-        tag.putInt(Constants.SHOTS_AVAILABLE_TAG, shotsAvailable);
-        tag.putInt(Constants.MAX_SHOTS_TAG, maxShots);
-        tag.putString(Constants.CHEMICAL_TAG, chemical != null ? String.format("%s:%s", chemical.getClass().getModule().getName(), chemical.asItem()) : "");
-        pStack.setTag(tag);
-        statusChanged = false;
-        //pStack.setTag(new CompoundTag());
-    }
-
-    public static ItemStack getGun(Player player) {
+    public static ItemStack getPlayerGun(Player player) {
         ItemStack heldItem = ItemStack.EMPTY;
         if (player != null) {
             heldItem = player.getMainHandItem();
@@ -262,5 +197,19 @@ public class SquirtgunItem extends BowItem {
             }
         }
         return heldItem;
+    }
+
+    public static ItemStack loadNewPhial(Player pPlayer, ItemStack pPhialStack) {
+        IAmmunitionCapability ammunitionHandler = getPlayerGun(pPlayer).getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO, null).orElse(null);
+        if (pPhialStack.isEmpty() || !(pPhialStack.getItem() instanceof ChemicalPhial chemicalPhial)) {
+            return pPhialStack;
+        }
+
+        if (!ammunitionHandler.isChemicalValid(chemicalPhial.getChemical()) || chemicalPhial.getChemical() == ammunitionHandler.getChemical()) {
+            return pPhialStack;
+        }
+        ammunitionHandler.setChemical(chemicalPhial.getChemical());
+        ammunitionHandler.setShotsAvailable(chemicalPhial.getShotsAvailable());
+        return new ItemStack(ForgeRegistries.ITEMS.getValue(ItemRegistration.PHIAL.getId()), 1);
     }
 }

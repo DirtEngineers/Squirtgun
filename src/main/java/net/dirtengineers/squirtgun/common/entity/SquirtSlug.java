@@ -29,6 +29,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
+import static net.dirtengineers.squirtgun.common.registry.ItemRegistration.CHEMICAL_FLUIDS;
+
 
 public class SquirtSlug extends AbstractArrow {
 
@@ -44,10 +46,11 @@ public class SquirtSlug extends AbstractArrow {
     private boolean fixedColor;
     private final Set<MobEffectInstance> effects = Sets.newHashSet();
 
-    public SquirtSlug(LivingEntity pShooter, Level pLevel, Fluid pFluid, Chemical pChemical) {
+    public SquirtSlug(LivingEntity pShooter, Level pLevel, Chemical pChemical) {
         super(EntityRegistration.SQUIRT_SLUG.get(), pShooter, pLevel);
-        this.ammoType = pFluid;
         this.chemical = pChemical;
+        this.ammoType = CHEMICAL_FLUIDS.get(chemical);
+
         setEffects();
     }
 
