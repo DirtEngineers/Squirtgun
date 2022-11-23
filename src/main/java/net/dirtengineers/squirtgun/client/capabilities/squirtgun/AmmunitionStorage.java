@@ -74,13 +74,17 @@ public class AmmunitionStorage implements IAmmunitionCapability, INBTSerializabl
     }
 
     private void setchemicalTag() {
+        CompoundTag tag = stack.getOrCreateTag();
         stack.getOrCreateTag().putString(Constants.CHEMICAL_TAG, chemical != null
                 ? String.format("%s:%s", chemical.getClass().getModule().getName(), chemical.asItem())
                 : "");
+        stack.save(tag);
     }
 
     private void setShotsTag() {
-        stack.getOrCreateTag().putInt(Constants.SHOTS_AVAILABLE_TAG, shotsAvailable);
+        CompoundTag tag = stack.getOrCreateTag();
+        tag.putInt(Constants.SHOTS_AVAILABLE_TAG, shotsAvailable);
+        stack.save(tag);
     }
 
     @Override

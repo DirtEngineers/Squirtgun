@@ -12,21 +12,29 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.level.material.Fluid;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
 public class TextUtility {
 
-    public static String buildAmmoStatus(String pAmmoStatus, String pChemicalName){
-        StringBuilder ammoStatus = new StringBuilder();
-        int padding = (pChemicalName.length() - pAmmoStatus.length()) / 2;
-        ammoStatus.append(" ".repeat(Math.max(0, padding + 1)));
-        ammoStatus.append(pAmmoStatus);
-        return ammoStatus.toString();
+    public static LinkedList<String> padStrings(LinkedList<String> pStrings) {
+        LinkedList<String> outList = new LinkedList<>();
+        if (!pStrings.isEmpty()) {
+            int max = pStrings.stream().map(String::length).max(Integer::compareTo).get();
+            for (String pString : pStrings) {
+                if (pString.length() < max) {
+                    outList.add(" ".repeat(Math.max(0, ((max - pString.length()) / 2))) + pString);
+                } else {
+                    outList.add(pString);
+                }
+            }
+        }
+        return outList;
     }
 
-    public static void drawCenteredStringNoShadow(PoseStack pPoseStack, Font pFont, Component pText, int pX, int pY){
+    public static void drawCenteredStringNoShadow(PoseStack pPoseStack, Font pFont, Component pText, int pX, int pY) {
         FormattedCharSequence formattedcharsequence = pText.getVisualOrderText();
         pFont.draw(
                 pPoseStack,
@@ -56,9 +64,9 @@ public class TextUtility {
 
     public static Component getFriendlyChemicalName(Chemical pChemical) {
         return MutableComponent.create(
-                new TranslatableContents(pChemical != null ?
-                        String.format("item.%s.%s", pChemical.getClass().getModule().getName(), pChemical.asItem())
-                        : Constants.emptyFluidNameKey))
+                        new TranslatableContents(pChemical != null ?
+                                String.format("item.%s.%s", pChemical.getClass().getModule().getName(), pChemical.asItem())
+                                : Constants.emptyFluidNameKey))
                 .withStyle(Constants.HOVER_TEXT_STYLE);
     }
 
@@ -67,7 +75,7 @@ public class TextUtility {
         return Objects.equals(pFluid.get().getFluidType().toString(), Constants.EMPTY_FLUID_NAME);
     }
 
-    public static String capitalizeText(String text, char delimiter){
+    public static String capitalizeText(String text, char delimiter) {
         final char[] buffer = text.toCharArray();
         boolean capitalizeNext = true;
         for (int i = 0; i < buffer.length; i++) {

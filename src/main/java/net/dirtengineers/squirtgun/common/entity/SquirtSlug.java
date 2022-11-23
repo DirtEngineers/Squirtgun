@@ -36,7 +36,7 @@ public class SquirtSlug extends AbstractArrow {
 
     private double baseDamage = 2.0D;
     private int life;
-    private Fluid ammoType;
+    private Fluid fluid;
     private Chemical chemical;
     private final int maxGroundTime = 10;
     private static final int NO_EFFECT_COLOR = -1;
@@ -49,7 +49,7 @@ public class SquirtSlug extends AbstractArrow {
     public SquirtSlug(LivingEntity pShooter, Level pLevel, Chemical pChemical) {
         super(EntityRegistration.SQUIRT_SLUG.get(), pShooter, pLevel);
         this.chemical = pChemical;
-        this.ammoType = CHEMICAL_FLUIDS.get(chemical);
+        this.fluid = CHEMICAL_FLUIDS.get(chemical);
 
         setEffects();
     }
@@ -60,10 +60,12 @@ public class SquirtSlug extends AbstractArrow {
 
     public void setEffects() {
         this.effects.clear();
-        for (MobEffectInstance effect : this.chemical.getEffects())
-            this.effects.add(new MobEffectInstance(effect));
-
-        this.updateColor();
+        if (this.chemical != null) {
+            for (MobEffectInstance effect : this.chemical.getEffects()) {
+                this.effects.add(new MobEffectInstance(effect));
+            }
+            this.updateColor();
+        }
     }
 
     public boolean hasEffects(){
@@ -181,7 +183,7 @@ public class SquirtSlug extends AbstractArrow {
     }
 
     private void updateColor() {
-        int pValue = this.ammoType == null ? -1 : IClientFluidTypeExtensions.of(this.ammoType).getTintColor();
+        int pValue = this.fluid == null ? -1 : IClientFluidTypeExtensions.of(this.fluid).getTintColor();
         if (pValue == -1) {
             pValue = this.chemical.getColor();
         } else {
@@ -208,8 +210,8 @@ public class SquirtSlug extends AbstractArrow {
     @Override
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
-        if (this.ammoType != null) {
-            pCompound.putString("Fluid", ammoType.getFluidType().toString());
+        if (this.fluid != null) {
+            pCompound.putString("Fluid", fluid.getFluidType().toString());
         }
         if (!this.effects.isEmpty()) {
             ListTag listtag = new ListTag();

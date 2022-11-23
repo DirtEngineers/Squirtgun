@@ -4,14 +4,17 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
+import net.dirtengineers.squirtgun.client.buttons.CancelButton;
 import net.dirtengineers.squirtgun.client.buttons.PhialReloadScreenButton;
 import net.dirtengineers.squirtgun.client.capabilities.SquirtgunCapabilities;
 import net.dirtengineers.squirtgun.client.capabilities.squirtgun.IAmmunitionCapability;
 import net.dirtengineers.squirtgun.common.item.BasePhial;
 import net.dirtengineers.squirtgun.common.item.ChemicalPhial;
 import net.dirtengineers.squirtgun.common.item.EmptyPhialItem;
-import net.dirtengineers.squirtgun.common.item.Squirtgun.SquirtgunItem;
-import net.dirtengineers.squirtgun.common.network.*;
+import net.dirtengineers.squirtgun.common.item.SquirtgunItem;
+import net.dirtengineers.squirtgun.common.network.InventoryInsertC2SPacket;
+import net.dirtengineers.squirtgun.common.network.InventoryRemoveC2SPacket;
+import net.dirtengineers.squirtgun.common.network.SquirtgunPacketHandler;
 import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
 import net.dirtengineers.squirtgun.common.registry.SoundEventRegistration;
 import net.minecraft.ChatFormatting;
@@ -55,20 +58,13 @@ public class SquirtgunReloadScreen extends Screen {
     int destinationSlot = Constants.DROP_ITEM_INDEX;
     int offhandLocationIndex = -1;
     PhialReloadScreenButton gunButton;
+    CancelButton cancelButton;
     private final LinkedList<ItemStack> phials = new LinkedList<>();
     private ItemStack phialSwapStack = ItemStack.EMPTY;
-//    private ItemStack pGunStack;
-//    private SquirtgunItem actualGun;
-//    private IAmmunitionCapability ammunitionHandler;
     private static final Player player = Minecraft.getInstance().player;
-    public static volatile boolean hasInventory;
 
     public SquirtgunReloadScreen() {
         super(MutableComponent.create(new TranslatableContents(Constants.gunFunctionality)));
-    }
-
-    public static void updateTest(boolean pUpdateTest) {
-        hasInventory = pUpdateTest;
     }
 
     @Override
@@ -76,8 +72,6 @@ public class SquirtgunReloadScreen extends Screen {
         if (player != null) {
             offhandLocationIndex = player.getInventory().items.size() + 1;
         }
-//        hasInventory = false;
-//        SquirtgunPacketHandler.sendToServer(new GetReloadPhialsListC2SPacket());
         populatePhialsList();
         UpdateLayout();
     }
@@ -104,6 +98,11 @@ public class SquirtgunReloadScreen extends Screen {
                 , 0xFFFFFF);
         this.children().forEach(e -> {
             if (e instanceof PhialReloadScreenButton btn) {
+                if (btn.isMouseOver(pMouseX, pMouseY)) {
+                    renderTooltip(pPoseStack, btn.getTooltip(), pMouseX, pMouseY);
+                }
+            }
+            if (e instanceof CancelButton btn) {
                 if (btn.isMouseOver(pMouseX, pMouseY)) {
                     renderTooltip(pPoseStack, btn.getTooltip(), pMouseX, pMouseY);
                 }
@@ -153,10 +152,10 @@ public class SquirtgunReloadScreen extends Screen {
         makeGunButton();
         makeSwapStackButton();
         fillPhialTable();
+        makeCancelbutton();
     }
 
-
-    //TODO: make a packet with reply to sender
+    //TODO: might have to reload this list on swap or check the inventory slot per stack
     private void populatePhialsList() {
         if (player != null) {
             phials.clear();
@@ -172,11 +171,9 @@ public class SquirtgunReloadScreen extends Screen {
                 tempStack.setCount(offhandLocationIndex);
                 addToPhials(tempStack);
             }
-
             //Get from gun
             Optional<BasePhial> phialOptional = Optional.of((BasePhial) Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(ItemRegistration.PHIAL.getId())));
             IAmmunitionCapability ammunitionHandler = player.getItemInHand(player.getUsedItemHand()).getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO).orElse(null);
-//                    SquirtgunItem.getPlayerGun(player).getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO, null).orElse(null);
             if (ammunitionHandler.getChemical() != null) {
                 phialOptional = ItemRegistration.PHIALS
                         .entrySet()
@@ -188,11 +185,8 @@ public class SquirtgunReloadScreen extends Screen {
             phialSwapStack = phialOptional.map(
                             chemicalPhial -> new ItemStack(chemicalPhial, 1))
                     .orElseGet(() -> new ItemStack(ForgeRegistries.ITEMS.getValue(ItemRegistration.PHIAL.getId()), 1));
-            phials.sort(new ItemStackComparator());
 
-            if (!ForgeRegistries.ITEMS.getResourceKey(phialSwapStack.getItem()).equals(ForgeRegistries.ITEMS.getResourceKey(ItemRegistration.PHIAL.get()))) {
-                addToPhials(phialSwapStack.copy());
-            }
+            phials.sort(new ItemStackComparator());
         }
     }
 
@@ -235,7 +229,7 @@ public class SquirtgunReloadScreen extends Screen {
                 , null
                 , pButton -> this.swapPhials((PhialReloadScreenButton) pButton));
         btn.setTargetStack(pPhialStack);
-        btn.active = !isSameAsSwapStack;
+        btn.active = !isSwapStack;
         btn.setDisplayLoadedMessage(isSameAsSwapStack && !isSwapStack);
         return btn;
     }
@@ -262,6 +256,19 @@ public class SquirtgunReloadScreen extends Screen {
         gunButton.setTargetStack(gunStack);
         gunButton.active = false;
         addRenderableWidget(gunButton);
+    }
+
+    //TODO: Change width and height
+    private void makeCancelbutton() {
+        cancelButton = new CancelButton(
+                (centerX / 2) - 9
+                , gunButton.getY() + yShift
+                , 40
+                , 40
+                , MutableComponent.create(new TranslatableContents(Constants.gunGuiCancelButtonMessage)).withStyle(Style.EMPTY.withFont(Style.DEFAULT_FONT))
+                , b -> super.onClose());
+        cancelButton.setActive(true);
+        addRenderableWidget(cancelButton);
     }
 
     private void swapPhials(PhialReloadScreenButton pButton) {

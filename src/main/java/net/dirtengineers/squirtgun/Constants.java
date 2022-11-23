@@ -33,7 +33,6 @@ public class Constants {
     public static final String encapsulatorPhialCreationRecipeLocationPrefix = "encapsulator/";
     public static final String encapsulatorPhialCreationAdvancementLocationPrefix = "recipes/encapsulator/";
     public static final String encapsulatorMenuScreenTexture = "textures/gui/encapsulator_gui.png";
-    public static final ResourceLocation phialReloadScreenButtonTexture = new ResourceLocation(Squirtgun.MOD_ID, "textures/item/squirt_phial_white.png");
 
     // translation keys
     public static final String gunFunctionality = "item.squirtgun.gun_functionality";
@@ -45,8 +44,7 @@ public class Constants {
     public static final String openGunGui = String.format("%s.text.open_gui", Squirtgun.MOD_ID);
     public static final String gunGuiPhialIsLoaded = "tooltip.squirtgun.gui.phial_is_loaded";
     public static final String gunGuiPhialAmmoLossWarning = "tooltip.squirtgun.gui.phial_ammo_loss";
-
-    // Translation strings
+    public static final String gunGuiCancelButtonMessage = "tooltip.squirtgun.gui.cancel_button_message";
     public static final String reloadScreenCurrentAmmunition = String.format("%s.reload_screen.current_ammunition", Squirtgun.MOD_ID);
     public static final String reloadScreenInventoryWarning = String.format("%s.reload_screen.inventory_warning", Squirtgun.MOD_ID);
 

@@ -31,6 +31,14 @@ public class SquirtgunPacketHandler {
                 .encoder(InventoryRemoveC2SPacket::encode)
                 .consumerNetworkThread(InventoryRemoveC2SPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(GunCapsUpdateC2SPacket.class, PACKET_ID++, NetworkDirection.PLAY_TO_SERVER)
+                .decoder(GunCapsUpdateC2SPacket::new)
+                .encoder(GunCapsUpdateC2SPacket::encode)
+                .consumerNetworkThread(GunCapsUpdateC2SPacket::handle)
+                .add();
+
+
+
         INSTANCE.messageBuilder(GetReloadPhialsListC2SPacket.class, PACKET_ID++, NetworkDirection.PLAY_TO_SERVER)
                 .decoder(GetReloadPhialsListC2SPacket::new)
                 .encoder(GetReloadPhialsListC2SPacket::encode)

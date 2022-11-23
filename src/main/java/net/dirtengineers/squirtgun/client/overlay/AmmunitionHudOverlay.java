@@ -3,7 +3,7 @@ package net.dirtengineers.squirtgun.client.overlay;
 import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.client.capabilities.SquirtgunCapabilities;
 import net.dirtengineers.squirtgun.client.capabilities.squirtgun.IAmmunitionCapability;
-import net.dirtengineers.squirtgun.common.item.Squirtgun.SquirtgunItem;
+import net.dirtengineers.squirtgun.common.item.SquirtgunItem;
 import net.dirtengineers.squirtgun.util.TextUtility;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -40,8 +40,6 @@ public class AmmunitionHudOverlay {
             if(player != null){
                 ItemStack pStack = player.getItemInHand(player.getUsedItemHand());
                 if(pStack.getItem() instanceof SquirtgunItem) {
-                    //TODO: USE STCK TAG INSTEAD OF CAPABILITY
-                    // look into setting cap tag
                     IAmmunitionCapability ammunitionHandler = pStack.getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO, null).orElse(null);
                     Component chemicalName = TextUtility.getFriendlyChemicalName(ammunitionHandler.getChemical());
                     TextUtility.drawCenteredStringNoShadow(poseStack, font, chemicalName, x, y - font.lineHeight);
@@ -51,14 +49,6 @@ public class AmmunitionHudOverlay {
                     }
                 }
             }
-//            if (player != null && player.getItemInHand(player.getUsedItemHand()).getItem() instanceof SquirtgunItem pSquirtgun) {
-//                Component chemicalName = TextUtility.getFriendlyChemicalName(pSquirtgun.getChemical());
-//                TextUtility.drawCenteredStringNoShadow(poseStack, font, chemicalName, x, y - font.lineHeight);
-//                if(pSquirtgun.getChemical() != null) {
-//                    Component status = Component.literal(pSquirtgun.getAmmoStatus()).withStyle(Constants.HOVER_TEXT_STYLE);
-//                    TextUtility.drawCenteredStringNoShadow(poseStack, font, status, x, y);
-//                }
-//            }
         }
     };
 }

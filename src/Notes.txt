@@ -9,7 +9,7 @@ SQUIRTGUNITEM:
  Need sounds for various actions
  Need advancements for item use
 
-   Machine block: lift from liquifier block, block entity, menu, and screen as example
+CHANGE LOADING so that you can load up the same kind of phial that is currently loaded in the gun
 
    Recipes:
    1.  Recipe for gun                                       -- DONE

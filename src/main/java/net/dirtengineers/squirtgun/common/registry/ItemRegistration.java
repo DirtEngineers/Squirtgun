@@ -4,7 +4,7 @@ import com.smashingmods.chemlib.api.Chemical;
 import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.common.item.*;
-import net.dirtengineers.squirtgun.common.item.Squirtgun.SquirtgunItem;
+import net.dirtengineers.squirtgun.common.item.SquirtgunItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
@@ -35,7 +35,6 @@ public class ItemRegistration {
     public static final RegistryObject<Item> PHIAL;
     public static final RegistryObject<Item> SQUIRTSLUGITEM;
     public static final RegistryObject<Item> SQUIRTGUNITEM;
-//    public static final RegistryObject<Item> TEST_ARTICLE_ITEM;
     public static Map<ChemicalPhial, Chemical> PHIALS;
     public static Map<Chemical, Fluid> CHEMICAL_FLUIDS;
     public static List<Chemical> ammunitionChemicals;
@@ -101,7 +100,6 @@ public class ItemRegistration {
         PHIAL = SQUIRTGUNITEMS.register(Constants.phialItemName, () -> new EmptyPhialItem(ITEM_PROPERTIES_WITH_TAB));
         SQUIRTSLUGITEM = SQUIRTGUNITEMS.register(Constants.slugItemName, () -> new GenericSlug(ITEM_PROPERTIES_NO_TAB));
         SQUIRTGUNITEM = SQUIRTGUNITEMS.register(Constants.gunItemName, () -> new SquirtgunItem(ITEM_PROPERTIES_WITH_TAB_STACK_TO_ONE));
-//        TEST_ARTICLE_ITEM = SQUIRTGUNITEMS.register("test_article_item", () -> new TestArticleItem(ITEM_PROPERTIES_WITH_TAB_STACK_TO_ONE));
         PHIALS = new HashMap<>();
         CHEMICAL_FLUIDS = new HashMap<>();
         ammunitionChemicals = new ArrayList<>();

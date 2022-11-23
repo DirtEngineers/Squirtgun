@@ -5,7 +5,7 @@ import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.client.Keybinds;
 import net.dirtengineers.squirtgun.client.overlay.AmmunitionHudOverlay;
 import net.dirtengineers.squirtgun.client.screens.ModScreens;
-import net.dirtengineers.squirtgun.common.item.Squirtgun.SquirtgunItem;
+import net.dirtengineers.squirtgun.common.item.SquirtgunItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
