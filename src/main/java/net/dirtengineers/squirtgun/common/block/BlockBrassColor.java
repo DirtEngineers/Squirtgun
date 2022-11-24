@@ -4,6 +4,6 @@ import net.minecraft.client.color.block.BlockColor;
 
 public interface BlockBrassColor {
     static BlockColor getColor() {
-       return null;//0XC6A874;
+        return (pState, pLevel, pPos, pTintIndex1) -> 0XC6A874;
     }
 }

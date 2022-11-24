@@ -7,6 +7,7 @@ import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.client.overlay.AmmunitionHudOverlay;
 import net.dirtengineers.squirtgun.client.render.SquirtSlugRenderer;
+import net.dirtengineers.squirtgun.common.block.BlockBrassColor;
 import net.dirtengineers.squirtgun.common.item.ChemicalPhial;
 import net.dirtengineers.squirtgun.common.item.ItemBrassColor;
 import net.dirtengineers.squirtgun.common.registry.BlockRegistration;
@@ -66,9 +67,9 @@ public class ClientModEventHandler {
         event.register((itemStack, i) -> ItemBrassColor.getColor(), BlockRegistration.BRASS_BLOCK.get());
         event.register((itemStack, i) -> ItemBrassColor.getColor(), ForgeRegistries.ITEMS.getValue(new ResourceLocation(Squirtgun.MOD_ID, "brass_block")));
     }
-//TODO: Block color
+
     @SubscribeEvent
     public static void onBlockColorHandlerEvent(RegisterColorHandlersEvent.Block event) {
-//        event.register(BlockBrassColor.getColor(), BlockRegistration.BRASS_BLOCK.get());
+        event.register(BlockBrassColor.getColor(), BlockRegistration.BRASS_BLOCK.get());
     }
 }
