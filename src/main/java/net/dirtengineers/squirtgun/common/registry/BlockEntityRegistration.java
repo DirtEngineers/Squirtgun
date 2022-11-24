@@ -26,6 +26,6 @@ public class BlockEntityRegistration {
                 Constants.encapsulatorBlockEntityName,
                 () -> BlockEntityType.Builder.of(
                         EncapsulatorBlockEntity::new,
-                        new Block[]{BlockRegistration.ENCAPSULATOR.get()}).build(null));
+                        new Block[]{BlockRegistration.ENCAPSULATOR_BLOCK.get()}).build(null));
     }
 }

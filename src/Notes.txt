@@ -9,8 +9,6 @@ SQUIRTGUNITEM:
  Need sounds for various actions
  Need advancements for item use
 
-CHANGE LOADING so that you can load up the same kind of phial that is currently loaded in the gun
-
    Recipes:
    1.  Recipe for gun                                       -- DONE
    2.  Recipe for generic phial item in crafting bench      -- DONE
@@ -70,12 +68,39 @@ Kill current ammo caption.  build a goddamned tooltip, bitch!                   
 8 pixels of padding between things like the inner edge of the bg                                                PENDING ARTWORK
 render loaded phial in selection pool as well as in swap stack.  Loaded phial in pool disabled for selection    DONE
 phials in a linked list.  Keep the index of the one in the swap stack.                                          DONE
-Add note to bottom of reload screen reminding player that reloaded phial will be completely emptied
+Add note to bottom of reload screen reminding player that reloaded phial will be completely emptied             DONE (sort of)
 
 
 API-ify chemlib
 
+just make sure you're using forge tags in all the recipes and it'll automatically be compatible with mods that add alloying machines
+Empty phial recipe
+1 - brass phial cap
+3 - fused quarts glass shards
 
 
+Make brass blend item                               DONE
+Make brass nugget item                              DONE
+Make brass ingot item                               DONE
+Make brass block item                               DONE
+Make brass cap item                                 DONE
 
+Recipes --
+Brass blend from Copper and Zinc                    DONE
+Brass nugget from brass blend - smelting            DONE
+Brass nugget from brass blend - blasting            DONE
+Brass ingot from brass nuggets                      DONE
+Brass block from brass ingot
 
+Brass ingots from brass block
+Brass nuggets from brass ingot                      DONE
+
+Fused Quartz shard item                             DONE
+Fused Quartz shard recipe from SiO2                 DONE
+Fused Quartz shard recipe from Quartz - blasting    DONE
+Fused Quartz shard recipe from Quartz - smelting    DONE
+
+Brass cap item                                      DONE
+Make brass cap recipe                               DONE
+
+Phial recipe                                        DONE

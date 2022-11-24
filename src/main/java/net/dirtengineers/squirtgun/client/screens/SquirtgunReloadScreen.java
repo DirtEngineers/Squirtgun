@@ -47,7 +47,7 @@ public class SquirtgunReloadScreen extends Screen {
     int buttonRows = 0;
     int bgWidth = 250;
     int bgHeight = 162;
-    private int bgOffsetY = 2;
+    private final int bgOffsetY = 2;
     private final int titleOffsetY = 12;
     private final int CurrentAmmoOffsetY = 32;
     private final int topRowOffsetY = 30;

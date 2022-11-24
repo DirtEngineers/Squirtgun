@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "squirtgun:item/compound_dust_layer_0",
+    "layer1": "squirtgun:item/compound_dust_layer_1"
+  }
+}

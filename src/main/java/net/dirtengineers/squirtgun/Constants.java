@@ -2,7 +2,6 @@ package net.dirtengineers.squirtgun;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
 
 public class Constants {
     //Ids
@@ -14,6 +13,13 @@ public class Constants {
     public static final String phialItemName = "phial";
     public static final String slugItemName = "slugitem";
     public static final String gunItemName = "squirtgunitem";
+    public static final String brassBlendItemName = "brass_blend";
+    public static final String brassNuggetItemName = "brass_nugget";
+    public static final String brassIngotItemName = "brass_ingot";
+    public static final String brassBlockItemName = "brass_block_item";
+    public static final String brassBlockName = "brass_block";
+    public static final String phialCapItemName = "phial_cap";
+    public static final String quartzShardItemName = "quartz_shard";
     public static final String squirtgunTabName = "squirtguntab";
     public static final String encapsulatorMenuName = "encapsulator_menu";
     public static final String phialCreationSerializerName = "phial_creation_serializer";

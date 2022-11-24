@@ -42,8 +42,6 @@ public class SquirtSlug extends AbstractArrow {
     private static final int NO_EFFECT_COLOR = -1;
     private static final EntityDataAccessor<Integer> ID_EFFECT_COLOR =
             SynchedEntityData.defineId(SquirtSlug.class, EntityDataSerializers.INT);
-    //TODO: why does this exist?
-    private boolean fixedColor;
     private final Set<MobEffectInstance> effects = Sets.newHashSet();
 
     public SquirtSlug(LivingEntity pShooter, Level pLevel, Chemical pChemical) {
@@ -115,12 +113,12 @@ public class SquirtSlug extends AbstractArrow {
     private void makeParticle(int pParticleAmount) {
         int i = this.getColor();
         if (i != -1 && pParticleAmount > 0) {
-            double d0 = (double)(i >> 16 & 255) / 255.0D;
-            double d1 = (double)(i >> 8 & 255) / 255.0D;
-            double d2 = (double)(i & 255) / 255.0D;
+            double RED = (double)(i >> 16 & 255) / 255.0D;
+            double GREEN = (double)(i >> 8 & 255) / 255.0D;
+            double BLUE = (double)(i & 255) / 255.0D;
 
-            for(int j = 0; j < (pParticleAmount > 0 ? pParticleAmount : 20); ++j) {
-                this.level.addParticle(ParticleTypes.ENTITY_EFFECT, this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), d0, d1, d2);
+            for(int j = 0; j < pParticleAmount; ++j) {
+                this.level.addParticle(ParticleTypes.ENTITY_EFFECT, this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), RED, GREEN, BLUE);
             }
         }
     }
@@ -196,11 +194,6 @@ public class SquirtSlug extends AbstractArrow {
         return this.entityData.get(ID_EFFECT_COLOR);
     }
 
-    private void setFixedColor(int pFixedColor) {
-        this.fixedColor = true;
-        this.entityData.set(ID_EFFECT_COLOR, pFixedColor);
-    }
-
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
@@ -222,7 +215,6 @@ public class SquirtSlug extends AbstractArrow {
         }
     }
 
-
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
@@ -230,15 +222,6 @@ public class SquirtSlug extends AbstractArrow {
     @Override
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-//        if (pCompound.contains("Fluid")) {
-//            for (Fluid fluid : ItemRegistration.ammunition.keySet()) {
-//                if (Objects.equals(fluid.getFluidType().toString(), pCompound.getString("Fluid"))) {
-//                    this.ammoType = fluid;
-//                    break;
-//                }
-//            }
-//        }
-//        setEffects();
     }
 
     @Override

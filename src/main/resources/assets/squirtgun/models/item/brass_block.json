@@ -1,0 +1,6 @@
+{
+  "parent": "squirtgun:block/brass_block",
+  "textures": {
+    "layer0": "squirtgun:block/metal_block"
+  }
+}

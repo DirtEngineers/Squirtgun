@@ -35,6 +35,11 @@ public class ItemRegistration {
     public static final RegistryObject<Item> PHIAL;
     public static final RegistryObject<Item> SQUIRTSLUGITEM;
     public static final RegistryObject<Item> SQUIRTGUNITEM;
+    public static final RegistryObject<Item> BRASS_BLEND_ITEM;
+    public static final RegistryObject<Item> BRASS_NUGGET_ITEM;
+    public static final RegistryObject<Item> BRASS_INGOT_ITEM;
+    public static final RegistryObject<Item> PHIAL_CAP_ITEM;
+    public static final RegistryObject<Item> QUARTZ_SHARD_ITEM;
     public static Map<ChemicalPhial, Chemical> PHIALS;
     public static Map<Chemical, Fluid> CHEMICAL_FLUIDS;
     public static List<Chemical> ammunitionChemicals;
@@ -100,6 +105,11 @@ public class ItemRegistration {
         PHIAL = SQUIRTGUNITEMS.register(Constants.phialItemName, () -> new EmptyPhialItem(ITEM_PROPERTIES_WITH_TAB));
         SQUIRTSLUGITEM = SQUIRTGUNITEMS.register(Constants.slugItemName, () -> new GenericSlug(ITEM_PROPERTIES_NO_TAB));
         SQUIRTGUNITEM = SQUIRTGUNITEMS.register(Constants.gunItemName, () -> new SquirtgunItem(ITEM_PROPERTIES_WITH_TAB_STACK_TO_ONE));
+        BRASS_BLEND_ITEM = SQUIRTGUNITEMS.register(Constants.brassBlendItemName, () -> new BrassBlendItem(ITEM_PROPERTIES_WITH_TAB));
+        PHIAL_CAP_ITEM = SQUIRTGUNITEMS.register(Constants.phialCapItemName, () -> new PhialCapItem(ITEM_PROPERTIES_WITH_TAB));
+        BRASS_NUGGET_ITEM = SQUIRTGUNITEMS.register(Constants.brassNuggetItemName, () -> new BrassNuggetItem(ITEM_PROPERTIES_WITH_TAB));
+        BRASS_INGOT_ITEM = SQUIRTGUNITEMS.register(Constants.brassIngotItemName, () -> new BrassIngotItem(ITEM_PROPERTIES_WITH_TAB));
+        QUARTZ_SHARD_ITEM = SQUIRTGUNITEMS.register(Constants.quartzShardItemName, () -> new QuartzShard(ITEM_PROPERTIES_WITH_TAB));
         PHIALS = new HashMap<>();
         CHEMICAL_FLUIDS = new HashMap<>();
         ammunitionChemicals = new ArrayList<>();

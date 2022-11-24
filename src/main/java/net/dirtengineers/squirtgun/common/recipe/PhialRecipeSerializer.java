@@ -2,7 +2,7 @@ package net.dirtengineers.squirtgun.common.recipe;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import net.dirtengineers.squirtgun.datagen.DatagenUtility;
+import net.dirtengineers.squirtgun.datagen.Util;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -25,7 +25,7 @@ public class PhialRecipeSerializer<T extends PhialRecipe> implements RecipeSeria
         if (!pSerializedRecipe.has("input1")) {
             throw new JsonSyntaxException("Missing input1, expected to find an object.");
         } else {
-            ItemStack pPhial = DatagenUtility.toItemStack(pSerializedRecipe.getAsJsonObject("input1").get("item").getAsString());
+            ItemStack pPhial = Util.toItemStack(pSerializedRecipe.getAsJsonObject("input1").get("item").getAsString());
             if (!pSerializedRecipe.has("input2")) {
                 throw new JsonSyntaxException("Missing input2, expected to find an object.");
             } else {

@@ -31,6 +31,6 @@ public class EncapsulatorMenu extends AbstractProcessingMenu {
         return stillValid(
                 ContainerLevelAccess.create(Objects.requireNonNull(this.getBlockEntity().getLevel()), this.getBlockEntity().getBlockPos())
                 , pPlayer,
-                BlockRegistration.ENCAPSULATOR.get());
+                BlockRegistration.ENCAPSULATOR_BLOCK.get());
     }
 }

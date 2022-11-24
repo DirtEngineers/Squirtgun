@@ -1,0 +1,6 @@
+{
+  "parent": "squirtgun:block/metal_model",
+  "textures": {
+    "all": "squirtgun:block/metal_block"
+  }
+}

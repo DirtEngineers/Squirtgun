@@ -22,12 +22,21 @@ public class LocalizationGenerator extends LanguageProvider {
     }
 
     private void addManualTranslations(){
+        //ITEMS
         this.add(Constants.squirtgunTabItemGroup, "Squirtgun");
+        this.add(Constants.squirtgunItemGroup, "Squirtgun");
         this.add(String.format("item.squirtgun.%s", Constants.gunItemName), "Squirtgun");
         this.add(String.format("item.squirtgun.%s", Constants.phialItemName), "Empty Phial");
-        this.add("item.squirtgun.gun_functionality", "Squirtgun reload/settings");
+        this.add(String.format("item.squirtgun.%s", Constants.brassBlendItemName), "Brass Blend");
+        this.add(String.format("item.squirtgun.%s", Constants.brassNuggetItemName), "Brass Nugget");
+        this.add(String.format("item.squirtgun.%s", Constants.brassIngotItemName), "Brass Ingot");
+        this.add(String.format("item.squirtgun.%s", Constants.brassBlockItemName), "Block of Brass");
+        this.add(String.format("item.squirtgun.%s", Constants.phialCapItemName), "Phial Cap");
+        this.add(String.format("item.squirtgun.%s", Constants.quartzShardItemName), "Quartz Shard");
+        this.add(String.format("block.squirtgun.%s", Constants.brassBlockName), "Block of Brass");
         this.add("item.chemlib.milk", "Milk");
         this.add("item.chemlib.lava", "Lava");
+        //Sounds
         this.add("sounds.squirtgun.squirt_slug_hit", "EWWW!");
         this.add("sounds.squirtgun.reload_screen_close", "YEEEEHAAAA!");
         this.add("sounds.squirtgun.phial_swap", "Phial Swapped");
@@ -35,15 +44,17 @@ public class LocalizationGenerator extends LanguageProvider {
         this.add("sounds.squirtgun.gun_fire", "BOOM!");
         this.add("sounds.squirtgun.phial_complete", "Ding!  Fries are done.");
         this.add("sounds.squirtgun.encapsulator_processing", "Time to make the doughnuts.");
+        //Keybinds
         this.add("key.category.squirtgun", "Squirtgun");
         this.add("key.squirtgun.gun_ammo_load", "Load Ammunition");
         this.add("key.squirtgun.gun_display_ammo_status", "Toggle Ammunition Status Display");
+
+        this.add("item.squirtgun.gun_functionality", "Squirtgun reload/settings");
         this.add("fluid.squirtgun.empty_fluid_name", "EMPTY");
         this.add("tooltip.squirtgun.energy_requirement", "Requires %d FE/t");
         this.add(Constants.encapsulatorMenuScreenTitle, "Dr. Clark's Fully Automatic Fluid Encapsulation Matrix");
         this.add(Constants.encapsulatorBlockNameKey, "Dr. Clark's Fully Automatic Fluid Encapsulation Matrix");
         this.add(Constants.openGunGui, "Open Squirtgun Settings");
-        this.add(Constants.squirtgunItemGroup, "Squirtgun");
         this.add(Constants.reloadScreenCurrentAmmunition, "Current Ammunition: ");
         this.add(Constants.reloadScreenInventoryWarning, "No room in inventory for ");
         this.add(Constants.gunGuiPhialIsLoaded, "Loaded");

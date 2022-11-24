@@ -6,9 +6,8 @@
         "items": [
           {
             "items": [
-              "minecraft:piston",
-              "minecraft:bucket",
-              "minecraft:iron_ingot"
+              "squirtgun:phial_cap",
+              "squirtgun:quartz_shard"
             ]
           }
         ]
