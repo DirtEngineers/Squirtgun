@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:blasting",
+  "cookingtime": 100,
+  "experience": 0.5,
+  "group": "squirtgun",
+  "ingredient": {
+    "item": "squirtgun:brass_blend"
+  },
+  "result": "squirtgun:brass_nugget"
+}

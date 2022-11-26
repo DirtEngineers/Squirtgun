@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "squirtgun",
+  "key": {
+    "C": {
+      "item": "squirtgun:phial_cap"
+    },
+    "Q": {
+      "item": "squirtgun:quartz_shard"
+    }
+  },
+  "pattern": [
+    " C ",
+    "Q Q",
+    " Q "
+  ],
+  "result": {
+    "item": "squirtgun:phial"
+  }
+}

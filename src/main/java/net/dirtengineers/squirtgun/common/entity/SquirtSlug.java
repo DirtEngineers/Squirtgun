@@ -183,9 +183,7 @@ public class SquirtSlug extends AbstractArrow {
     private void updateColor() {
         int pValue = this.fluid == null ? -1 : IClientFluidTypeExtensions.of(this.fluid).getTintColor();
         if (pValue == -1) {
-            pValue = this.chemical.getColor();
-        } else {
-            pValue = -1;
+            pValue = this.chemical == null ? -1 : this.chemical.getColor();
         }
         this.entityData.set(ID_EFFECT_COLOR, pValue);
     }

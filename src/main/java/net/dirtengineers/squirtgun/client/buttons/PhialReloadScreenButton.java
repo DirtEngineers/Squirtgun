@@ -22,11 +22,14 @@ import java.util.List;
 public class PhialReloadScreenButton extends Button {
     ItemStack targetStack;
     boolean displayLoadedMessage = false;
-//    private final ResourceLocation texture;
+    private ResourceLocation texture;
 
-    public PhialReloadScreenButton(int pX, int pY, int pWidth, int pHeight, Component pMessage, ResourceLocation alternateTexture, OnPress pOnPress) {
+    public PhialReloadScreenButton(int pX, int pY, int pWidth, int pHeight, Component pMessage, OnPress pOnPress) {
         super(pX, pY, pWidth, pHeight, pMessage, pOnPress);
-//        this.texture = alternateTexture != null ? alternateTexture : Constants.phialReloadScreenButtonTexture;
+    }
+    public PhialReloadScreenButton(int pX, int pY, int pWidth, int pHeight, Component pMessage, ResourceLocation alternateTexture, OnPress pOnPress) {
+        this(pX, pY,pWidth, pHeight, pMessage, pOnPress);
+        this.texture = alternateTexture;
     }
 
     @Override

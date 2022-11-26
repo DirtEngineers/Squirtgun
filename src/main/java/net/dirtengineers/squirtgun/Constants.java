@@ -20,6 +20,12 @@ public class Constants {
     public static final String brassBlockName = "brass_block";
     public static final String phialCapItemName = "phial_cap";
     public static final String quartzShardItemName = "quartz_shard";
+    public static final String gunActuatorItemName = "gun_actuator";
+    public static final String gunBarrelSectionItemName = "gun_barrel_section";
+    public static final String gunGripItemName = "gun_grip";
+    public static final String gunPhialMountItemName = "gun_phial_mount";
+    public static final String luminousPaintItemName = "luminous_paint";
+
     public static final String squirtgunTabName = "squirtguntab";
     public static final String encapsulatorMenuName = "encapsulator_menu";
     public static final String phialCreationSerializerName = "phial_creation_serializer";
@@ -79,6 +85,10 @@ public class Constants {
     //Text style
     public static final Style HOVER_TEXT_STYLE = Style.EMPTY.withFont(Style.DEFAULT_FONT).withColor(ChatFormatting.YELLOW);
     public static final Style LOADED_PHIAL_TEXT_STYLE = Style.EMPTY.withFont(Style.DEFAULT_FONT).withBold(true).withColor(ChatFormatting.RED);
+
+    //Colors
+    public static int BRASS_COLOR = 0XC6A874;
+    public static int LUMINOUS_PAINT_COLOR = 0X20EF7C;
 
     public enum HUD_DISPLAY_SETTING {
         OFF,

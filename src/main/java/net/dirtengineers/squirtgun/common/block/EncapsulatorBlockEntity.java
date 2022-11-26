@@ -73,6 +73,8 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity {
     @Override
     public boolean canProcessRecipe() {
         if (currentRecipe == null || getInputHandler().getStackInSlot(0).isEmpty()) {
+            this.setProgress(0);
+            //TODO: Cancel sound event
             return false;
         } else {
             if (currentRecipe instanceof PhialRecipe) {

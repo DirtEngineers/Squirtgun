@@ -94,7 +94,7 @@ public class SquirtgunItem extends BowItem {
 
         boolean hasAmmo = itemstack.getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO, null).orElse(null).hasAmmunition();
 
-        net.minecraftforge.common.ForgeHooks.getProjectile(pPlayer, itemstack, hasAmmo ? new ItemStack(ItemRegistration.SQUIRTSLUGITEM.get()) : ItemStack.EMPTY);
+        net.minecraftforge.common.ForgeHooks.getProjectile(pPlayer, itemstack, hasAmmo ? new ItemStack(ItemRegistration.SQUIRTSLUG.get()) : ItemStack.EMPTY);
         InteractionResultHolder<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(itemstack, pLevel, pPlayer, pHand, hasAmmo);
         if (ret != null) return ret;
 
@@ -123,7 +123,7 @@ public class SquirtgunItem extends BowItem {
             boolean flag = player.getAbilities().instabuild || EnchantmentHelper.getTagEnchantmentLevel(Enchantments.INFINITY_ARROWS, pStack) > 0;
 
             boolean hasAmmo = pStack.getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO, null).orElse(null).hasAmmunition();
-            net.minecraftforge.common.ForgeHooks.getProjectile(pEntityLiving, pStack, hasAmmo ? new ItemStack(ItemRegistration.SQUIRTSLUGITEM.get()) : ItemStack.EMPTY);
+            net.minecraftforge.common.ForgeHooks.getProjectile(pEntityLiving, pStack, hasAmmo ? new ItemStack(ItemRegistration.SQUIRTSLUG.get()) : ItemStack.EMPTY);
 
             int i = getUseDuration(pStack) - pTimeLeft;
             i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(pStack, pLevel, player, i, hasAmmo || flag);
@@ -137,9 +137,9 @@ public class SquirtgunItem extends BowItem {
                     SquirtSlug slug = makeSlugToFire(pStack, pLevel, player);
                     if (slug.hasEffects()) {
                         slug.setBaseDamage(0D);
-                        slug.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 3.0F, 1.0F);
-                        pLevel.addFreshEntity(slug);
                     }
+                    slug.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 3.0F, 1.0F);
+                    pLevel.addFreshEntity(slug);
                 }
                 pLevel.playSound(
                         null,
@@ -181,15 +181,12 @@ public class SquirtgunItem extends BowItem {
 
     public static ItemStack loadNewPhial(Player pPlayer, ItemStack pPhialStack) {
         IAmmunitionCapability ammunitionHandler = getPlayerGun(pPlayer).getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO, null).orElse(null);
-        if (pPhialStack.isEmpty() || !(pPhialStack.getItem() instanceof ChemicalPhial chemicalPhial)) {
-            return pPhialStack;
-        }
-        if (!ammunitionHandler.isChemicalValid(chemicalPhial.getChemical()) || chemicalPhial.getChemical() == ammunitionHandler.getChemical()) {
-            return pPhialStack;
-        }
-        if(pPlayer.level.isClientSide) {
+        if (pPlayer.level.isClientSide
+                && pPhialStack.getItem() instanceof ChemicalPhial chemicalPhial
+                && ammunitionHandler.isChemicalValid(chemicalPhial.getChemical())) {
             SquirtgunPacketHandler.sendToServer(new GunCapsUpdateC2SPacket(pPhialStack));
+            return new ItemStack(ForgeRegistries.ITEMS.getValue(ItemRegistration.PHIAL.getId()), 1);
         }
-        return new ItemStack(ForgeRegistries.ITEMS.getValue(ItemRegistration.PHIAL.getId()), 1);
+        return pPhialStack;
     }
 }

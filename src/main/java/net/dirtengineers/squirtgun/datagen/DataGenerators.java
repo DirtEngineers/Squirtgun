@@ -17,8 +17,9 @@ public class DataGenerators {
         generator.addProvider(pEvent.includeServer(), new RecipeGenerator(generator));
         generator.addProvider(pEvent.includeClient(), new ItemModelGenerator(generator, pEvent.getExistingFileHelper()));
         generator.addProvider(pEvent.includeClient(), new LocalizationGenerator(generator, "en_us"));
+        generator.addProvider(pEvent.includeServer(), new BlockTagGenerator(generator, pEvent.getExistingFileHelper()));
+        generator.addProvider(pEvent.includeServer(), new ItemTagGenerator(generator, pEvent.getExistingFileHelper()));
+        generator.addProvider(pEvent.includeServer(), new LootTableGenerator(generator));
 //        generator.addProvider(pEvent.includeClient(), new BlockStateGenerator(generator, pEvent.getExistingFileHelper()));
-//        generator.addProvider(pEvent.includeServer(), new LootTableProvider(generator));
-//        generator.addProvider(pEvent.includeServer(), new BlockTagProvider(generator, pEvent.getExistingFileHelper()));
     }
 }

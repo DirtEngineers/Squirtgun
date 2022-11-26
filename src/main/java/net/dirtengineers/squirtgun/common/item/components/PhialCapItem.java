@@ -1,4 +1,4 @@
-package net.dirtengineers.squirtgun.common.item;
+package net.dirtengineers.squirtgun.common.item.components;
 
 import net.minecraft.world.item.Item;
 

@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "squirtgun",
+  "key": {
+    "A": {
+      "item": "squirtgun:gun_actuator"
+    },
+    "B": {
+      "item": "squirtgun:gun_barrel_section"
+    },
+    "G": {
+      "item": "squirtgun:gun_grip"
+    },
+    "P": {
+      "item": "squirtgun:gun_phial_mount"
+    }
+  },
+  "pattern": [
+    "PP ",
+    "ABB",
+    "G  "
+  ],
+  "result": {
+    "item": "squirtgun:squirtgunitem"
+  }
+}

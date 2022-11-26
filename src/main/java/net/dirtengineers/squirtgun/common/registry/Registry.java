@@ -13,7 +13,7 @@ import java.util.Objects;
 public class Registry {
 
     public static void register(IEventBus modEventBus) {
-        CompoundRegistration.register();
+//        CompoundRegistration.register();
         BlockRegistration.register(modEventBus);
         ItemRegistration.register(modEventBus);
         BlockEntityRegistration.register(modEventBus);

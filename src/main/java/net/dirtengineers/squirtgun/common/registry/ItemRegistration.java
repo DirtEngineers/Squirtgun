@@ -5,6 +5,8 @@ import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.common.item.*;
 import net.dirtengineers.squirtgun.common.item.SquirtgunItem;
+import net.dirtengineers.squirtgun.common.item.components.*;
+import net.dirtengineers.squirtgun.common.item.materials.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
@@ -25,21 +27,32 @@ import static com.smashingmods.chemlib.registry.ItemRegistry.getElements;
 public class ItemRegistration {
     public static final CreativeModeTab SQUIRTGUN_TAB = new CreativeModeTab(Constants.squirtgunTabName) {
         public ItemStack makeIcon() {
-            return new ItemStack(SQUIRTGUNITEM.get());
+            return new ItemStack(SQUIRTGUN.get());
         }
     };
+
+    //Properties
     public static final Item.Properties ITEM_PROPERTIES_NO_TAB;
     public static final Item.Properties ITEM_PROPERTIES_WITH_TAB;
     public static final Item.Properties ITEM_PROPERTIES_WITH_TAB_STACK_TO_ONE;
-    public static final DeferredRegister<Item> SQUIRTGUNITEMS;
+
+    public static final DeferredRegister<Item> ITEMS;
+
+    //Items
     public static final RegistryObject<Item> PHIAL;
-    public static final RegistryObject<Item> SQUIRTSLUGITEM;
-    public static final RegistryObject<Item> SQUIRTGUNITEM;
-    public static final RegistryObject<Item> BRASS_BLEND_ITEM;
-    public static final RegistryObject<Item> BRASS_NUGGET_ITEM;
-    public static final RegistryObject<Item> BRASS_INGOT_ITEM;
-    public static final RegistryObject<Item> PHIAL_CAP_ITEM;
-    public static final RegistryObject<Item> QUARTZ_SHARD_ITEM;
+    public static final RegistryObject<Item> SQUIRTSLUG;
+    public static final RegistryObject<Item> SQUIRTGUN;
+    public static final RegistryObject<Item> BRASS_BLEND;
+    public static final RegistryObject<Item> BRASS_NUGGET;
+    public static final RegistryObject<Item> BRASS_INGOT;
+    public static final RegistryObject<Item> PHIAL_CAP;
+    public static final RegistryObject<Item> QUARTZ_SHARD;
+    public static final RegistryObject<Item> GUN_ACTUATOR;
+    public static final RegistryObject<Item> GUN_BARREL_SECTION;
+    public static final RegistryObject<Item> GUN_GRIP;
+    public static final RegistryObject<Item> GUN_PHIAL_MOUNT;
+
+    //Collections
     public static Map<ChemicalPhial, Chemical> PHIALS;
     public static Map<Chemical, Fluid> CHEMICAL_FLUIDS;
     public static List<Chemical> ammunitionChemicals;
@@ -89,27 +102,32 @@ public class ItemRegistration {
     }
 
     public static <B extends Block> void fromBlock(RegistryObject<B> block) {
-        SQUIRTGUNITEMS.register(block.getId().getPath(), () -> new BlockItem(block.get(), ITEM_PROPERTIES_WITH_TAB));
+        ITEMS.register(block.getId().getPath(), () -> new BlockItem(block.get(), ITEM_PROPERTIES_WITH_TAB));
     }
 
     public static void register(IEventBus eventbus) {
         BlockRegistration.BLOCKS.getEntries().forEach(ItemRegistration::fromBlock);
-        SQUIRTGUNITEMS.register(eventbus);
+        ITEMS.register(eventbus);
     }
 
     static {
         ITEM_PROPERTIES_WITH_TAB = new Item.Properties().tab(SQUIRTGUN_TAB).rarity(Rarity.COMMON).stacksTo(64);
         ITEM_PROPERTIES_WITH_TAB_STACK_TO_ONE = new Item.Properties().tab(SQUIRTGUN_TAB).rarity(Rarity.COMMON).stacksTo(1);
         ITEM_PROPERTIES_NO_TAB = new Item.Properties().rarity(Rarity.COMMON).stacksTo(1);
-        SQUIRTGUNITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Squirtgun.MOD_ID);
-        PHIAL = SQUIRTGUNITEMS.register(Constants.phialItemName, () -> new EmptyPhialItem(ITEM_PROPERTIES_WITH_TAB));
-        SQUIRTSLUGITEM = SQUIRTGUNITEMS.register(Constants.slugItemName, () -> new GenericSlug(ITEM_PROPERTIES_NO_TAB));
-        SQUIRTGUNITEM = SQUIRTGUNITEMS.register(Constants.gunItemName, () -> new SquirtgunItem(ITEM_PROPERTIES_WITH_TAB_STACK_TO_ONE));
-        BRASS_BLEND_ITEM = SQUIRTGUNITEMS.register(Constants.brassBlendItemName, () -> new BrassBlendItem(ITEM_PROPERTIES_WITH_TAB));
-        PHIAL_CAP_ITEM = SQUIRTGUNITEMS.register(Constants.phialCapItemName, () -> new PhialCapItem(ITEM_PROPERTIES_WITH_TAB));
-        BRASS_NUGGET_ITEM = SQUIRTGUNITEMS.register(Constants.brassNuggetItemName, () -> new BrassNuggetItem(ITEM_PROPERTIES_WITH_TAB));
-        BRASS_INGOT_ITEM = SQUIRTGUNITEMS.register(Constants.brassIngotItemName, () -> new BrassIngotItem(ITEM_PROPERTIES_WITH_TAB));
-        QUARTZ_SHARD_ITEM = SQUIRTGUNITEMS.register(Constants.quartzShardItemName, () -> new QuartzShard(ITEM_PROPERTIES_WITH_TAB));
+        ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Squirtgun.MOD_ID);
+        PHIAL = ITEMS.register(Constants.phialItemName, () -> new EmptyPhialItem(ITEM_PROPERTIES_WITH_TAB));
+        SQUIRTSLUG = ITEMS.register(Constants.slugItemName, () -> new GenericSlug(ITEM_PROPERTIES_NO_TAB));
+        SQUIRTGUN = ITEMS.register(Constants.gunItemName, () -> new SquirtgunItem(ITEM_PROPERTIES_WITH_TAB_STACK_TO_ONE));
+        BRASS_BLEND = ITEMS.register(Constants.brassBlendItemName, () -> new BrassBlendItem(ITEM_PROPERTIES_WITH_TAB));
+        PHIAL_CAP = ITEMS.register(Constants.phialCapItemName, () -> new PhialCapItem(ITEM_PROPERTIES_WITH_TAB));
+        BRASS_NUGGET = ITEMS.register(Constants.brassNuggetItemName, () -> new BrassNuggetItem(ITEM_PROPERTIES_WITH_TAB));
+        BRASS_INGOT = ITEMS.register(Constants.brassIngotItemName, () -> new BrassIngotItem(ITEM_PROPERTIES_WITH_TAB));
+        QUARTZ_SHARD = ITEMS.register(Constants.quartzShardItemName, () -> new QuartzShard(ITEM_PROPERTIES_WITH_TAB));
+        GUN_ACTUATOR = ITEMS.register(Constants.gunActuatorItemName, () -> new GunActuator(ITEM_PROPERTIES_WITH_TAB));
+        GUN_BARREL_SECTION = ITEMS.register(Constants.gunBarrelSectionItemName, () -> new GunBarrelSection(ITEM_PROPERTIES_WITH_TAB));
+        GUN_GRIP = ITEMS.register(Constants.gunGripItemName, () -> new GunGrip(ITEM_PROPERTIES_WITH_TAB));
+        GUN_PHIAL_MOUNT = ITEMS.register(Constants.gunPhialMountItemName, () -> new GunPhialMount(ITEM_PROPERTIES_WITH_TAB));
+
         PHIALS = new HashMap<>();
         CHEMICAL_FLUIDS = new HashMap<>();
         ammunitionChemicals = new ArrayList<>();

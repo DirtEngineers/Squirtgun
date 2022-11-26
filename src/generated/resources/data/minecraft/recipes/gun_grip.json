@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "squirtgun",
+  "key": {
+    "B": {
+      "item": "squirtgun:brass_nugget"
+    },
+    "I": {
+      "item": "minecraft:iron_nugget"
+    },
+    "P": {
+      "item": "chemlib:polyvinyl_chloride"
+    }
+  },
+  "pattern": [
+    " B ",
+    "P I",
+    " I "
+  ],
+  "result": {
+    "item": "squirtgun:gun_grip"
+  }
+}

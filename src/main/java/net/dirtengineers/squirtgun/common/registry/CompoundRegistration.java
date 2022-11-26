@@ -70,12 +70,11 @@ public class CompoundRegistration {
                     }
                 }
             }
-
             return;
         }
     }
 
-    private static List<MobEffectInstance> mobEffectsFactory(JsonObject object) {
+    public static List<MobEffectInstance> mobEffectsFactory(JsonObject object) {
         List<MobEffectInstance> effectsList = new ArrayList<>();
         JsonArray effects = object.getAsJsonArray("effect");
         if (effects != null) {
@@ -93,7 +92,7 @@ public class CompoundRegistration {
         return effectsList;
     }
 
-    private static FluidType.Properties fluidTypePropertiesFactory(JsonObject pObject, String pName) {
+    public static FluidType.Properties fluidTypePropertiesFactory(JsonObject pObject, String pName) {
         int density = pObject.has("density") ? pObject.get("density").getAsInt() : 1000;
         int lightLevel = pObject.has("light_level") ? pObject.get("light_level").getAsInt() : 0;
         int viscosity = pObject.has("viscosity") ? pObject.get("viscosity").getAsInt() : 1000;
@@ -108,7 +107,7 @@ public class CompoundRegistration {
         boolean canExtinguish = pObject.has("can_extinguish") && pObject.get("can_extinguish").getAsBoolean();
         boolean supportsBoating = pObject.has("supports_boating") && pObject.get("supports_boating").getAsBoolean();
         boolean canConvertToSource = pObject.has("can_convert_to_source") && pObject.get("can_convert_to_source").getAsBoolean();
-        return FluidType.Properties.create().descriptionId(String.format("block.chemlib.%s", pName)).density(density).lightLevel(lightLevel).viscosity(viscosity).temperature(temperature).motionScale(motionScale).fallDistanceModifier((float)fallDistanceModifier).pathType(pathType).canPushEntity(pushEntity).canSwim(canSwim).canDrown(canDrown).canHydrate(canHydrate).canExtinguish(canExtinguish).canConvertToSource(canConvertToSource).supportsBoating(supportsBoating).rarity(Rarity.COMMON).sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL).sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY).sound(SoundActions.FLUID_VAPORIZE, SoundEvents.FIRE_EXTINGUISH);
+        return FluidType.Properties.create().descriptionId(String.format("block.squirtgun.%s", pName)).density(density).lightLevel(lightLevel).viscosity(viscosity).temperature(temperature).motionScale(motionScale).fallDistanceModifier((float)fallDistanceModifier).pathType(pathType).canPushEntity(pushEntity).canSwim(canSwim).canDrown(canDrown).canHydrate(canHydrate).canExtinguish(canExtinguish).canConvertToSource(canConvertToSource).supportsBoating(supportsBoating).rarity(Rarity.COMMON).sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL).sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY).sound(SoundActions.FLUID_VAPORIZE, SoundEvents.FIRE_EXTINGUISH);
     }
 
     public static void register() {

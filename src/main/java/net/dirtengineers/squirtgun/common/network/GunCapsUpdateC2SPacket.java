@@ -32,7 +32,7 @@ public class GunCapsUpdateC2SPacket {
             if (pPacket.insertStack.getItem() instanceof ChemicalPhial chemicalPhial) {
                 Player player = pContext.get().getSender();
                 if(player != null) {
-                    IAmmunitionCapability ammunitionHandler = SquirtgunItem.getPlayerGun(player).getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO).orElse(null);
+                    IAmmunitionCapability ammunitionHandler = SquirtgunItem.getPlayerGun(player).getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO, null).orElse(null);
                     ammunitionHandler.setChemical(chemicalPhial.getChemical());
                     ammunitionHandler.setShotsAvailable(chemicalPhial.getShotsAvailable());
                 }

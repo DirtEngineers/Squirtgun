@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "squirtgun",
+  "key": {
+    "A": {
+      "item": "chemlib:radium_dust"
+    },
+    "B": {
+      "item": "squirtgun:brass_nugget"
+    },
+    "G": {
+      "item": "chemlib:graphite_dust"
+    },
+    "N": {
+      "item": "minecraft:gold_nugget"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "pattern": [
+    " A ",
+    "NBN",
+    "RGR"
+  ],
+  "result": {
+    "item": "squirtgun:gun_actuator"
+  }
+}

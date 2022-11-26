@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "squirtgun",
+  "ingredients": [
+    {
+      "item": "squirtgun:brass_ingot"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "item": "squirtgun:brass_nugget"
+  }
+}

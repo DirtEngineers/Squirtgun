@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "squirtgun",
+  "ingredients": [
+    {
+      "item": "chemlib:copper_dust"
+    },
+    {
+      "item": "chemlib:copper_dust"
+    },
+    {
+      "item": "chemlib:zinc_dust"
+    }
+  ],
+  "result": {
+    "count": 3,
+    "item": "squirtgun:brass_blend"
+  }
+}
