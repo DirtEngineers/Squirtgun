@@ -1,12 +1,15 @@
-package net.dirtengineers.squirtgun.common.registry;
+package net.dirtengineers.squirtgun.registry;
 
 import com.smashingmods.chemlib.api.Chemical;
 import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.common.item.*;
-import net.dirtengineers.squirtgun.common.item.SquirtgunItem;
-import net.dirtengineers.squirtgun.common.item.components.*;
-import net.dirtengineers.squirtgun.common.item.materials.*;
+import net.dirtengineers.squirtgun.common.item.components.PhialCapItem;
+import net.dirtengineers.squirtgun.common.item.components.GunActuator;
+import net.dirtengineers.squirtgun.common.item.materials.BrassBlendItem;
+import net.dirtengineers.squirtgun.common.item.materials.BrassIngotItem;
+import net.dirtengineers.squirtgun.common.item.materials.BrassNuggetItem;
+import net.dirtengineers.squirtgun.common.item.materials.FusedQuartzShard;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
@@ -46,11 +49,8 @@ public class ItemRegistration {
     public static final RegistryObject<Item> BRASS_NUGGET;
     public static final RegistryObject<Item> BRASS_INGOT;
     public static final RegistryObject<Item> PHIAL_CAP;
-    public static final RegistryObject<Item> QUARTZ_SHARD;
+    public static final RegistryObject<Item> FUSED_QUARTZ_SHARD;
     public static final RegistryObject<Item> GUN_ACTUATOR;
-    public static final RegistryObject<Item> GUN_BARREL_SECTION;
-    public static final RegistryObject<Item> GUN_GRIP;
-    public static final RegistryObject<Item> GUN_PHIAL_MOUNT;
 
     //Collections
     public static Map<ChemicalPhial, Chemical> PHIALS;
@@ -122,11 +122,8 @@ public class ItemRegistration {
         PHIAL_CAP = ITEMS.register(Constants.phialCapItemName, () -> new PhialCapItem(ITEM_PROPERTIES_WITH_TAB));
         BRASS_NUGGET = ITEMS.register(Constants.brassNuggetItemName, () -> new BrassNuggetItem(ITEM_PROPERTIES_WITH_TAB));
         BRASS_INGOT = ITEMS.register(Constants.brassIngotItemName, () -> new BrassIngotItem(ITEM_PROPERTIES_WITH_TAB));
-        QUARTZ_SHARD = ITEMS.register(Constants.quartzShardItemName, () -> new QuartzShard(ITEM_PROPERTIES_WITH_TAB));
+        FUSED_QUARTZ_SHARD = ITEMS.register(Constants.quartzShardItemName, () -> new FusedQuartzShard(ITEM_PROPERTIES_WITH_TAB));
         GUN_ACTUATOR = ITEMS.register(Constants.gunActuatorItemName, () -> new GunActuator(ITEM_PROPERTIES_WITH_TAB));
-        GUN_BARREL_SECTION = ITEMS.register(Constants.gunBarrelSectionItemName, () -> new GunBarrelSection(ITEM_PROPERTIES_WITH_TAB));
-        GUN_GRIP = ITEMS.register(Constants.gunGripItemName, () -> new GunGrip(ITEM_PROPERTIES_WITH_TAB));
-        GUN_PHIAL_MOUNT = ITEMS.register(Constants.gunPhialMountItemName, () -> new GunPhialMount(ITEM_PROPERTIES_WITH_TAB));
 
         PHIALS = new HashMap<>();
         CHEMICAL_FLUIDS = new HashMap<>();

@@ -2,8 +2,8 @@ package net.dirtengineers.squirtgun.common.entity;
 
 import com.google.common.collect.Sets;
 import com.smashingmods.chemlib.api.Chemical;
-import net.dirtengineers.squirtgun.common.registry.EntityRegistration;
-import net.dirtengineers.squirtgun.common.registry.SoundEventRegistration;
+import net.dirtengineers.squirtgun.registry.EntityRegistration;
+import net.dirtengineers.squirtgun.registry.SoundEventRegistration;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
-import static net.dirtengineers.squirtgun.common.registry.ItemRegistration.CHEMICAL_FLUIDS;
+import static net.dirtengineers.squirtgun.registry.ItemRegistration.CHEMICAL_FLUIDS;
 
 
 public class SquirtSlug extends AbstractArrow {

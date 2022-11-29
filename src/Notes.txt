@@ -7,11 +7,6 @@ SQUIRTGUNITEM:
  Need sounds for various actions
  Need advancements for item use
 
-   Recipes:
-   1.  Recipe for gun                                       -- DONE
-   2.  Recipe for generic phial item in crafting bench      -- DONE
-   3.  Recipe for phial types and fill (eg: HCl phial)      -- WORKING
-
 https://www.curseforge.com/minecraft/mc-mods/alchemylib/files
 
 Leather bandolier with brass filigree trim
@@ -67,12 +62,54 @@ Add note to bottom of reload screen reminding player that reloaded phial will be
 Cancel button look
 Adjust mob effects for fluids.
 
-ISSUE: Lava and Milk show up in Chemlib tab with no image
 
-just make sure you're using forge tags in all the recipes and it'll automatically be compatible with mods that add alloying machines
+Make recipe for encapsulator
+-Tank
+-Battery
+-Control panel
+-Injector
+-machine frame X3
+-gold
+-redstone
+-brass
+
+Make components for encapsulator
+Fluid Storage Tank                                                                              DONE
+
+Machine frame                                                                                   DONE
+
+polymer electrolyte - chitin amide polyvinyl_chloride acetic_acid CPA
+
+Energy Storage (battery?)
+-- a machine frame of some kind                                                                 DONE
+-Graphite                                                                G
+-Lithium Manganese Oxide LiMn2O4 -- lithium_oxide & manganese_oxide     E E
+-polymer? chitin starch amide polyvinyl_chloride acetic_acid            LFM
+
+Control panel                                                                                   DONE
+-Iron_plate X2
+-PVC
+-Brass
+-Gold
+-Copper
+
+Injector assembly                                                                               DONE
+-piston X2
+-redstone
+-gold nugget
+-brass nugget
+-brass ingot
+
+Gold ingots for wires
+Plenty of redstone
+
+Make crafting table recipes for phials?
+Add capability to encapsulator to take items and fluids from outside source
+Make water pistol item for initial gun and use that in recipe to upgrade to full squirtgun?
+
+Timbr:just make sure you're using forge tags in all the recipes and it'll automatically be compatible with mods that add alloying machines
 Add mineable tags to brass block and encapsulator
 
-Make encapsulator recipe
 
 Need models for:
 Gun Grip                    -- Waiting on final model
@@ -80,7 +117,8 @@ Gun Actuator                -- Waiting on final model
 Gun Barrel Assembly         -- Waiting on final model
 Gun Phial Mount             -- Waiting on final model
 
-Encapsulator should set progress to 0 when item removed from input slot.
+
+
 
 !!--- API-ify chemlib
 One step would be to allow outside access to create/register compounds like a helper function to pass in the json.

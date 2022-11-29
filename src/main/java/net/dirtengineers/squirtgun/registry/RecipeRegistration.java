@@ -1,4 +1,4 @@
-package net.dirtengineers.squirtgun.common.registry;
+package net.dirtengineers.squirtgun.registry;
 
 import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class RecipeRegistration {
-    public static final DeferredRegister<RecipeType<?>> ENCAPSULATOR_RECIPE_TYPES;//RecipeType<T extends Recipe<?>>
+    public static final DeferredRegister<RecipeType<?>> ENCAPSULATOR_RECIPE_TYPES;
     private static final DeferredRegister<RecipeSerializer<?>> SERIALIZERS;
     public static RegistryObject<RecipeType<PhialRecipe>> PHIAL_CREATION_RECIPE_TYPE;
     public static final RegistryObject<PhialRecipeSerializer<PhialRecipe>> PHIAL_CREATION_SERIALIZER;

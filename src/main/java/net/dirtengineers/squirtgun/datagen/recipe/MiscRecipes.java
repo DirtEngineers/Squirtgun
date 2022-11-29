@@ -1,75 +1,34 @@
 package net.dirtengineers.squirtgun.datagen.recipe;
 
+import com.smashingmods.chemlib.registry.ItemRegistry;
 import net.dirtengineers.squirtgun.Squirtgun;
-import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 
 import java.util.function.Consumer;
 
-import static net.dirtengineers.squirtgun.datagen.recipe.ItemDefinitions.*;
+import static net.dirtengineers.squirtgun.registry.ItemRegistration.FUSED_QUARTZ_SHARD;
 
 public class MiscRecipes extends net.minecraft.data.recipes.RecipeProvider {
+    public static final Item SILICA = ItemRegistry.getRegistryObject(ItemRegistry.REGISTRY_COMPOUNDS, "silicon_dioxide").get();
+
     public MiscRecipes(DataGenerator pGenerator) { super(pGenerator); }
 
     public static void buildRecipes(Consumer<FinishedRecipe> pConsumer) {
-        generateQuartzShard(pConsumer);
-        generatePhialCap(pConsumer);
-        generateEmptyPhial(pConsumer);
+        generateQuartzShardSmelting(pConsumer);
+        generateQuartzShardBlasting(pConsumer);
     }
 
-//    private static void generateLuminousPaint(Consumer<FinishedRecipe> pConsumer) {
-//        ShapelessRecipeBuilder
-//                .shapeless(LUMINOUS_PAINT)
-//                .group(Squirtgun.MOD_ID)
-//                .requires(RADIUM_DUST)
-//                .requires(ZINC_SULPHIDE_DUST)
-//                .requires(STARCH_DUST)
-//                .requires(AMIDE_DUST)
-//                .requires(Items.WATER_BUCKET)
-//                .group(Squirtgun.MOD_ID)
-//                .unlockedBy(
-//                        "has_item",
-//                        inventoryTrigger(
-//                                ItemPredicate.Builder.item().of(new ItemLike[]{RADIUM_DUST, ZINC_SULPHIDE_DUST, STARCH_DUST, AMIDE_DUST, Items.WATER_BUCKET}).build()))
-//                .save(pConsumer);
-//    }
-
-    private static void generateQuartzShard(Consumer<FinishedRecipe> pConsumer) {
-        SimpleCookingRecipeBuilder.blasting(
-                        Ingredient.of(SILICA)
-                        , QUARTZ_SHARD
-                        , 0.5F
-                        , 100)
-                .group(Squirtgun.MOD_ID)
-                .unlockedBy(
-                        "has_item",
-                        inventoryTrigger(
-                                ItemPredicate.Builder.item().of(new ItemLike[]{SILICA}).build()))
-                .save(pConsumer, String.format("%s_from_blasting", getConversionRecipeName(QUARTZ_SHARD, SILICA)));
-
-        SimpleCookingRecipeBuilder.blasting(
-                        Ingredient.of(Items.QUARTZ)
-                        , QUARTZ_SHARD
-                        , 0.5F
-                        , 100)
-                .group(Squirtgun.MOD_ID)
-                .unlockedBy(
-                        "has_item",
-                        inventoryTrigger(
-                                ItemPredicate.Builder.item().of(new ItemLike[]{Items.QUARTZ}).build()))
-                .save(pConsumer, String.format("%s_from_blasting", getConversionRecipeName(QUARTZ_SHARD, Items.QUARTZ)));
-
+    private static void generateQuartzShardSmelting(Consumer<FinishedRecipe> pConsumer) {
         SimpleCookingRecipeBuilder.smelting(
                         Ingredient.of(SILICA)
-                        , QUARTZ_SHARD
+                        , FUSED_QUARTZ_SHARD.get()
                         , 0.5F
                         , 200)
                 .group(Squirtgun.MOD_ID)
@@ -77,11 +36,11 @@ public class MiscRecipes extends net.minecraft.data.recipes.RecipeProvider {
                         "has_item",
                         inventoryTrigger(
                                 ItemPredicate.Builder.item().of(new ItemLike[]{SILICA}).build()))
-                .save(pConsumer, String.format("%s_from_smelting", getConversionRecipeName(QUARTZ_SHARD, SILICA)));
+                .save(pConsumer, String.format("%s_from_smelting", getConversionRecipeName(FUSED_QUARTZ_SHARD.get(), SILICA)));
 
         SimpleCookingRecipeBuilder.smelting(
                         Ingredient.of(Items.QUARTZ)
-                        , QUARTZ_SHARD
+                        , FUSED_QUARTZ_SHARD.get()
                         , 0.5F
                         , 200)
                 .group(Squirtgun.MOD_ID)
@@ -89,35 +48,32 @@ public class MiscRecipes extends net.minecraft.data.recipes.RecipeProvider {
                         "has_item",
                         inventoryTrigger(
                                 ItemPredicate.Builder.item().of(new ItemLike[]{Items.QUARTZ}).build()))
-                .save(pConsumer, String.format("%s_from_smelting", getConversionRecipeName(QUARTZ_SHARD, Items.QUARTZ)));
+                .save(pConsumer, String.format("%s_from_smelting", getConversionRecipeName(FUSED_QUARTZ_SHARD.get(), Items.QUARTZ)));
     }
 
-    private static void generatePhialCap(Consumer<FinishedRecipe> pConsumer) {
-        ShapelessRecipeBuilder
-                .shapeless(PHIAL_CAP)
-                .group(Squirtgun.MOD_ID)
-                .requires(BRASS_NUGGET, 2)
+    private static void generateQuartzShardBlasting(Consumer<FinishedRecipe> pConsumer) {
+        SimpleCookingRecipeBuilder.blasting(
+                        Ingredient.of(SILICA)
+                        , FUSED_QUARTZ_SHARD.get()
+                        , 0.5F
+                        , 100)
                 .group(Squirtgun.MOD_ID)
                 .unlockedBy(
                         "has_item",
                         inventoryTrigger(
-                                ItemPredicate.Builder.item().of(new ItemLike[]{BRASS_NUGGET}).build()))
-                .save(pConsumer);
-    }
+                                ItemPredicate.Builder.item().of(new ItemLike[]{SILICA}).build()))
+                .save(pConsumer, String.format("%s_from_blasting", getConversionRecipeName(FUSED_QUARTZ_SHARD.get(), SILICA)));
 
-    private static void generateEmptyPhial(Consumer<FinishedRecipe> pConsumer) {
-        ShapedRecipeBuilder
-                .shaped(ItemRegistration.PHIAL.get().asItem())
+        SimpleCookingRecipeBuilder.blasting(
+                        Ingredient.of(Items.QUARTZ)
+                        , FUSED_QUARTZ_SHARD.get()
+                        , 0.5F
+                        , 100)
                 .group(Squirtgun.MOD_ID)
-                .define('C', PHIAL_CAP)
-                .define('Q', QUARTZ_SHARD)
-                .pattern(" C ")
-                .pattern("Q Q")
-                .pattern(" Q ")
                 .unlockedBy(
                         "has_item",
                         inventoryTrigger(
-                                ItemPredicate.Builder.item().of(new ItemLike[]{PHIAL_CAP, QUARTZ_SHARD}).build()))
-                .save(pConsumer);
+                                ItemPredicate.Builder.item().of(new ItemLike[]{Items.QUARTZ}).build()))
+                .save(pConsumer, String.format("%s_from_blasting", getConversionRecipeName(FUSED_QUARTZ_SHARD.get(), Items.QUARTZ)));
     }
 }

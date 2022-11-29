@@ -3,13 +3,14 @@
   "group": "squirtgun",
   "ingredients": [
     {
-      "item": "squirtgun:brass_nugget"
+      "item": "squirtgun:brass_ingot"
     },
     {
-      "item": "squirtgun:brass_nugget"
+      "item": "squirtgun:brass_ingot"
     }
   ],
   "result": {
+    "count": 3,
     "item": "squirtgun:phial_cap"
   }
 }

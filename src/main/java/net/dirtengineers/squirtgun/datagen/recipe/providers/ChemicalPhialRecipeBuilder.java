@@ -2,7 +2,6 @@ package net.dirtengineers.squirtgun.datagen.recipe.providers;
 
 import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
-import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.RequirementsStrategy;
@@ -12,7 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -57,15 +55,15 @@ public class ChemicalPhialRecipeBuilder implements RecipeBuilder {
         return this.result.getItem();
     }
 
-    private String getFluidName(FluidType pFluidType){
-        return ItemRegistration.CHEMICAL_FLUIDS
-                .entrySet()
-                .stream()
-                .filter(entry -> entry.getValue().getFluidType() == pFluidType)
-                .findFirst()
-                .map(entry -> entry.getKey().getChemicalName())
-                .orElse("");
-    }
+//    private String getFluidName(FluidType pFluidType){
+//        return ItemRegistration.CHEMICAL_FLUIDS
+//                .entrySet()
+//                .stream()
+//                .filter(entry -> entry.getValue().getFluidType() == pFluidType)
+//                .findFirst()
+//                .map(entry -> entry.getKey().getChemicalName())
+//                .orElse("");
+//    }
 
     @Override
     public void save(Consumer<FinishedRecipe> pFinishedRecipeConsumer, ResourceLocation pRecipeId) {

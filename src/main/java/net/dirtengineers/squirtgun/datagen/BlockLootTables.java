@@ -1,6 +1,6 @@
 package net.dirtengineers.squirtgun.datagen;
 
-import net.dirtengineers.squirtgun.common.registry.BlockRegistration;
+import net.dirtengineers.squirtgun.registry.BlockRegistration;
 import net.minecraft.data.loot.BlockLoot;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.RegistryObject;

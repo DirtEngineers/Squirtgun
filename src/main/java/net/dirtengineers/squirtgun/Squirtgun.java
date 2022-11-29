@@ -1,9 +1,9 @@
 package net.dirtengineers.squirtgun;
 
 import net.dirtengineers.squirtgun.common.block.EncapsulatorScreen;
-import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
-import net.dirtengineers.squirtgun.common.registry.MenuRegistration;
-import net.dirtengineers.squirtgun.common.registry.Registry;
+import net.dirtengineers.squirtgun.registry.ItemRegistration;
+import net.dirtengineers.squirtgun.registry.MenuRegistration;
+import net.dirtengineers.squirtgun.registry.Registry;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
@@ -35,9 +35,7 @@ public class Squirtgun {
 
     @SubscribeEvent
     public void clientSetupEvent(FMLClientSetupEvent event){
-        event.enqueueWork(() -> {
-            MenuScreens.register(MenuRegistration.ENCAPSULATOR_MENU.get(), EncapsulatorScreen::new);
-        });
+        event.enqueueWork(() -> MenuScreens.register(MenuRegistration.ENCAPSULATOR_MENU.get(), EncapsulatorScreen::new));
     }
 
     private void commonSetupEvent(final FMLCommonSetupEvent event) {

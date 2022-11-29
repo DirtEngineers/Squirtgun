@@ -10,7 +10,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Objects;
 
-import static net.dirtengineers.squirtgun.common.registry.ItemRegistration.ammunitionChemicals;
+import static net.dirtengineers.squirtgun.registry.ItemRegistration.ammunitionChemicals;
 
 public class AmmunitionStorage implements IAmmunitionCapability, INBTSerializable<CompoundTag> {
 

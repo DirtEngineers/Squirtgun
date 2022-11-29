@@ -6,8 +6,12 @@
         "items": [
           {
             "items": [
-              "squirtgun:brass_nugget",
-              "chemlib:polyvinyl_chloride"
+              "minecraft:bucket",
+              "minecraft:piston",
+              "minecraft:redstone",
+              "minecraft:copper_ingot",
+              "squirtgun:gun_actuator",
+              "squirtgun:brass_ingot"
             ]
           }
         ]
@@ -16,7 +20,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:gun_phial_mount"
+        "recipe": "minecraft:encapsulator_block"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -29,7 +33,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:gun_phial_mount"
+      "minecraft:encapsulator_block"
     ]
   }
 }

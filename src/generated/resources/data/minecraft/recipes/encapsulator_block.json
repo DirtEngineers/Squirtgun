@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "squirtgun",
+  "key": {
+    "A": {
+      "item": "squirtgun:gun_actuator"
+    },
+    "B": {
+      "item": "squirtgun:brass_ingot"
+    },
+    "C": {
+      "item": "minecraft:copper_ingot"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "U": {
+      "item": "minecraft:bucket"
+    }
+  },
+  "pattern": [
+    "BRB",
+    "UAP",
+    "BCB"
+  ],
+  "result": {
+    "item": "squirtgun:encapsulator_block"
+  }
+}

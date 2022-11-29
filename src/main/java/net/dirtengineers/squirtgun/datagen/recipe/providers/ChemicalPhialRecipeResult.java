@@ -1,7 +1,7 @@
 package net.dirtengineers.squirtgun.datagen.recipe.providers;
 
 import com.google.gson.JsonObject;
-import net.dirtengineers.squirtgun.common.registry.RecipeRegistration;
+import net.dirtengineers.squirtgun.registry.RecipeRegistration;
 import net.dirtengineers.squirtgun.datagen.Util;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.data.recipes.FinishedRecipe;

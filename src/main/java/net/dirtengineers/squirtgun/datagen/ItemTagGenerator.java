@@ -1,7 +1,7 @@
 package net.dirtengineers.squirtgun.datagen;
 
 import net.dirtengineers.squirtgun.Squirtgun;
-import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
+import net.dirtengineers.squirtgun.registry.ItemRegistration;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -33,7 +33,7 @@ public class ItemTagGenerator  extends ForgeRegistryTagsProvider<Item> {
         this.tag(key).add(ItemRegistration.BRASS_NUGGET.get());
 
         key = Objects.requireNonNull(ForgeRegistries.ITEMS.tags())
-                .createTagKey(new ResourceLocation("forge", String.format("%s/%s", "glass/silica", ItemRegistration.QUARTZ_SHARD.get())));
-        this.tag(key).add(ItemRegistration.QUARTZ_SHARD.get());
+                .createTagKey(new ResourceLocation("forge", String.format("%s/%s", "glass/silica", ItemRegistration.FUSED_QUARTZ_SHARD.get())));
+        this.tag(key).add(ItemRegistration.FUSED_QUARTZ_SHARD.get());
     }
 }

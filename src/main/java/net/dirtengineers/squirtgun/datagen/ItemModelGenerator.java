@@ -3,7 +3,7 @@ package net.dirtengineers.squirtgun.datagen;
 import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.common.item.ChemicalPhial;
-import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
+import net.dirtengineers.squirtgun.registry.ItemRegistration;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.model.generators.ItemModelProvider;

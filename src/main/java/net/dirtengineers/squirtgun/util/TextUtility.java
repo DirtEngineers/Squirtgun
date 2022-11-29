@@ -3,7 +3,7 @@ package net.dirtengineers.squirtgun.util;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.smashingmods.chemlib.api.Chemical;
 import net.dirtengineers.squirtgun.Constants;
-import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
+import net.dirtengineers.squirtgun.registry.ItemRegistration;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;

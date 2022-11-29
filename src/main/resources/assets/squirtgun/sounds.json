@@ -29,6 +29,12 @@
       "squirtgun:gun_fire"
     ]
   },
+  "gun_dry_fire": {
+    "subtitle": "sounds.squirtgun.gun_dry_fire",
+    "sounds": [
+      "squirtgun:gun_dry_fire"
+    ]
+  },
   "phial_complete": {
     "subtitle": "sounds.squirtgun.phial_complete",
     "sounds": [

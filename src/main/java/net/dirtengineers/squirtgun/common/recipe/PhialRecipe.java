@@ -2,7 +2,7 @@ package net.dirtengineers.squirtgun.common.recipe;
 
 import com.smashingmods.alchemylib.api.recipe.AbstractProcessingRecipe;
 import com.smashingmods.alchemylib.api.recipe.ProcessingRecipe;
-import net.dirtengineers.squirtgun.common.registry.RecipeRegistration;
+import net.dirtengineers.squirtgun.registry.RecipeRegistration;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;

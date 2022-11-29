@@ -6,9 +6,10 @@
         "items": [
           {
             "items": [
-              "squirtgun:brass_nugget",
-              "chemlib:graphite_dust",
-              "chemlib:radium_dust"
+              "squirtgun:brass_ingot",
+              "minecraft:gold_ingot",
+              "minecraft:redstone",
+              "chemlib:graphite_dust"
             ]
           }
         ]

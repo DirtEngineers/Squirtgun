@@ -1,7 +1,7 @@
 package net.dirtengineers.squirtgun.common.item;
 
 import com.smashingmods.chemlib.api.Chemical;
-import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
+import net.dirtengineers.squirtgun.registry.ItemRegistration;
 
 public class ChemicalPhial extends BasePhial {
 

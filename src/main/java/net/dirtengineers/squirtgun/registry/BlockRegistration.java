@@ -1,4 +1,4 @@
-package net.dirtengineers.squirtgun.common.registry;
+package net.dirtengineers.squirtgun.registry;
 
 import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;

@@ -1,4 +1,4 @@
-package net.dirtengineers.squirtgun.common.registry;
+package net.dirtengineers.squirtgun.registry;
 
 import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
@@ -17,6 +17,7 @@ public class SoundEventRegistration {
     public static RegistryObject<SoundEvent> PHIAL_SWAP;
     public static RegistryObject<SoundEvent> GUN_USE;
     public static RegistryObject<SoundEvent> GUN_FIRE;
+    public static RegistryObject<SoundEvent> GUN_DRY_FIRE;
     public static RegistryObject<SoundEvent> PHIAL_COMPLETE;
     public static RegistryObject<SoundEvent> ENCAPSULATOR_PROCESSING;
 
@@ -37,5 +38,6 @@ public class SoundEventRegistration {
         GUN_FIRE = registerSoundEvent(Constants.GunFireSoundName);
         PHIAL_COMPLETE = registerSoundEvent(Constants.PhialCompleteSoundName);
         ENCAPSULATOR_PROCESSING = registerSoundEvent(Constants.EncapsulatorProcessingSoundName);
+        GUN_DRY_FIRE = registerSoundEvent(Constants.GunDryFireSoundName);
     }
 }

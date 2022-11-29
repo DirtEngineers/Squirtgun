@@ -6,9 +6,10 @@
         "items": [
           {
             "items": [
-              "minecraft:piston",
-              "minecraft:redstone",
-              "minecraft:iron_ingot"
+              "chemlib:polyvinyl_chloride",
+              "squirtgun:gun_actuator",
+              "squirtgun:brass_ingot",
+              "squirtgun:phial"
             ]
           }
         ]

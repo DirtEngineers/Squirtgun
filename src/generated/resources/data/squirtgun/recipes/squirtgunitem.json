@@ -6,19 +6,19 @@
       "item": "squirtgun:gun_actuator"
     },
     "B": {
-      "item": "squirtgun:gun_barrel_section"
-    },
-    "G": {
-      "item": "squirtgun:gun_grip"
+      "item": "squirtgun:brass_ingot"
     },
     "P": {
-      "item": "squirtgun:gun_phial_mount"
+      "item": "squirtgun:phial"
+    },
+    "V": {
+      "item": "chemlib:polyvinyl_chloride"
     }
   },
   "pattern": [
-    "PP ",
+    "VP ",
     "ABB",
-    "G  "
+    "BV "
   ],
   "result": {
     "item": "squirtgun:squirtgunitem"

@@ -10,8 +10,8 @@ import net.dirtengineers.squirtgun.client.screens.ModScreens;
 import net.dirtengineers.squirtgun.common.entity.SquirtSlug;
 import net.dirtengineers.squirtgun.common.network.GunCapsUpdateC2SPacket;
 import net.dirtengineers.squirtgun.common.network.SquirtgunPacketHandler;
-import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
-import net.dirtengineers.squirtgun.common.registry.SoundEventRegistration;
+import net.dirtengineers.squirtgun.registry.ItemRegistration;
+import net.dirtengineers.squirtgun.registry.SoundEventRegistration;
 import net.dirtengineers.squirtgun.util.TextUtility;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -110,7 +110,7 @@ public class SquirtgunItem extends BowItem {
                     SoundEventRegistration.GUN_USE.get(),
                     SoundSource.PLAYERS,
                     1.0F,
-                    1.0F / (pLevel.getRandom().nextFloat() * 0.4F + 1.2F) + 0.5F
+                    1.0F// / (pLevel.getRandom().nextFloat() * 0.4F + 1.2F) + 0.5F
             );
             return InteractionResultHolder.consume(itemstack);
         }
@@ -148,10 +148,22 @@ public class SquirtgunItem extends BowItem {
                         player.getZ(),
                         SoundEventRegistration.GUN_FIRE.get(),
                         SoundSource.PLAYERS,
-                        1.0F,
-                        1.0F / (pLevel.getRandom().nextFloat() * 0.4F + 1.2F) + 0.5F
+                        0.5F,
+                        1.0F
                 );
                 player.awardStat(Stats.ITEM_USED.get(this));
+            }
+            else {
+                pLevel.playSound(
+                        null,
+                        player.getX(),
+                        player.getY(),
+                        player.getZ(),
+                        SoundEventRegistration.GUN_DRY_FIRE.get(),
+                        SoundSource.PLAYERS,
+                        1.0F,
+                        1.0F
+                );
             }
         }
     }

@@ -1,16 +1,25 @@
-Background:
-Tracking fluid levels in individual phials is proving far too complex from a development and item management point of view.
 
-Current approach:
-The gun stacks to 1 and holds a phial for use.
-Phials stack to whatever and individually tracks the chemical, fluid, and shots available.
-That is the part presenting the problem.
 
-Proposed solution:
-A chemical phial would hold a reference to the particular chemical (as per current).                                    DONE
-Add the chemical reference to the gun                                                                                   DONE
-Migrate the fluid and shot capacity functionality to the gun                                                            DONE
-Add these to the NBT data for the gun.                                                                                  DONE
-Phials are one-shot in that when they are loaded into the gun, the gun does its thing and returns an Empty phial item.  DONE
-The actual fluid is only dealt with when the gun makes a slug to fire.                                                  DONE
-Modify reload screen accordingly                                                                                        DONE
+Brass blend to make an ingot                                                        DONE
+One ingot to make 3 caps                                                            DONE
+
+Change nuggets to ingots on everything                                              DONE
+
+Investigate quartz-type glass in other mods                                         PENDING
+Investigate brass nuggets/ingots/blocks in other mods                               PENDING
+Investigate compactor recipe for PVC plate from PVC --                              PENDING
+Either use PVC dust or create a recipe for PVC plate
+
+Gun --> brass, PVC, actuator, and empty phial                                       DONE
+
+pachouli book entry
+
+Gun actuator & piston for injector, bucket for fluid storage,                       DONE
+Redstone and copper for battery, brass ingots in the corners
+
+
+Reload screen layout and cancel button look:
+reload screen 9X4?                                                                  PENDING
+
+Encapsulator sound bring it down to <50% & drop electricity level
+Take ideas for button states from combiner menu screen.

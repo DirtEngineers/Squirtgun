@@ -2,7 +2,7 @@ package net.dirtengineers.squirtgun.datagen;
 
 import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
-import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
+import net.dirtengineers.squirtgun.registry.ItemRegistration;
 import net.dirtengineers.squirtgun.util.TextUtility;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.LanguageProvider;
@@ -32,20 +32,16 @@ public class LocalizationGenerator extends LanguageProvider {
         this.add(String.format("item.squirtgun.%s", Constants.brassIngotItemName), "Brass Ingot");
         this.add(String.format("item.squirtgun.%s", Constants.brassBlockItemName), "Block of Brass");
         this.add(String.format("item.squirtgun.%s", Constants.phialCapItemName), "Phial Cap");
-        this.add(String.format("item.squirtgun.%s", Constants.quartzShardItemName), "Quartz Shard");
+        this.add(String.format("item.squirtgun.%s", Constants.quartzShardItemName), "Fuzed Quartz Shard");
         this.add(String.format("block.squirtgun.%s", Constants.brassBlockName), "Block of Brass");
-        this.add(String.format("item.squirtgun.%s", Constants.gunActuatorItemName), "Actuator");
-        this.add(String.format("item.squirtgun.%s", Constants.gunBarrelSectionItemName), "Barrel Section");
-        this.add(String.format("item.squirtgun.%s", Constants.gunGripItemName), "Grip Assembly");
-        this.add(String.format("item.squirtgun.%s", Constants.gunPhialMountItemName), "Phial Mount");
-        this.add(String.format("item.squirtgun.%s", Constants.luminousPaintItemName), "Luminous Paint");
-        this.add("item.chemlib.milk", "Milk");
-        this.add("item.chemlib.lava", "Lava");
+        this.add(String.format("item.squirtgun.%s", Constants.gunActuatorItemName), "Gun Actuator");
+        this.add(String.format("block.squirtgun.%s", Constants.encapsulatorBlockName), "Dr. Clark's Fluid Encapsulation Matrix");
         //Sounds
         this.add("sounds.squirtgun.squirt_slug_hit", "EWWW!");
         this.add("sounds.squirtgun.reload_screen_close", "YEEEEHAAAA!");
         this.add("sounds.squirtgun.phial_swap", "Phial Swapped");
         this.add("sounds.squirtgun.gun_use", "Ready to roll!");
+        this.add("sounds.squirtgun.gun_dry_fire", "Oops.  No ammo.");
         this.add("sounds.squirtgun.gun_fire", "BOOM!");
         this.add("sounds.squirtgun.phial_complete", "Ding!  Fries are done.");
         this.add("sounds.squirtgun.encapsulator_processing", "Time to make the doughnuts.");
@@ -58,7 +54,6 @@ public class LocalizationGenerator extends LanguageProvider {
         this.add("fluid.squirtgun.empty_fluid_name", "EMPTY");
         this.add("tooltip.squirtgun.energy_requirement", "Requires %d FE/t");
         this.add(Constants.encapsulatorMenuScreenTitle, "Dr. Clark's Fluid Encapsulation Matrix");
-        this.add(Constants.encapsulatorBlockNameKey, "Dr. Clark's Fluid Encapsulation Matrix");
         this.add(Constants.openGunGui, "Open Squirtgun Settings");
         this.add(Constants.reloadScreenCurrentAmmunition, "Current Ammunition: ");
         this.add(Constants.reloadScreenInventoryWarning, "No room in inventory for ");

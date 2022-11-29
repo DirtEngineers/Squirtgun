@@ -6,9 +6,7 @@
         "items": [
           {
             "items": [
-              "minecraft:iron_nugget",
-              "squirtgun:brass_nugget",
-              "chemlib:polyvinyl_chloride"
+              "squirtgun:brass_blend"
             ]
           }
         ]
@@ -17,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:gun_barrel_section"
+        "recipe": "minecraft:brass_ingot_from_smelting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -30,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:gun_barrel_section"
+      "minecraft:brass_ingot_from_smelting"
     ]
   }
 }

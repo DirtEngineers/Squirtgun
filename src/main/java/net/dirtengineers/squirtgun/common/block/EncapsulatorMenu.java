@@ -2,8 +2,8 @@ package net.dirtengineers.squirtgun.common.block;
 
 import com.smashingmods.alchemylib.api.blockentity.container.AbstractProcessingMenu;
 import com.smashingmods.alchemylib.api.storage.ProcessingSlotHandler;
-import net.dirtengineers.squirtgun.common.registry.BlockRegistration;
-import net.dirtengineers.squirtgun.common.registry.MenuRegistration;
+import net.dirtengineers.squirtgun.registry.BlockRegistration;
+import net.dirtengineers.squirtgun.registry.MenuRegistration;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

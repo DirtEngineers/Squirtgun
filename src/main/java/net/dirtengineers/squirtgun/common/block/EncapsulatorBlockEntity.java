@@ -11,10 +11,10 @@ import net.dirtengineers.squirtgun.common.item.BasePhial;
 import net.dirtengineers.squirtgun.common.item.ChemicalPhial;
 import net.dirtengineers.squirtgun.common.item.EmptyPhialItem;
 import net.dirtengineers.squirtgun.common.recipe.PhialRecipe;
-import net.dirtengineers.squirtgun.common.registry.BlockEntityRegistration;
-import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
-import net.dirtengineers.squirtgun.common.registry.RecipeRegistration;
-import net.dirtengineers.squirtgun.common.registry.SoundEventRegistration;
+import net.dirtengineers.squirtgun.registry.BlockEntityRegistration;
+import net.dirtengineers.squirtgun.registry.ItemRegistration;
+import net.dirtengineers.squirtgun.registry.RecipeRegistration;
+import net.dirtengineers.squirtgun.registry.SoundEventRegistration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
@@ -39,6 +39,8 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity {
     private final int maxProgress;
     List<AbstractProcessingRecipe> recipes;
     private AbstractProcessingRecipe currentRecipe;
+    private net.minecraftforge.event.PlayLevelSoundEvent.AtPosition serverProcessingSoundEvent;
+    private net.minecraftforge.event.PlayLevelSoundEvent.AtPosition clientProcessingSoundEvent;
     private static final int testEnergyAmount = 100000;
     private static final int testFluidAmount = 100000;
 
@@ -49,6 +51,29 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity {
     }
 
     private void testing() {
+//        if(this.level != null && !this.level.isClientSide) {
+//            serverProcessingSoundEvent = net.minecraftforge.event.ForgeEventFactory.onPlaySoundAtPosition(
+//                    this.level
+//                    , this.getBlockPos().getX()
+//                    ,this.getBlockPos().getY()
+//                    ,this.getBlockPos().getZ()
+//                    , SoundEventRegistration.ENCAPSULATOR_PROCESSING.get()
+//                    , SoundSource.BLOCKS
+//                    , 1.0F
+//                    , 1.0F);
+//            serverProcessingSoundEvent = net.minecraftforge.event.ForgeEventFactory.onPlaySoundAtPosition(
+//                    Minecraft.getInstance().level
+//                    , this.getBlockPos().getX()
+//                    ,this.getBlockPos().getY()
+//                    ,this.getBlockPos().getZ()
+//                    , SoundEventRegistration.ENCAPSULATOR_PROCESSING.get()
+//                    , SoundSource.BLOCKS
+//                    , 1.0F
+//                    , 1.0F);
+//
+//        }
+//        net.minecraftforge.event.PlayLevelSoundEvent.AtPosition event =
+//                net.minecraftforge.event.ForgeEventFactory.onPlaySoundAtPosition(this, pX, pY, pZ, pSoundEvent, pSource, pVolume, pPitch);
 //        getFluidStorage().setFluid(new FluidStack(Objects.requireNonNull(ForgeRegistries.FLUIDS.getValue(new ResourceLocation("chemlib:sulfuric_acid_fluid"))), testFluidAmount));
 //        if (getEnergyHandler().getEnergyStored() <= Config.Common.encapsulatorTicksPerOperation.get() || getFluidStorage().getFluidAmount() <= 5000) {
             getEnergyHandler().setEnergy(getEnergyHandler().getMaxEnergyStored());
@@ -96,7 +121,13 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity {
     public void processRecipe() {
         if (this.getProgress() < maxProgress) {
             if(this.getProgress() == 1) {
-                Objects.requireNonNull(this.getLevel()).playSound(null, this.getBlockPos(), SoundEventRegistration.ENCAPSULATOR_PROCESSING.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                Objects.requireNonNull(this.getLevel()).playSound(
+                        null
+                        , this.getBlockPos()
+                        , SoundEventRegistration.ENCAPSULATOR_PROCESSING.get()
+                        , SoundSource.BLOCKS
+                        , 0.5F
+                        , 1.0F);
             }
             incrementProgress();
         } else {
@@ -106,7 +137,13 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity {
                 getFluidStorage().getFluidStack().shrink(((ChemicalPhial) outputStack.getItem()).getFluidCapacityInMb());
                 getInputHandler().decrementSlot(0, 1);
                 getOutputHandler().insertItem(FILLED_PHIAL_OUTPUT_SLOT, outputStack, false);
-                Objects.requireNonNull(this.getLevel()).playSound(null, this.getBlockPos(), SoundEventRegistration.PHIAL_COMPLETE.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                Objects.requireNonNull(this.getLevel()).playSound(
+                        null
+                        , this.getBlockPos()
+                        , SoundEventRegistration.PHIAL_COMPLETE.get()
+                        , SoundSource.BLOCKS
+                        , 1.0F
+                        , 1.0F);
             }
         }
         this.getEnergyHandler().extractEnergy(Config.Common.encapsulatorEnergyPerTick.get(), false);

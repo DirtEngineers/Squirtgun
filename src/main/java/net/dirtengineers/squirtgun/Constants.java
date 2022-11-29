@@ -21,10 +21,6 @@ public class Constants {
     public static final String phialCapItemName = "phial_cap";
     public static final String quartzShardItemName = "quartz_shard";
     public static final String gunActuatorItemName = "gun_actuator";
-    public static final String gunBarrelSectionItemName = "gun_barrel_section";
-    public static final String gunGripItemName = "gun_grip";
-    public static final String gunPhialMountItemName = "gun_phial_mount";
-    public static final String luminousPaintItemName = "luminous_paint";
 
     public static final String squirtgunTabName = "squirtguntab";
     public static final String encapsulatorMenuName = "encapsulator_menu";
@@ -37,6 +33,7 @@ public class Constants {
     public static final String PhialSwapSoundName = "phial_swap";
     public static final String GunUseSoundName = "gun_use";
     public static final String GunFireSoundName = "gun_fire";
+    public static final String GunDryFireSoundName = "gun_dry_fire";
     public static final String PhialCompleteSoundName = "phial_complete";
     public static final String EncapsulatorProcessingSoundName = "encapsulator_processing";
 
@@ -52,7 +49,7 @@ public class Constants {
     public static final String encapsulatorEnergyRequirementTooltipKey = "tooltip.squirtgun.energy_requirement";
     public static final String phialItemNameTranslationPrefix = "item.squirtgun.";
     public static final String encapsulatorMenuScreenTitle = String.format("%s.container.encapsulator", Squirtgun.MOD_ID);
-    public static final String encapsulatorBlockNameKey = String.format("block.%s.%s", Squirtgun.MOD_ID, encapsulatorBlockName);
+//    public static final String encapsulatorBlockNameKey = String.format("block.%s.%s", Squirtgun.MOD_ID, encapsulatorBlockName);
     public static final String openGunGui = String.format("%s.text.open_gui", Squirtgun.MOD_ID);
     public static final String gunGuiPhialIsLoaded = "tooltip.squirtgun.gui.phial_is_loaded";
     public static final String gunGuiPhialAmmoLossWarning = "tooltip.squirtgun.gui.phial_ammo_loss";
@@ -76,7 +73,6 @@ public class Constants {
 
     //NBT
     public static final String SHOTS_AVAILABLE_TAG = Squirtgun.MOD_ID + ".shots_available";
-    public static final String MAX_SHOTS_TAG = Squirtgun.MOD_ID + ".max_shots";
     public static final String CHEMICAL_TAG = Squirtgun.MOD_ID + ".chemical";
 
     //Recipes
@@ -88,7 +84,6 @@ public class Constants {
 
     //Colors
     public static int BRASS_COLOR = 0XC6A874;
-    public static int LUMINOUS_PAINT_COLOR = 0X20EF7C;
 
     public enum HUD_DISPLAY_SETTING {
         OFF,

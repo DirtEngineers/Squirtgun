@@ -1,7 +1,7 @@
 package net.dirtengineers.squirtgun.datagen;
 
 import net.dirtengineers.squirtgun.datagen.recipe.BrassItemRecipes;
-import net.dirtengineers.squirtgun.datagen.recipe.GunComponentRecipes;
+import net.dirtengineers.squirtgun.datagen.recipe.ComponentRecipes;
 import net.dirtengineers.squirtgun.datagen.recipe.MiscRecipes;
 import net.dirtengineers.squirtgun.datagen.recipe.providers.ChemicalPhialRecipeProvider;
 import net.minecraft.data.DataGenerator;
@@ -17,7 +17,7 @@ public class RecipeGenerator extends net.minecraft.data.recipes.RecipeProvider {
 
     protected void buildCraftingRecipes(Consumer<FinishedRecipe> pConsumer) {
         BrassItemRecipes.buildRecipes(pConsumer);
-        GunComponentRecipes.buildRecipes(pConsumer);
+        ComponentRecipes.buildRecipes(pConsumer);
         MiscRecipes.buildRecipes(pConsumer);
         ChemicalPhialRecipeProvider.register(pConsumer);
     }

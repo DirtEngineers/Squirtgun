@@ -4,7 +4,7 @@ import com.smashingmods.chemlib.api.Chemical;
 import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.common.item.ChemicalPhial;
-import net.dirtengineers.squirtgun.common.registry.ItemRegistration;
+import net.dirtengineers.squirtgun.registry.ItemRegistration;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
@@ -31,7 +31,7 @@ public class ChemicalPhialRecipeProvider {
         ItemRegistration.buildChemical_Fluids();
         for(Map.Entry<ChemicalPhial, Chemical> phialEntry : ItemRegistration.PHIALS.entrySet()) {
             if (phialEntry.getValue().getFluidTypeReference().isPresent()) {
-                this.buildPhialCreationRecipe(
+                this.buildPhialRecipe(
                         new ItemStack(ForgeRegistries.ITEMS.getValue(ItemRegistration.PHIAL.getId()), 1),
                         new FluidStack(ItemRegistration.CHEMICAL_FLUIDS.get(phialEntry.getValue()), 1000),
                         new ItemStack(phialEntry.getKey(), 1));
@@ -39,7 +39,7 @@ public class ChemicalPhialRecipeProvider {
         }
     }
 
-    private void buildPhialCreationRecipe(ItemStack pPhial, FluidStack pFluid, ItemStack pOutput) {
+    private void buildPhialRecipe(ItemStack pPhial, FluidStack pFluid, ItemStack pOutput) {
         ChemicalPhialRecipeBuilder
                 .createRecipe(pPhial
                         , pFluid
