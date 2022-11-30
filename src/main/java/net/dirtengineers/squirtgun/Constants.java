@@ -49,9 +49,9 @@ public class Constants {
     public static final String encapsulatorEnergyRequirementTooltipKey = "tooltip.squirtgun.energy_requirement";
     public static final String phialItemNameTranslationPrefix = "item.squirtgun.";
     public static final String encapsulatorMenuScreenTitle = String.format("%s.container.encapsulator", Squirtgun.MOD_ID);
-//    public static final String encapsulatorBlockNameKey = String.format("block.%s.%s", Squirtgun.MOD_ID, encapsulatorBlockName);
     public static final String openGunGui = String.format("%s.text.open_gui", Squirtgun.MOD_ID);
     public static final String gunGuiPhialIsLoaded = "tooltip.squirtgun.gui.phial_is_loaded";
+    public static final String gunGuiPhialLoaded = "tooltip.squirtgun.gui.phial_loaded";
     public static final String gunGuiPhialAmmoLossWarning = "tooltip.squirtgun.gui.phial_ammo_loss";
     public static final String gunGuiCancelButtonMessage = "tooltip.squirtgun.gui.cancel_button_message";
     public static final String reloadScreenCurrentAmmunition = String.format("%s.reload_screen.current_ammunition", Squirtgun.MOD_ID);
@@ -81,6 +81,7 @@ public class Constants {
     //Text style
     public static final Style HOVER_TEXT_STYLE = Style.EMPTY.withFont(Style.DEFAULT_FONT).withColor(ChatFormatting.YELLOW);
     public static final Style LOADED_PHIAL_TEXT_STYLE = Style.EMPTY.withFont(Style.DEFAULT_FONT).withBold(true).withColor(ChatFormatting.RED);
+    public static final Style MOD_ID_TEXT_STYLE = Style.EMPTY.withFont(Style.DEFAULT_FONT).withItalic(true).withColor(ChatFormatting.BLUE);
 
     //Colors
     public static int BRASS_COLOR = 0XC6A874;

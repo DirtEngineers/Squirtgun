@@ -45,5 +45,6 @@
   "tooltip.squirtgun.energy_requirement": "Requires %d FE/t",
   "tooltip.squirtgun.gui.cancel_button_message": "Cancel Loading",
   "tooltip.squirtgun.gui.phial_ammo_loss": "Warning: Currrently loaded ammo will be lost upon change.",
-  "tooltip.squirtgun.gui.phial_is_loaded": "Loaded"
+  "tooltip.squirtgun.gui.phial_is_loaded": "Loaded",
+  "tooltip.squirtgun.gui.phial_loaded": "Currently Loaded"
 }

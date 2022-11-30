@@ -1,0 +1,6 @@
+{
+  "parent": "squirtgun:block/encapsulator_block",
+  "textures": {
+    "all": "squirtgun:block/encapsulator_block"
+  }
+}

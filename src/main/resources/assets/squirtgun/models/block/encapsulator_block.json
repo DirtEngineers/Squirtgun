@@ -6,7 +6,7 @@
 		"3": "squirtgun:block/dials",
 		"4": "squirtgun:block/brass",
 		"5": "squirtgun:block/shiny_brass",
-		"particle": "squirtgun:block/brass"
+		"particle": "squirtgun:block/glass"
 	},
 	"elements": [
 		{
@@ -1591,6 +1591,38 @@
 			}
 		}
 	],
+	"display": {
+		"thirdperson_righthand": {
+			"translation": [0, 1.5, -1.25],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"thirdperson_lefthand": {
+			"translation": [0, 1.5, -1.25],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, 91, 0],
+			"translation": [0, -0.75, 0]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 90, 0],
+			"translation": [0, -0.75, 0]
+		},
+		"ground": {
+			"translation": [0, 1.75, 0],
+			"scale": [0.75, 0.75, 0.75]
+		},
+		"gui": {
+			"rotation": [20, 140, 0],
+			"scale": [0.75, 0.75, 0.75]
+		},
+		"head": {
+			"translation": [0, 14, 0]
+		},
+		"fixed": {
+			"translation": [0, 0, 1.25]
+		}
+	},
 	"groups": [
 		{
 			"name": "panel base",

@@ -58,6 +58,7 @@ public class LocalizationGenerator extends LanguageProvider {
         this.add(Constants.reloadScreenCurrentAmmunition, "Current Ammunition: ");
         this.add(Constants.reloadScreenInventoryWarning, "No room in inventory for ");
         this.add(Constants.gunGuiPhialIsLoaded, "Loaded");
+        this.add(Constants.gunGuiPhialLoaded, "Currently Loaded");
         this.add(Constants.gunGuiPhialAmmoLossWarning, "Warning: Currrently loaded ammo will be lost upon change.");
         this.add(Constants.gunGuiCancelButtonMessage, "Cancel Loading");
     }

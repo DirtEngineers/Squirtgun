@@ -38,7 +38,6 @@ public class ItemRegistration {
     public static final Item.Properties ITEM_PROPERTIES_NO_TAB;
     public static final Item.Properties ITEM_PROPERTIES_WITH_TAB;
     public static final Item.Properties ITEM_PROPERTIES_WITH_TAB_STACK_TO_ONE;
-
     public static final DeferredRegister<Item> ITEMS;
 
     //Items

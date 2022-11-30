@@ -36,27 +36,21 @@ import java.util.*;
 
 @OnlyIn(Dist.CLIENT)
 public class SquirtgunReloadScreen extends Screen {
-    int buttonHeight = 16;
-    int buttonWidth = 16;
-    int xShift = (int) Math.floor(buttonWidth + 3);
-    int yShift = xShift;
+    int buttonSize = 16;
+    int positionShift = (int) Math.floor(buttonSize + 3);
     int centerX;
-    int centerY;
     final int maxButtonColumns = 9;
-    int buttonRows = 0;
-    int bgWidth = 250;
-    int bgHeight = 162;
-    private final int bgOffsetY = 2;
-    private final int titleOffsetY = 12;
-    private final int CurrentAmmoOffsetY = 32;
+    int buttonRows;
+    int bgHeight;
+    int bgWidth;
+    private int bgLeft;
+    int bgTop;
+    private final int titleOffsetY = 8;
     private final int topRowOffsetY = 30;
     private final int phialTableOffsetY = 70;
-    private int phialTableBottom = 0;
-    private final ResourceLocation BG_LOCATION = new ResourceLocation("textures/gui/demo_background.png");
-    private final ResourceLocation INVENTORY_LOCATION = new ResourceLocation("textures/gui/container/creative_inventory/tab_item_search.png");
+    private int phialTableBottom;
     int destinationSlot = Constants.DROP_ITEM_INDEX;
     int offhandLocationIndex = -1;
-    PhialReloadScreenButton gunButton;
     CancelButton cancelButton;
     private final LinkedList<ItemStack> phials = new LinkedList<>();
     private ItemStack phialSwapStack = ItemStack.EMPTY;
@@ -72,9 +66,32 @@ public class SquirtgunReloadScreen extends Screen {
         if (player != null) {
             offhandLocationIndex = player.getInventory().items.size() + 1;
         }
+        centerX = width / 2;
         populatePhialsList();
+        calculateBGSizeAndPosition();
         UpdateLayout();
         phialSelected = false;
+    }
+
+    private void calculateBGSizeAndPosition() {
+        bgHeight = phialTableOffsetY;
+        int rows = phials.size() / maxButtonColumns;
+        if(phials.size() % maxButtonColumns != 0) {
+            rows++;
+        }
+        bgHeight += (positionShift * (rows +1)) + 8;
+
+        bgTop = this.height / 2 - (bgHeight / 2);
+        bgWidth = maxButtonColumns * (positionShift + 1) + (8 + 3) * 2;//bgWidth = ((maxButtonColumns + 1) * (positionShift)) + 8;
+    }
+
+    private void UpdateLayout() {
+        clearWidgets();
+        makeSwapStackButton();
+        fillPhialTable();
+        if(phialSelected) {
+            makeCancelbutton();
+        }
     }
 
     @Override
@@ -88,15 +105,18 @@ public class SquirtgunReloadScreen extends Screen {
                 , MutableComponent.create(new TranslatableContents(Constants.gunFunctionality)).setStyle(Style.EMPTY.withFont(Style.DEFAULT_FONT)
                         .withColor(ChatFormatting.WHITE)).withStyle(ChatFormatting.BOLD)
                 , centerX
-                , bgOffsetY + titleOffsetY
+                , bgTop + titleOffsetY
                 , 0xFFFFFF);
-        drawCenteredString(
-                pPoseStack
-                , Minecraft.getInstance().font
-                , MutableComponent.create(new TranslatableContents(Constants.gunGuiPhialAmmoLossWarning)).withStyle(Constants.LOADED_PHIAL_TEXT_STYLE)
-                , centerX
-                , phialTableBottom
-                , 0xFFFFFF);
+//        drawCenteredString(
+//                pPoseStack
+//                , Minecraft.getInstance().font
+//                , Component.literal(MutableComponent.create(new TranslatableContents(phialSwapStack.getItem().getDescriptionId())).getString() + " Loaded")
+//                        .setStyle(Style.EMPTY.withFont(Style.DEFAULT_FONT)
+//                        .withColor(ChatFormatting.WHITE).withItalic(true))
+//                , centerX
+//                , bgTop + topRowOffsetY + positionShift
+//                , 0xFFFFFF);
+
         this.children().forEach(e -> {
             if (e instanceof PhialReloadScreenButton btn) {
                 if (btn.isMouseOver(pMouseX, pMouseY)) {
@@ -118,8 +138,14 @@ public class SquirtgunReloadScreen extends Screen {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        RenderSystem.setShaderTexture(0, BG_LOCATION);
-        this.blit(pPoseStack, centerX - bgWidth / 2, bgOffsetY, 0, 0, bgWidth, bgHeight);
+        int targetImageWidth = 248;
+        int targetImageHeight = 166;
+        int cornerOffset = 5;
+        RenderSystem.setShaderTexture(0, new ResourceLocation("textures/gui/demo_background.png"));
+        this.blit(pPoseStack, bgLeft, bgTop, 0, 0, bgWidth, bgHeight);
+        this.blit(pPoseStack, centerX + bgWidth / 2 - 5, bgTop, targetImageWidth - cornerOffset, 0, cornerOffset, bgHeight);
+        this.blit(pPoseStack, bgLeft, (height / 2) + (bgHeight / 2), 0, targetImageHeight - cornerOffset, bgWidth, cornerOffset);
+        this.blit(pPoseStack, centerX + bgWidth / 2 - 5, bgTop + bgHeight - 1, targetImageWidth - cornerOffset, targetImageHeight - cornerOffset, cornerOffset, cornerOffset);
     }
 
     @Override
@@ -143,18 +169,6 @@ public class SquirtgunReloadScreen extends Screen {
         super.onClose();
     }
 
-    private void UpdateLayout() {
-        clearWidgets();
-        centerX = width / 2;
-        centerY = height / 2;
-        makeGunButton();
-        makeSwapStackButton();
-        fillPhialTable();
-        makeCancelbutton();
-        phialSelected = true;
-    }
-
-    //TODO: might have to reload this list on swap or check the inventory slot per stack
     private void populatePhialsList() {
         if (player != null) {
             phials.clear();
@@ -193,28 +207,38 @@ public class SquirtgunReloadScreen extends Screen {
         int buttonsInRow = 0;
         buttonRows = 0;
         int xPos = centerX - calculateLeftOffset(maxButtonColumns);
-        int yPos = bgOffsetY + phialTableOffsetY;
+        int yPos = bgTop + phialTableOffsetY;
 
         for (ItemStack phial : phials) {
             addRenderableWidget(makePhialButton(
                     phial
                     , false
-                    , xPos + (buttonsInRow * (xShift))
+                    , xPos + (buttonsInRow * (positionShift))
                     , yPos));
             // Spaces the buttons
             buttonsInRow++;
             if (buttonsInRow % maxButtonColumns == 0) {
                 buttonsInRow = 0;
                 buttonRows++;
-                yPos += yShift + 1;
+                yPos += positionShift + 1;
             }
         }
-        phialTableBottom = yPos + (2 * yShift);
+        bgLeft = xPos - positionShift;
+        phialTableBottom = yPos + positionShift;
+    }
+
+    private void makeSwapStackButton() {
+        PhialReloadScreenButton btn = makePhialButton(
+                phialSwapStack
+                , true
+                , centerX - positionShift / 2
+                , bgTop + topRowOffsetY);
+        addRenderableWidget(btn);
     }
 
     private int calculateLeftOffset(int pColumns) {
         int buttonColumns = Math.min(phials.size(), pColumns);
-        return (int) (xShift * (buttonColumns * 0.5));
+        return (int) (positionShift * (buttonColumns * 0.5));
     }
 
     private PhialReloadScreenButton makePhialButton(ItemStack pPhialStack, boolean isSwapStack, int pX, int pY) {
@@ -222,8 +246,8 @@ public class SquirtgunReloadScreen extends Screen {
         PhialReloadScreenButton btn = new PhialReloadScreenButton(
                 pX
                 , pY
-                , buttonWidth
-                , buttonHeight
+                , buttonSize
+                , buttonSize
                 , MutableComponent.create(new TranslatableContents(pPhialStack.getItem().getDescriptionId())).withStyle(Style.EMPTY.withFont(Style.DEFAULT_FONT))
                 , pButton -> this.swapPhials((PhialReloadScreenButton) pButton));
         btn.setTargetStack(pPhialStack);
@@ -232,40 +256,15 @@ public class SquirtgunReloadScreen extends Screen {
         return btn;
     }
 
-    private void makeSwapStackButton() {
-        PhialReloadScreenButton btn = makePhialButton(
-                phialSwapStack
-                , true
-                , centerX + (buttonWidth)
-                , bgOffsetY + topRowOffsetY);
-        addRenderableWidget(btn);
-    }
-
-    private void makeGunButton() {
-        ItemStack gunStack = new ItemStack(ItemRegistration.SQUIRTGUN.get());
-        gunButton = new PhialReloadScreenButton(
-                centerX - (buttonWidth * 2)
-                , bgOffsetY + topRowOffsetY
-                , buttonWidth
-                , buttonHeight
-                , MutableComponent.create(new TranslatableContents(gunStack.getItem().getDescriptionId())).withStyle(Style.EMPTY.withFont(Style.DEFAULT_FONT))
-//                , new ResourceLocation(Squirtgun.MOD_ID, "textures/item/squirtgun.png")
-                , pButton -> this.swapPhials((PhialReloadScreenButton) pButton));
-        gunButton.setTargetStack(gunStack);
-        gunButton.active = false;
-        addRenderableWidget(gunButton);
-    }
-
-    //TODO: Change width and height
     private void makeCancelbutton() {
         cancelButton = new CancelButton(
-                (centerX / 2) - 9
-                , gunButton.getY() + yShift
-                , 40
-                , 40
+                centerX - (positionShift / 2) - 2
+                , phialTableBottom
+                , 18
+                , 18
                 , MutableComponent.create(new TranslatableContents(Constants.gunGuiCancelButtonMessage)).withStyle(Style.EMPTY.withFont(Style.DEFAULT_FONT))
                 , b -> super.onClose());
-        cancelButton.setActive(true);
+        cancelButton.setActive(phialSelected);
         addRenderableWidget(cancelButton);
     }
 
@@ -273,6 +272,7 @@ public class SquirtgunReloadScreen extends Screen {
         if (pButton.getTargetStack() != null && player != null) {
             if (pButton.getTargetStack().getItem() instanceof ChemicalPhial) {
                 phialSwapStack = pButton.getTargetStack().copy();
+                phialSelected = true;
                 UpdateLayout();
                 if (player.level.isClientSide) {
                     player.playSound(SoundEventRegistration.PHIAL_SWAP.get());

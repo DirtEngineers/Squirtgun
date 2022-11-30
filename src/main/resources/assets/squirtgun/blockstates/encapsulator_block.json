@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "squirtgun:block/encapsulator_block"
+    },
+    "facing=south": {
+      "model": "squirtgun:block/encapsulator_block",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "squirtgun:block/encapsulator_block",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "squirtgun:block/encapsulator_block",
+      "y": 90
+    }
+  }
+}

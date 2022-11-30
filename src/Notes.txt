@@ -31,20 +31,13 @@ API-fying chemlib to load custom JSON for chemicals/fluids
 
 
 Look into custom mob effects for fluids
-Migrate effects for fluids to a separate JSON for later modder support
-1.  Create JSON file
-2.  Write a factory to build/register the custom effects
-3.  Serialize it to create the custom effects
-4.  make association with chemicals in CommonSetupEvent
+
 
 https://maven.tamaized.com/#/releases/smashingmods/alchemylib
 
 RELEASE TASKS:
-Get and install models/textures for gun and encapsulator
 Change sounds -- Audacity libraries!
-Make phial buttons use the default MC background
-Making the phials into buttons would work too, give them a button-y background
-Using the button background from default Minecraft would let it automatically change with texture packs as well
+
 
 Arcana — Today at 9:46 PM
 General play testing.  Test with different mods.
@@ -53,72 +46,18 @@ Make sure everything makes sense to a user or has some way of describing how to 
 Write a description for the mod page.
 
 
-reload screen -> max rows == 9                                                                                  DONE
-Kill current ammo caption.  build a goddamned tooltip, bitch!                                                   DONE
-8 pixels of padding between things like the inner edge of the bg                                                PENDING ARTWORK
-render loaded phial in selection pool as well as in swap stack.  Loaded phial in pool disabled for selection    DONE
-phials in a linked list.  Keep the index of the one in the swap stack.                                          DONE
-Add note to bottom of reload screen reminding player that reloaded phial will be completely emptied             DONE (sort of)
-Cancel button look
 Adjust mob effects for fluids.
 
-
-Make recipe for encapsulator
--Tank
--Battery
--Control panel
--Injector
--machine frame X3
--gold
--redstone
--brass
-
-Make components for encapsulator
-Fluid Storage Tank                                                                              DONE
-
-Machine frame                                                                                   DONE
-
-polymer electrolyte - chitin amide polyvinyl_chloride acetic_acid CPA
-
-Energy Storage (battery?)
--- a machine frame of some kind                                                                 DONE
--Graphite                                                                G
--Lithium Manganese Oxide LiMn2O4 -- lithium_oxide & manganese_oxide     E E
--polymer? chitin starch amide polyvinyl_chloride acetic_acid            LFM
-
-Control panel                                                                                   DONE
--Iron_plate X2
--PVC
--Brass
--Gold
--Copper
-
-Injector assembly                                                                               DONE
--piston X2
--redstone
--gold nugget
--brass nugget
--brass ingot
-
-Gold ingots for wires
-Plenty of redstone
-
-Make crafting table recipes for phials?
-Add capability to encapsulator to take items and fluids from outside source
-Make water pistol item for initial gun and use that in recipe to upgrade to full squirtgun?
-
 Timbr:just make sure you're using forge tags in all the recipes and it'll automatically be compatible with mods that add alloying machines
-Add mineable tags to brass block and encapsulator
 
+Investigate quartz-type glass in other mods                                         PENDING
+Investigate brass nuggets/ingots/blocks in other mods                               PENDING
+Investigate compactor recipe for PVC plate from PVC --                              PENDING
+Either use PVC dust or create a recipe for PVC plate
 
-Need models for:
-Gun Grip                    -- Waiting on final model
-Gun Actuator                -- Waiting on final model
-Gun Barrel Assembly         -- Waiting on final model
-Gun Phial Mount             -- Waiting on final model
+pachouli book entry
 
-
-
+Encapsulator sound bring it down to <50% & drop electricity level
 
 !!--- API-ify chemlib
 One step would be to allow outside access to create/register compounds like a helper function to pass in the json.

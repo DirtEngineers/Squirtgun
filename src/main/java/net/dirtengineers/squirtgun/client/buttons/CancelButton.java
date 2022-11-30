@@ -16,23 +16,26 @@ import java.util.List;
 
 public class CancelButton extends Button {
 
-    private final ResourceLocation IMAGE_LOCATION = new ResourceLocation("textures/gui/container/bundle.png");
+    private final ResourceLocation IMAGE_LOCATION = new ResourceLocation("textures/gui/container/beacon.png");
 
     public CancelButton(int pX, int pY, int pWidth, int pHeight, Component pMessage, OnPress pOnPress) {
         super(pX, pY, pWidth, pHeight, pMessage, pOnPress);
     }
 
-    //TODO: Get proper image
     @Override
     public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        int i = this.getYImage(this.isHoveredOrFocused()) - 1;
+        this.blit(pPoseStack, this.x, this.y, 0, 66 + i * 20, 10, 20);
+        this.blit(pPoseStack, this.x + 10, this.y, 191, 66 + i * 20, 10, 20);
         RenderSystem.setShaderTexture(0, IMAGE_LOCATION);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
-//        int i = this.getYImage(this.isHoveredOrFocused());
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        this.blit(pPoseStack, this.x, this.y, 0, 0, this.width, this.height);//this.isActive() ? 40 : 0
+        this.blit(pPoseStack, this.x + 3, this.y + 3, 114, 223, 13, 13);
     }
 
     @Override
