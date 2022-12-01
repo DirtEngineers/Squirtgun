@@ -1051,8 +1051,9 @@
 			"translation": [0, 3.5, 0]
 		},
 		"gui": {
-			"rotation": [0, 180, 0],
-			"translation": [0, 2, 0]
+			"rotation": [15, 150, 15],
+			"translation": [0, 2, 20],
+			"scale": [0.8, 0.8, 0.8]
 		},
 		"head": {
 			"rotation": [-180, 90, -180],

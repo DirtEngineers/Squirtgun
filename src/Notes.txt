@@ -64,3 +64,20 @@ pachouli book entry
 
 !!--- API-ify chemlib
 One step would be to allow outside access to create/register compounds like a helper function to pass in the json.
+
+DESCRIPTION:
+Ever want to shoot your friends with various hazardous materials? Well, now you can!
+
+SquirtGun is an addon for ChemLib.
+
+Approval requires a valid name, description, mod image, and upload.
+The mod image should be a picture of the squirt gun on some colored background.
+
+"gui": {
+			"rotation": [0, 180, 0],
+			"translation": [0, 2, 0]
+		},
+
+Description:
+Ever want to shoot your friends with various hazardous materials?  How about hosing down mobs with some nitric acid?  Well, now you can!
+Squirt Gun fire slugs of fluids from Chemlib like nitric acid for instant damage and blindness or ethanol for poison and confusion.

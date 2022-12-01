@@ -37,10 +37,6 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity {
     private final int maxProgress;
     List<AbstractProcessingRecipe> recipes;
     private AbstractProcessingRecipe currentRecipe;
-    private net.minecraftforge.event.PlayLevelSoundEvent.AtPosition serverProcessingSoundEvent;
-    private net.minecraftforge.event.PlayLevelSoundEvent.AtPosition clientProcessingSoundEvent;
-    private static final int testEnergyAmount = 100000;
-    private static final int testFluidAmount = 100000;
 
     public EncapsulatorBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
         super(Squirtgun.MOD_ID, BlockEntityRegistration.FLUID_ENCAPSULATOR_BLOCK_ENTITY.get(), pWorldPosition, pBlockState);
@@ -114,7 +110,7 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity {
                         , this.getBlockPos()
                         , SoundEventRegistration.PHIAL_COMPLETE.get()
                         , SoundSource.BLOCKS
-                        , 1.0F
+                        , 0.5F
                         , 1.0F);
             }
         }
