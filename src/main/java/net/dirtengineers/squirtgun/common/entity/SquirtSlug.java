@@ -168,9 +168,6 @@ public class SquirtSlug extends AbstractArrow {
     }
 
     protected void onHit() {
-//        if(chemical.getChemicalName().equals("lava")) {
-//            // TODO: spawn flowing lava
-//        }
         //TODO: Refactor sound events
         this.setSoundEvent(SoundEventRegistration.SQUIRT_SLUG_HIT.get());
     }

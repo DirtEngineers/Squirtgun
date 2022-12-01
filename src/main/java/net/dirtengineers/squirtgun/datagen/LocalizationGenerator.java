@@ -61,5 +61,6 @@ public class LocalizationGenerator extends LanguageProvider {
         this.add(Constants.gunGuiPhialLoaded, "Currently Loaded");
         this.add(Constants.gunGuiPhialAmmoLossWarning, "Warning: Currrently loaded ammo will be lost upon change.");
         this.add(Constants.gunGuiCancelButtonMessage, "Cancel Loading");
+        this.add(Constants.gunGuiAgreeButtonMessage, "Load it!");
     }
 }

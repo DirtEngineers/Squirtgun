@@ -1,4 +1,4 @@
-// 1.19.2	2022-11-28T12:10:28.9906154	Recipes
+// 1.19.2	2022-11-30T12:23:50.3105172	Recipes
 89b969217a09083c4cc28ea1c21e114ac0eff2b2 data/minecraft/advancements/recipes/squirtguntab/brass_block_from_brass_ingot.json
 baf15dcce3317045ac99910663f00745c32e4f77 data/minecraft/advancements/recipes/squirtguntab/brass_ingot_from_blasting.json
 0a39df9ca6b1f5141b6df24618f8ea45398ffcdf data/minecraft/advancements/recipes/squirtguntab/brass_ingot_from_brass_block.json
@@ -39,7 +39,7 @@ b72fe84d99086a452b470148ed135104bdcfbd09 data/squirtgun/advancements/recipes/enc
 5b40c6cd644009ab179564cd94347e1dd3836453 data/squirtgun/advancements/recipes/squirtguntab/brass_blend.json
 2833175d25b5a1f635ee68bc15fb0e5077bfbeb7 data/squirtgun/advancements/recipes/squirtguntab/phial.json
 933876827f898a23965f2a1a96944dcbf4575365 data/squirtgun/advancements/recipes/squirtguntab/phial_cap.json
-bc465446093ee9757a4f51985304a3220f828e2e data/squirtgun/advancements/recipes/squirtguntab/squirtgunitem.json
+0be67f88f8e16f3cad146bcac940a1bc427f2f1e data/squirtgun/advancements/recipes/squirtguntab/squirtgunitem.json
 1eab794f6920367b747fc0eee4603b112a130bd7 data/squirtgun/recipes/brass_blend.json
 c6676a639bc8ec0a2907a1fab7ad5d74ea8b0ce7 data/squirtgun/recipes/encapsulator/acetic_acid_phial.json
 6356dd98c46dabcd4ec14b349e6ef64400392252 data/squirtgun/recipes/encapsulator/bromine_phial.json
@@ -56,4 +56,4 @@ b927f4b7677e67a08ecfdc673a524a6dc905a914 data/squirtgun/recipes/encapsulator/mer
 b6983ceb5311ba36f7605e6b0e47c2c59ef2e609 data/squirtgun/recipes/encapsulator/water_phial.json
 994fc3e5fd8f3c6e42620de1f3a510f21aef9f48 data/squirtgun/recipes/phial.json
 c1428d820fd6795eb565ab503795fcb5dfdfdcce data/squirtgun/recipes/phial_cap.json
-9964ad1283b1befeee4952d1d596818cc788b811 data/squirtgun/recipes/squirtgunitem.json
+5bba7d545b978840b9fc58133e5e90e7d84ee961 data/squirtgun/recipes/squirtgunitem.json

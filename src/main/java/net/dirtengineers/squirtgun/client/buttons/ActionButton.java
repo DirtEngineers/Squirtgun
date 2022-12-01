@@ -14,12 +14,19 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 
-public class CancelButton extends Button {
+public class ActionButton extends Button {
+    public enum ActionType{
+        CANCEL,
+        AGREE
+    }
+
+    ActionType actionType;
 
     private final ResourceLocation IMAGE_LOCATION = new ResourceLocation("textures/gui/container/beacon.png");
 
-    public CancelButton(int pX, int pY, int pWidth, int pHeight, Component pMessage, OnPress pOnPress) {
+    public ActionButton(int pX, int pY, int pWidth, int pHeight, Component pMessage, OnPress pOnPress, ActionType pActionType) {
         super(pX, pY, pWidth, pHeight, pMessage, pOnPress);
+        actionType = pActionType;
     }
 
     @Override
@@ -35,7 +42,10 @@ public class CancelButton extends Button {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        this.blit(pPoseStack, this.x + 3, this.y + 3, 114, 223, 13, 13);
+        switch (actionType) {
+            case CANCEL -> this.blit(pPoseStack, this.x + 3, this.y + 3, 114, 223, 13, 13);
+            case AGREE -> this.blit(pPoseStack, this.x + 3, this.y + 3, 91, 223, 13, 13);
+        }
     }
 
     @Override

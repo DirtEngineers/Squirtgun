@@ -24,7 +24,7 @@ import static net.dirtengineers.squirtgun.registry.ItemRegistration.*;
 public class ComponentRecipes extends net.minecraft.data.recipes.RecipeProvider {
 
     public static final Item GRAPHITE_DUST = ItemRegistry.getRegistryObject(ItemRegistry.REGISTRY_COMPOUND_DUSTS, "graphite_dust").get();
-    public static final Item PVC = ItemRegistry.getRegistryObject(ItemRegistry.REGISTRY_COMPOUNDS, "polyvinyl_chloride").get();
+    public static final Item PVC = ItemRegistry.getRegistryObject(ItemRegistry.REGISTRY_COMPOUND_DUSTS, "polyvinyl_chloride_dust").get();
 
     public ComponentRecipes(DataGenerator pGenerator) {
         super(pGenerator);

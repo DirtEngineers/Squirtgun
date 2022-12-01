@@ -16,7 +16,6 @@ import net.dirtengineers.squirtgun.registry.ItemRegistration;
 import net.dirtengineers.squirtgun.registry.RecipeRegistration;
 import net.dirtengineers.squirtgun.registry.SoundEventRegistration;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
@@ -26,7 +25,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
@@ -51,34 +49,8 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity {
     }
 
     private void testing() {
-//        if(this.level != null && !this.level.isClientSide) {
-//            serverProcessingSoundEvent = net.minecraftforge.event.ForgeEventFactory.onPlaySoundAtPosition(
-//                    this.level
-//                    , this.getBlockPos().getX()
-//                    ,this.getBlockPos().getY()
-//                    ,this.getBlockPos().getZ()
-//                    , SoundEventRegistration.ENCAPSULATOR_PROCESSING.get()
-//                    , SoundSource.BLOCKS
-//                    , 1.0F
-//                    , 1.0F);
-//            serverProcessingSoundEvent = net.minecraftforge.event.ForgeEventFactory.onPlaySoundAtPosition(
-//                    Minecraft.getInstance().level
-//                    , this.getBlockPos().getX()
-//                    ,this.getBlockPos().getY()
-//                    ,this.getBlockPos().getZ()
-//                    , SoundEventRegistration.ENCAPSULATOR_PROCESSING.get()
-//                    , SoundSource.BLOCKS
-//                    , 1.0F
-//                    , 1.0F);
-//
-//        }
-//        net.minecraftforge.event.PlayLevelSoundEvent.AtPosition event =
-//                net.minecraftforge.event.ForgeEventFactory.onPlaySoundAtPosition(this, pX, pY, pZ, pSoundEvent, pSource, pVolume, pPitch);
-//        getFluidStorage().setFluid(new FluidStack(Objects.requireNonNull(ForgeRegistries.FLUIDS.getValue(new ResourceLocation("chemlib:sulfuric_acid_fluid"))), testFluidAmount));
-//        if (getEnergyHandler().getEnergyStored() <= Config.Common.encapsulatorTicksPerOperation.get() || getFluidStorage().getFluidAmount() <= 5000) {
-            getEnergyHandler().setEnergy(getEnergyHandler().getMaxEnergyStored());
-            getFluidStorage().setFluid(new FluidStack(Objects.requireNonNull(ForgeRegistries.FLUIDS.getValue(new ResourceLocation("chemlib:nitric_acid_fluid"))), getFluidStorage().getCapacity()));
-//        }
+//        getEnergyHandler().setEnergy(getEnergyHandler().getMaxEnergyStored());
+//        getFluidStorage().setFluid(new FluidStack(Objects.requireNonNull(ForgeRegistries.FLUIDS.getValue(new ResourceLocation("chemlib:nitric_acid_fluid"))), getFluidStorage().getCapacity()));
     }
 
     @Override

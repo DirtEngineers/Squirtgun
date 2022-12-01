@@ -28,6 +28,8 @@ General ->
 Effects on blocks?  Need something like a pH scale to chemicals (chemlib)
 Consider honey
 API-fying chemlib to load custom JSON for chemicals/fluids
+Hydrocarbons make target explode if on fire
+
 
 
 Look into custom mob effects for fluids
@@ -53,11 +55,12 @@ Timbr:just make sure you're using forge tags in all the recipes and it'll automa
 Investigate quartz-type glass in other mods                                         PENDING
 Investigate brass nuggets/ingots/blocks in other mods                               PENDING
 Investigate compactor recipe for PVC plate from PVC --                              PENDING
+-- difficult to do as only elemental metals can make a plate for now
+
 Either use PVC dust or create a recipe for PVC plate
 
-pachouli book entry
 
-Encapsulator sound bring it down to <50% & drop electricity level
+pachouli book entry
 
 !!--- API-ify chemlib
 One step would be to allow outside access to create/register compounds like a helper function to pass in the json.

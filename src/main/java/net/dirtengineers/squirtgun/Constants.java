@@ -54,6 +54,7 @@ public class Constants {
     public static final String gunGuiPhialLoaded = "tooltip.squirtgun.gui.phial_loaded";
     public static final String gunGuiPhialAmmoLossWarning = "tooltip.squirtgun.gui.phial_ammo_loss";
     public static final String gunGuiCancelButtonMessage = "tooltip.squirtgun.gui.cancel_button_message";
+    public static final String gunGuiAgreeButtonMessage = "tooltip.squirtgun.gui.agree_button_message";
     public static final String reloadScreenCurrentAmmunition = String.format("%s.reload_screen.current_ammunition", Squirtgun.MOD_ID);
     public static final String reloadScreenInventoryWarning = String.format("%s.reload_screen.inventory_warning", Squirtgun.MOD_ID);
 
