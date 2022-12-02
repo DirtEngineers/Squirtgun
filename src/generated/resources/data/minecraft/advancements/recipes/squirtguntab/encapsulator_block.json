@@ -10,7 +10,7 @@
               "minecraft:piston",
               "minecraft:redstone",
               "minecraft:copper_ingot",
-              "squirtgun:gun_actuator",
+              "squirtgun:actuator",
               "squirtgun:brass_ingot"
             ]
           }

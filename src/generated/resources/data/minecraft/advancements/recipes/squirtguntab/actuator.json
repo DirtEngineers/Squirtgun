@@ -18,7 +18,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:gun_actuator"
+        "recipe": "minecraft:actuator"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -31,7 +31,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:gun_actuator"
+      "minecraft:actuator"
     ]
   }
 }

@@ -34,7 +34,7 @@ public class LocalizationGenerator extends LanguageProvider {
         this.add(String.format("item.squirtgun.%s", Constants.phialCapItemName), "Phial Cap");
         this.add(String.format("item.squirtgun.%s", Constants.quartzShardItemName), "Fuzed Quartz Shard");
         this.add(String.format("block.squirtgun.%s", Constants.brassBlockName), "Block of Brass");
-        this.add(String.format("item.squirtgun.%s", Constants.gunActuatorItemName), "Gun Actuator");
+        this.add(String.format("item.squirtgun.%s", Constants.actuatorItemName), "Actuator");
         this.add(String.format("block.squirtgun.%s", Constants.encapsulatorBlockName), "Dr. Clark's Fluid Encapsulation Matrix");
         //Sounds
         this.add("sounds.squirtgun.squirt_slug_hit", "EWWW!");

@@ -3,7 +3,7 @@
   "group": "squirtgun",
   "key": {
     "A": {
-      "item": "squirtgun:gun_actuator"
+      "item": "squirtgun:actuator"
     },
     "B": {
       "item": "squirtgun:brass_ingot"

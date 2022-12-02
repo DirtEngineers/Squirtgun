@@ -24,7 +24,8 @@ import static net.dirtengineers.squirtgun.registry.ItemRegistration.*;
 public class ComponentRecipes extends net.minecraft.data.recipes.RecipeProvider {
 
     public static final Item GRAPHITE_DUST = ItemRegistry.getRegistryObject(ItemRegistry.REGISTRY_COMPOUND_DUSTS, "graphite_dust").get();
-    public static final Item PVC = ItemRegistry.getRegistryObject(ItemRegistry.REGISTRY_COMPOUND_DUSTS, "polyvinyl_chloride_dust").get();
+    public static final Item PVC_DUST = ItemRegistry.getRegistryObject(ItemRegistry.REGISTRY_COMPOUND_DUSTS, "polyvinyl_chloride_dust").get();
+//    public static final Item PVC_PLATE = ItemRegistry.getRegistryObject(ItemRegistry.REGISTRY_PLATES, "polyvinyl_chloride_plate").get();
 
     public ComponentRecipes(DataGenerator pGenerator) {
         super(pGenerator);
@@ -60,7 +61,7 @@ public class ComponentRecipes extends net.minecraft.data.recipes.RecipeProvider 
         ShapedRecipeBuilder
                 .shaped(SQUIRTGUN.get())
                 .group(Squirtgun.MOD_ID)
-                .define('V', PVC)
+                .define('V', PVC_DUST)
                 .define('A', GUN_ACTUATOR.get())
                 .define('B', BRASS_INGOT.get())
                 .define('P', PHIAL.get())
@@ -70,7 +71,7 @@ public class ComponentRecipes extends net.minecraft.data.recipes.RecipeProvider 
                 .unlockedBy(
                         "has_item",
                         inventoryTrigger(
-                                ItemPredicate.Builder.item().of(new ItemLike[]{PVC, GUN_ACTUATOR.get(), BRASS_INGOT.get(), PHIAL.get()}).build()))
+                                ItemPredicate.Builder.item().of(new ItemLike[]{PVC_DUST, GUN_ACTUATOR.get(), BRASS_INGOT.get(), PHIAL.get()}).build()))
                 .save(pConsumer);
     }
 

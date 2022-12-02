@@ -5,7 +5,7 @@ import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.common.item.*;
 import net.dirtengineers.squirtgun.common.item.components.PhialCapItem;
-import net.dirtengineers.squirtgun.common.item.components.GunActuator;
+import net.dirtengineers.squirtgun.common.item.components.Actuator;
 import net.dirtengineers.squirtgun.common.item.materials.BrassBlendItem;
 import net.dirtengineers.squirtgun.common.item.materials.BrassIngotItem;
 import net.dirtengineers.squirtgun.common.item.materials.BrassNuggetItem;
@@ -122,7 +122,7 @@ public class ItemRegistration {
         BRASS_NUGGET = ITEMS.register(Constants.brassNuggetItemName, () -> new BrassNuggetItem(ITEM_PROPERTIES_WITH_TAB));
         BRASS_INGOT = ITEMS.register(Constants.brassIngotItemName, () -> new BrassIngotItem(ITEM_PROPERTIES_WITH_TAB));
         FUSED_QUARTZ_SHARD = ITEMS.register(Constants.quartzShardItemName, () -> new FusedQuartzShard(ITEM_PROPERTIES_WITH_TAB));
-        GUN_ACTUATOR = ITEMS.register(Constants.gunActuatorItemName, () -> new GunActuator(ITEM_PROPERTIES_WITH_TAB));
+        GUN_ACTUATOR = ITEMS.register(Constants.actuatorItemName, () -> new Actuator(ITEM_PROPERTIES_WITH_TAB));
 
         PHIALS = new HashMap<>();
         CHEMICAL_FLUIDS = new HashMap<>();

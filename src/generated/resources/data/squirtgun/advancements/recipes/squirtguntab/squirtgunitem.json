@@ -7,7 +7,7 @@
           {
             "items": [
               "chemlib:polyvinyl_chloride_dust",
-              "squirtgun:gun_actuator",
+              "squirtgun:actuator",
               "squirtgun:brass_ingot",
               "squirtgun:phial"
             ]

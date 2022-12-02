@@ -73,11 +73,30 @@ SquirtGun is an addon for ChemLib.
 Approval requires a valid name, description, mod image, and upload.
 The mod image should be a picture of the squirt gun on some colored background.
 
-"gui": {
-			"rotation": [0, 180, 0],
-			"translation": [0, 2, 0]
-		},
-
 Description:
 Ever want to shoot your friends with various hazardous materials?  How about hosing down mobs with some nitric acid?  Well, now you can!
 Squirt Gun fire slugs of fluids from Chemlib like nitric acid for instant damage and blindness or ethanol for poison and confusion.
+
+ADD to chemlib at end of ChemicalRegistry::registerCompounds() -->
+    ItemRegistry.registerItemByType(ItemRegistry.getRegistryObject(ItemRegistry.REGISTRY_COMPOUNDS, "polyvinyl_chloride"), ChemicalItemType.PLATE, ItemRegistry.COMPOUND_TAB);
+
+switch (matterState) {
+                case SOLID -> {
+                    boolean hasItem = object.get("has_item").getAsBoolean();
+                    if (!hasItem) {
+                        ItemRegistry.registerItemByType(ItemRegistry.getRegistryObject(ItemRegistry.REGISTRY_COMPOUNDS, compoundName), ChemicalItemType.COMPOUND, ItemRegistry.COMPOUND_TAB);
+                        if(compoundName.equals("polyvinyl_chloride")) {
+                            ItemRegistry.registerItemByType(ItemRegistry.getRegistryObject(ItemRegistry.REGISTRY_COMPOUNDS, compoundName), ChemicalItemType.PLATE, ItemRegistry.COMPOUND_TAB);
+                        }
+                    }
+                }
+
+
+ADD to alchemistry in CompactorRecipeProvider::register() -->
+        ItemRegistry.getCompoundByName("polyvinyl_chloride").ifPresent((pvc_dust) -> {
+            ItemRegistry.getChemicalItemByNameAndType("polyvinyl_chloride", ChemicalItemType.PLATE).ifPresent((pvc_plate) -> {
+                this.compactor(new ItemStack(pvc_dust, 8), new ItemStack(pvc_plate));
+            });
+        });
+
+        override PVC plate texture

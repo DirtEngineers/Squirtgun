@@ -20,7 +20,7 @@ public class Constants {
     public static final String brassBlockName = "brass_block";
     public static final String phialCapItemName = "phial_cap";
     public static final String quartzShardItemName = "quartz_shard";
-    public static final String gunActuatorItemName = "gun_actuator";
+    public static final String actuatorItemName = "actuator";
 
     public static final String squirtgunTabName = "squirtguntab";
     public static final String encapsulatorMenuName = "encapsulator_menu";
