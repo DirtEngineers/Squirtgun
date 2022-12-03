@@ -54,11 +54,6 @@ Timbr:just make sure you're using forge tags in all the recipes and it'll automa
 
 Investigate quartz-type glass in other mods                                         PENDING
 Investigate brass nuggets/ingots/blocks in other mods                               PENDING
-Investigate compactor recipe for PVC plate from PVC --                              PENDING
--- difficult to do as only elemental metals can make a plate for now
-
-Either use PVC dust or create a recipe for PVC plate
-
 
 pachouli book entry
 
@@ -76,28 +71,3 @@ The mod image should be a picture of the squirt gun on some colored background.
 Description:
 Ever want to shoot your friends with various hazardous materials?  How about hosing down mobs with some nitric acid?  Well, now you can!
 Squirt Gun fire slugs of fluids from Chemlib like nitric acid for instant damage and blindness or ethanol for poison and confusion.
-
-ADD to chemlib at end of ChemicalRegistry::registerCompounds() -->
-    ItemRegistry.registerItemByType(ItemRegistry.getRegistryObject(ItemRegistry.REGISTRY_COMPOUNDS, "polyvinyl_chloride"), ChemicalItemType.PLATE, ItemRegistry.COMPOUND_TAB);
-
-switch (matterState) {
-                case SOLID -> {
-                    boolean hasItem = object.get("has_item").getAsBoolean();
-                    if (!hasItem) {
-                        ItemRegistry.registerItemByType(ItemRegistry.getRegistryObject(ItemRegistry.REGISTRY_COMPOUNDS, compoundName), ChemicalItemType.COMPOUND, ItemRegistry.COMPOUND_TAB);
-                        if(compoundName.equals("polyvinyl_chloride")) {
-                            ItemRegistry.registerItemByType(ItemRegistry.getRegistryObject(ItemRegistry.REGISTRY_COMPOUNDS, compoundName), ChemicalItemType.PLATE, ItemRegistry.COMPOUND_TAB);
-                        }
-                    }
-                }
-
-
-ADD to alchemistry in CompactorRecipeProvider::register() -->
-        ItemRegistry.getCompoundByName("polyvinyl_chloride").ifPresent((pvc) -> {
-                    ItemRegistry.getChemicalItemByNameAndType("polyvinyl_chloride", ChemicalItemType.PLATE).ifPresent((pvc_plate) -> {
-                        this.compactor(new ItemStack(pvc, 8), new ItemStack(pvc_plate));
-                    });
-                });
-
-        override PVC plate texture
-        https://github.com/IInventedDirt/Alchemistry

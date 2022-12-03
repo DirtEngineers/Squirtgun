@@ -105,13 +105,6 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity {
                 getFluidStorage().getFluidStack().shrink(((ChemicalPhial) outputStack.getItem()).getFluidCapacityInMb());
                 getInputHandler().decrementSlot(0, 1);
                 getOutputHandler().insertItem(FILLED_PHIAL_OUTPUT_SLOT, outputStack, false);
-                Objects.requireNonNull(this.getLevel()).playSound(
-                        null
-                        , this.getBlockPos()
-                        , SoundEventRegistration.PHIAL_COMPLETE.get()
-                        , SoundSource.BLOCKS
-                        , 0.5F
-                        , 1.0F);
             }
         }
         this.getEnergyHandler().extractEnergy(Config.Common.encapsulatorEnergyPerTick.get(), false);
