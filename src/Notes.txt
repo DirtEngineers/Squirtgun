@@ -93,10 +93,11 @@ switch (matterState) {
 
 
 ADD to alchemistry in CompactorRecipeProvider::register() -->
-        ItemRegistry.getCompoundByName("polyvinyl_chloride").ifPresent((pvc_dust) -> {
-            ItemRegistry.getChemicalItemByNameAndType("polyvinyl_chloride", ChemicalItemType.PLATE).ifPresent((pvc_plate) -> {
-                this.compactor(new ItemStack(pvc_dust, 8), new ItemStack(pvc_plate));
-            });
-        });
+        ItemRegistry.getCompoundByName("polyvinyl_chloride").ifPresent((pvc) -> {
+                    ItemRegistry.getChemicalItemByNameAndType("polyvinyl_chloride", ChemicalItemType.PLATE).ifPresent((pvc_plate) -> {
+                        this.compactor(new ItemStack(pvc, 8), new ItemStack(pvc_plate));
+                    });
+                });
 
         override PVC plate texture
+        https://github.com/IInventedDirt/Alchemistry

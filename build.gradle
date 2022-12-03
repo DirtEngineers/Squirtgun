@@ -105,6 +105,7 @@ dependencies {
 
     implementation fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
+    runtimeOnly fg.deobf("curse.maven:mekanism-268560:4020942")
 }
 
 jar {

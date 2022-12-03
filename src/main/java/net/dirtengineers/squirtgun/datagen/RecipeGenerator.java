@@ -1,5 +1,6 @@
 package net.dirtengineers.squirtgun.datagen;
 
+import net.dirtengineers.squirtgun.datagen.recipe.AlchemistryRecipes;
 import net.dirtengineers.squirtgun.datagen.recipe.BrassItemRecipes;
 import net.dirtengineers.squirtgun.datagen.recipe.ComponentRecipes;
 import net.dirtengineers.squirtgun.datagen.recipe.MiscRecipes;
@@ -19,6 +20,7 @@ public class RecipeGenerator extends net.minecraft.data.recipes.RecipeProvider {
         BrassItemRecipes.buildRecipes(pConsumer);
         ComponentRecipes.buildRecipes(pConsumer);
         MiscRecipes.buildRecipes(pConsumer);
+        AlchemistryRecipes.register(pConsumer);
         ChemicalPhialRecipeProvider.register(pConsumer);
     }
 }
