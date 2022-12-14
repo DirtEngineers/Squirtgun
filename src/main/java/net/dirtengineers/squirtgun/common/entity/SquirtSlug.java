@@ -34,7 +34,7 @@ import static net.dirtengineers.squirtgun.registry.ItemRegistration.CHEMICAL_FLU
 
 public class SquirtSlug extends AbstractArrow {
 
-    private double baseDamage = 2.0D;
+    private double baseDamage = 0.25D;
     private int life;
     private Fluid fluid;
     private Chemical chemical;
