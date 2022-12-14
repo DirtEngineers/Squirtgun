@@ -7,6 +7,7 @@ import net.dirtengineers.squirtgun.registry.SoundEventRegistration;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -24,15 +25,18 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.Set;
 
 import static net.dirtengineers.squirtgun.registry.ItemRegistration.CHEMICAL_FLUIDS;
 
 
-public class SquirtSlug extends AbstractArrow {
+public class SquirtSlug extends AbstractArrow implements IEntityAdditionalSpawnData {
 
     private double baseDamage = 0.25D;
     private int life;
@@ -86,6 +90,7 @@ public class SquirtSlug extends AbstractArrow {
     protected void doPostHurtEffects(LivingEntity pLiving) {
         super.doPostHurtEffects(pLiving);
         Entity entity = this.getEffectSource();
+
         if(chemical.getChemicalName().equals("milk")) {
             pLiving.removeAllEffects();
         } else {
@@ -225,4 +230,14 @@ public class SquirtSlug extends AbstractArrow {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
+    @Override
+    public void writeSpawnData(FriendlyByteBuf buffer) {
+        buffer.writeResourceLocation(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(this.chemical.asItem())));
+    }
+
+    @Override
+    public void readSpawnData(FriendlyByteBuf additionalData) {
+        chemical = (Chemical) ForgeRegistries.ITEMS.getValue(additionalData.readResourceLocation());
+
+    }
 }
