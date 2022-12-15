@@ -29,30 +29,32 @@ public class AbstractMachineBlock extends BaseEntityBlock {
     }
 
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext pContext) {
-        return (BlockState)this.defaultBlockState().setValue(FACING, pContext.getHorizontalDirection().getOpposite());
+        return this.defaultBlockState().setValue(FACING, pContext.getHorizontalDirection().getOpposite());
     }
 
     public BlockState rotate(BlockState pState, LevelAccessor pLevelAccessor, BlockPos pBlockPos, Rotation pRotation) {
-        return (BlockState)pState.setValue(FACING, pRotation.rotate((Direction)pState.getValue(FACING)));
+        return pState.setValue(FACING, pRotation.rotate(pState.getValue(FACING)));
     }
 
+    @SuppressWarnings("deprecation")
     public BlockState mirror(BlockState pState, Mirror pMirror) {
-        return pState.rotate(pMirror.getRotation((Direction)pState.getValue(FACING)));
+        return pState.rotate(pMirror.getRotation(pState.getValue(FACING)));
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add(new Property[]{FACING});
+        pBuilder.add(FACING);
     }
 
+    @SuppressWarnings("deprecation")
     public RenderShape getRenderShape(BlockState pState) {
         return RenderShape.MODEL;
     }
 
+    @SuppressWarnings("deprecation")
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
         if (pState.getBlock() != pNewState.getBlock()) {
             BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
-            if (blockEntity instanceof InventoryBlockEntity) {
-                InventoryBlockEntity inventoryBlockEntity = (InventoryBlockEntity)blockEntity;
+            if (blockEntity instanceof InventoryBlockEntity inventoryBlockEntity) {
                 inventoryBlockEntity.dropContents(pLevel, pPos);
             }
         }
@@ -61,7 +63,7 @@ public class AbstractMachineBlock extends BaseEntityBlock {
     }
 
     public @Nullable BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return (BlockEntity)this.blockEntityFunction.apply(pPos, pState);
+        return this.blockEntityFunction.apply(pPos, pState);
     }
 
     static {
