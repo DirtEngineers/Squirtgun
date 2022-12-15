@@ -59,8 +59,7 @@ public class EncapsulatorBlock extends AbstractMachineBlock {
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (!pLevel.isClientSide()) {
             BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
-
-            /*boolean interactionSuccessful = true;
+            boolean interactionSuccessful = true;
             if (blockEntity instanceof EncapsulatorBlockEntity) {
                 interactionSuccessful = ((EncapsulatorBlockEntity)blockEntity).onBlockActivated(pLevel, pPos, pPlayer, pHand);
             }
@@ -70,12 +69,7 @@ public class EncapsulatorBlock extends AbstractMachineBlock {
             return InteractionResult.CONSUME;
         } else {
             return InteractionResult.SUCCESS;
-        } */
-
-            NetworkHooks.openScreen(((ServerPlayer) pPlayer), (EncapsulatorBlockEntity) blockEntity, pPos);
-            return InteractionResult.SUCCESS;
         }
-        return InteractionResult.SUCCESS;
     }
 
     @Override
