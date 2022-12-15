@@ -1,4 +1,5 @@
 {
+	"render_type": "translucent",
 	"textures": {
 		"0": "squirtgun:block/glass",
 		"1": "squirtgun:block/fluid",
@@ -1609,15 +1610,17 @@
 			"translation": [0, -0.75, 0]
 		},
 		"ground": {
-			"translation": [0, 1.75, 0],
+			"translation": [0, 3.25, 0],
 			"scale": [0.75, 0.75, 0.75]
 		},
 		"gui": {
 			"rotation": [20, 140, 0],
+			"translation": [0, 0.75, 0],
 			"scale": [0.75, 0.75, 0.75]
 		},
 		"head": {
-			"translation": [0, 14, 0]
+			"translation": [0, 14.75, 0],
+			"scale": [0.93, 0.89, 0.9]
 		},
 		"fixed": {
 			"translation": [0, 0, 1.25]

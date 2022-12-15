@@ -30,21 +30,22 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class EncapsulatorBlock extends AbstractProcessingBlock {
-    public static final VoxelShape base = Block.box(0.0, 0.0, 0.0, 16.0, 1.0, 16.0);
-    public static final VoxelShape rest = Block.box(2.0, 1.0, 2.0, 14.0, 16.0, 14.0);
-    public static final VoxelShape SHAPE;
+public class EncapsulatorBlock extends AbstractMachineBlock {
+
+    public static final VoxelShape SHAPE = Shapes.block();
 
     public EncapsulatorBlock() {
         super(EncapsulatorBlockEntity::new);
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public VoxelShape getOcclusionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
         return SHAPE;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return SHAPE;
     }
@@ -56,10 +57,12 @@ public class EncapsulatorBlock extends AbstractProcessingBlock {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (!pLevel.isClientSide()) {
             BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
-            boolean interactionSuccessful = true;
+
+            /*boolean interactionSuccessful = true;
             if (blockEntity instanceof EncapsulatorBlockEntity) {
                 interactionSuccessful = ((EncapsulatorBlockEntity)blockEntity).onBlockActivated(pLevel, pPos, pPlayer, pHand);
             }
@@ -69,20 +72,21 @@ public class EncapsulatorBlock extends AbstractProcessingBlock {
             return InteractionResult.CONSUME;
         } else {
             return InteractionResult.SUCCESS;
+        } */
+
+            NetworkHooks.openScreen(((ServerPlayer) pPlayer), (EncapsulatorBlockEntity) blockEntity, pPos);
+            return InteractionResult.SUCCESS;
         }
+        return InteractionResult.SUCCESS;
     }
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        return !pLevel.isClientSide() ? (level, pBlockPos, pBlockState, pBlockEntity) -> {
+       return !pLevel.isClientSide() ? (level, pBlockPos, pBlockState, pBlockEntity) -> {
             if (pBlockEntity instanceof EncapsulatorBlockEntity blockEntity) {
                 blockEntity.tick();
             }
 
         } : null;
-    }
-
-    static {
-        SHAPE = Shapes.or(base, rest);
     }
 }
