@@ -2,10 +2,13 @@ package net.dirtengineers.squirtgun.common.block;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.smashingmods.alchemylib.api.blockentity.container.Direction2D;
-import com.smashingmods.alchemylib.api.blockentity.container.data.*;
-import com.smashingmods.alchemylib.api.blockentity.processing.AbstractFluidBlockEntity;
 import com.smashingmods.alchemylib.api.blockentity.container.AbstractProcessingScreen;
+import com.smashingmods.alchemylib.api.blockentity.container.Direction2D;
+import com.smashingmods.alchemylib.api.blockentity.container.data.AbstractDisplayData;
+import com.smashingmods.alchemylib.api.blockentity.container.data.EnergyDisplayData;
+import com.smashingmods.alchemylib.api.blockentity.container.data.FluidDisplayData;
+import com.smashingmods.alchemylib.api.blockentity.container.data.ProgressDisplayData;
+import com.smashingmods.alchemylib.api.blockentity.processing.AbstractFluidBlockEntity;
 import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
 import net.minecraft.client.renderer.GameRenderer;
