@@ -8,7 +8,6 @@ import net.dirtengineers.squirtgun.client.screens.ModScreens;
 import net.dirtengineers.squirtgun.common.item.SquirtgunItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ComputeFovModifierEvent;
 import net.minecraftforge.client.event.InputEvent;

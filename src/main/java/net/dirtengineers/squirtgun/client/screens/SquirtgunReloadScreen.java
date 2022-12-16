@@ -5,9 +5,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.client.buttons.ActionButton;
 import net.dirtengineers.squirtgun.client.buttons.PhialReloadScreenButton;
-import net.dirtengineers.squirtgun.client.capabilities.SquirtgunCapabilities;
-import net.dirtengineers.squirtgun.client.capabilities.squirtgun.IAmmunitionCapability;
-import net.dirtengineers.squirtgun.common.item.BasePhial;
 import net.dirtengineers.squirtgun.common.item.ChemicalPhial;
 import net.dirtengineers.squirtgun.common.item.EmptyPhialItem;
 import net.dirtengineers.squirtgun.common.item.SquirtgunItem;
@@ -15,7 +12,6 @@ import net.dirtengineers.squirtgun.common.network.GetReloadPhialsListC2SPacket;
 import net.dirtengineers.squirtgun.common.network.InventoryInsertC2SPacket;
 import net.dirtengineers.squirtgun.common.network.InventoryRemoveC2SPacket;
 import net.dirtengineers.squirtgun.common.network.SquirtgunPacketHandler;
-import net.dirtengineers.squirtgun.registry.ItemRegistration;
 import net.dirtengineers.squirtgun.registry.SoundEventRegistration;
 import net.dirtengineers.squirtgun.util.ReloadScreenHelper;
 import net.minecraft.ChatFormatting;
@@ -25,16 +21,13 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.contents.TranslatableContents;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.*;
+import java.util.Objects;
 
 @OnlyIn(Dist.CLIENT)
 public class SquirtgunReloadScreen extends Screen {
