@@ -49,7 +49,6 @@ public class Constants {
     public static final String encapsulatorEnergyRequirementTooltipKey = "tooltip.squirtgun.energy_requirement";
     public static final String phialItemNameTranslationPrefix = "item.squirtgun.";
     public static final String encapsulatorMenuScreenTitle = String.format("%s.container.encapsulator", Squirtgun.MOD_ID);
-    public static final String openGunGui = String.format("%s.text.open_gui", Squirtgun.MOD_ID);
     public static final String gunGuiPhialIsLoaded = "tooltip.squirtgun.gui.phial_is_loaded";
     public static final String gunGuiPhialLoaded = "tooltip.squirtgun.gui.phial_loaded";
     public static final String gunGuiPhialAmmoLossWarning = "tooltip.squirtgun.gui.phial_ammo_loss";
@@ -66,6 +65,7 @@ public class Constants {
 
     //Keybinds
     public static final String KEY_CATEGORY_MOD = "key.category.squirtgun";
+    public static final String KEY_SQUIRTGUN_MENU = "squirtgun.text.open_gui";
     public static final String KEY_GUN_AMMO_STATUS_DISPLAY = "key.squirtgun.gun_display_ammo_status";
 
     //Item Groups
