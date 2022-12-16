@@ -25,7 +25,7 @@ public class GetReloadPhialsListC2SPacket extends ReloadScreenHelper {
 
     public void encode(FriendlyByteBuf pBuffer) {}
 
-    public static void handle(Supplier<NetworkEvent.Context> pContext) {
+    public static void handle(GetReloadPhialsListC2SPacket pPacket, Supplier<NetworkEvent.Context> pContext) {
         pContext.get().enqueueWork(() -> {
             phials.clear();
             ServerPlayer player = pContext.get().getSender();
