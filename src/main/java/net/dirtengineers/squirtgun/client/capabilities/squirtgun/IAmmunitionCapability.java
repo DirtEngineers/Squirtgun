@@ -7,11 +7,11 @@ import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 public interface IAmmunitionCapability {
     void setShotsAvailable(int pShots);
     boolean hasAmmunition();
-    int getMaxShots();
-    int getShotsAvailable();
     void decrementShots();
     Chemical getChemical();
     void setChemical(Chemical pChemical);
+    String getPotionKey();
+    void setPotionKey(String pKey);
     boolean isChemicalValid(Chemical chemical);
     String getAmmoStatus();
 }

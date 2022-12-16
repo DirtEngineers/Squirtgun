@@ -3,6 +3,7 @@ package net.dirtengineers.squirtgun.datagen;
 import com.google.gson.JsonObject;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -30,6 +31,16 @@ public class Util {
             jsonObject.addProperty("amount", amount);
             pJson.add(pKey, jsonObject);
         }
+    }
+
+    public static void potionToJson(JsonObject pJson, String pKey, Potion pPotion) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("potion", Objects.requireNonNull(ForgeRegistries.POTIONS.getKey(pPotion)).toString());
+        pJson.add(pKey, jsonObject);
+    }
+
+    public static Potion toPotion(String pString) {
+        return Objects.requireNonNull(ForgeRegistries.POTIONS.getValue(new ResourceLocation(pString)));
     }
 
     public static ItemStack toItemStack(String pString) {

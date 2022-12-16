@@ -1,0 +1,13 @@
+{
+  "type": "squirtgun:potion_phial_serializer",
+  "group": "squirtgun:encapsulator",
+  "input1": {
+    "item": "squirtgun:phial"
+  },
+  "input2": {
+    "potion": "minecraft:long_water_breathing"
+  },
+  "output1": {
+    "item": "squirtgun:long_water_breathing_phial"
+  }
+}

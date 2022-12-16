@@ -3,17 +3,16 @@ package net.dirtengineers.squirtgun.client.screens;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.dirtengineers.squirtgun.Constants;
+import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.client.buttons.ActionButton;
 import net.dirtengineers.squirtgun.client.buttons.PhialReloadScreenButton;
 import net.dirtengineers.squirtgun.client.capabilities.SquirtgunCapabilities;
 import net.dirtengineers.squirtgun.client.capabilities.squirtgun.IAmmunitionCapability;
 import net.dirtengineers.squirtgun.common.item.BasePhial;
-import net.dirtengineers.squirtgun.common.item.ChemicalPhial;
 import net.dirtengineers.squirtgun.common.item.EmptyPhialItem;
 import net.dirtengineers.squirtgun.common.item.SquirtgunItem;
 import net.dirtengineers.squirtgun.common.network.InventoryInsertC2SPacket;
 import net.dirtengineers.squirtgun.common.network.InventoryRemoveC2SPacket;
-import net.dirtengineers.squirtgun.common.network.SquirtgunPacketHandler;
 import net.dirtengineers.squirtgun.registry.ItemRegistration;
 import net.dirtengineers.squirtgun.registry.SoundEventRegistration;
 import net.minecraft.ChatFormatting;
@@ -32,7 +31,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.Objects;
 
 @OnlyIn(Dist.CLIENT)
 public class SquirtgunReloadScreen extends Screen {
@@ -56,22 +57,27 @@ public class SquirtgunReloadScreen extends Screen {
     private ItemStack phialSwapStack = ItemStack.EMPTY;
     private static final Player player = Minecraft.getInstance().player;
     boolean phialSelected;
+    IAmmunitionCapability ammunitionHandler;
 
     public SquirtgunReloadScreen() {
         super(MutableComponent.create(new TranslatableContents(Constants.gunFunctionality)));
-
     }
 
     @Override
     protected void init() {
         if (player != null) {
             offhandLocationIndex = player.getInventory().items.size() + 1;
+            ammunitionHandler = player.getItemInHand(player.getUsedItemHand()).getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO).orElse(null);
+        }
+        if(ammunitionHandler == null) {
+            super.onClose();
         }
         centerX = width / 2;
         populatePhialsList();
         calculateBGSizeAndPosition();
         UpdateLayout();
         phialSelected = false;
+        super.init();
     }
 
     private void calculateBGSizeAndPosition() {
@@ -153,9 +159,9 @@ public class SquirtgunReloadScreen extends Screen {
             ItemStack insertStack = SquirtgunItem.loadNewPhial(player, phialSwapStack);
             if (insertStack.getItem() instanceof EmptyPhialItem) {
                 setInventorySlotForPlacement();
-                SquirtgunPacketHandler.sendToServer(new InventoryInsertC2SPacket(destinationSlot, insertStack));
+                Squirtgun.PACKET_HANDLER.sendToServer(new InventoryInsertC2SPacket(destinationSlot, insertStack));
                 destinationSlot = removeStack.getCount() == offhandLocationIndex ? Constants.OFF_HAND_INDEX : removeStack.getCount();
-                SquirtgunPacketHandler.sendToServer(new InventoryRemoveC2SPacket(destinationSlot, removeStack));//PHIAL_SWAP
+                Squirtgun.PACKET_HANDLER.sendToServer(new InventoryRemoveC2SPacket(destinationSlot, removeStack));
                 player.playSound(SoundEventRegistration.PHIAL_SWAP.get());
             }
         }
@@ -166,31 +172,38 @@ public class SquirtgunReloadScreen extends Screen {
         if (player != null) {
             phials.clear();
             for (int pSlot = 0; pSlot < player.getInventory().items.size(); pSlot++) {
-                if (player.getInventory().items.get(pSlot).getItem() instanceof ChemicalPhial) {
+                if (player.getInventory().items.get(pSlot).getItem() instanceof BasePhial) {
                     ItemStack tempStack = player.getInventory().items.get(pSlot).copy();
                     tempStack.setCount(pSlot);
                     addToPhials(tempStack);
                 }
             }
-            if (player.getInventory().offhand.get(0).getItem() instanceof ChemicalPhial) {
+            if (player.getInventory().offhand.get(0).getItem() instanceof BasePhial) {
                 ItemStack tempStack = player.getInventory().offhand.get(0).copy();
                 tempStack.setCount(offhandLocationIndex);
                 addToPhials(tempStack);
             }
-            //Get from gun
-            Optional<BasePhial> phialOptional = Optional.of((BasePhial) Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(ItemRegistration.PHIAL.getId())));
-            IAmmunitionCapability ammunitionHandler = player.getItemInHand(player.getUsedItemHand()).getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO).orElse(null);
+
+            BasePhial basePhial = null;
             if (ammunitionHandler.getChemical() != null) {
-                phialOptional = ItemRegistration.PHIALS
-                        .entrySet()
-                        .stream()
-                        .filter(entry -> ammunitionHandler.getChemical().equals(entry.getValue()))
-                        .findFirst()
-                        .map(Map.Entry::getKey);
+                for(BasePhial phial : ItemRegistration.CHEMICAL_PHIALS) {
+                    if(ammunitionHandler.getChemical().equals(phial.getChemical())) {
+                        basePhial = phial;
+                        break;
+                    }
+                }
             }
-            phialSwapStack = phialOptional.map(
-                            chemicalPhial -> new ItemStack(chemicalPhial, 1))
-                    .orElseGet(() -> new ItemStack(ForgeRegistries.ITEMS.getValue(ItemRegistration.PHIAL.getId()), 1));
+            if (!Objects.equals(ammunitionHandler.getPotionKey(), "")) {
+                for(BasePhial phial : ItemRegistration.POTION_PHIALS) {
+                    if(ammunitionHandler.getPotionKey().equals(phial.getPotionLocation())) {
+                        basePhial = phial;
+                        break;
+                    }
+                }
+            }
+            phialSwapStack = basePhial != null
+                    ? new ItemStack(basePhial, 1)
+                    : new ItemStack(ForgeRegistries.ITEMS.getValue(ItemRegistration.PHIAL.getId()), 1);
 
             phials.sort(new ItemStackComparator());
         }
@@ -277,7 +290,7 @@ public class SquirtgunReloadScreen extends Screen {
 
     private void swapPhials(PhialReloadScreenButton pButton) {
         if (pButton.getTargetStack() != null && player != null) {
-            if (pButton.getTargetStack().getItem() instanceof ChemicalPhial) {
+            if (pButton.getTargetStack().getItem() instanceof BasePhial) {
                 phialSwapStack = pButton.getTargetStack().copy();
                 phialSelected = true;
                 UpdateLayout();
@@ -322,7 +335,7 @@ public class SquirtgunReloadScreen extends Screen {
     }
 
     private void addToPhials(ItemStack pStack) {
-        if (phialsGetStackIndex(pStack) < 0) {
+        if ((phialsGetStackIndex(pStack) < 0) && !(pStack.getItem() instanceof EmptyPhialItem)) {
             phials.add(pStack);
         }
     }

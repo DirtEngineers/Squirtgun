@@ -3,7 +3,8 @@ package net.dirtengineers.squirtgun.datagen;
 import net.dirtengineers.squirtgun.datagen.recipe.BrassItemRecipes;
 import net.dirtengineers.squirtgun.datagen.recipe.ComponentRecipes;
 import net.dirtengineers.squirtgun.datagen.recipe.MiscRecipes;
-import net.dirtengineers.squirtgun.datagen.recipe.providers.ChemicalPhialRecipeProvider;
+import net.dirtengineers.squirtgun.datagen.recipe.chemical_phial.ChemicalPhialRecipeProvider;
+import net.dirtengineers.squirtgun.datagen.recipe.potion_phial.PotionPhialRecipeProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 
@@ -20,5 +21,6 @@ public class RecipeGenerator extends net.minecraft.data.recipes.RecipeProvider {
         ComponentRecipes.buildRecipes(pConsumer);
         MiscRecipes.buildRecipes(pConsumer);
         ChemicalPhialRecipeProvider.register(pConsumer);
+        PotionPhialRecipeProvider.register(pConsumer);
     }
 }

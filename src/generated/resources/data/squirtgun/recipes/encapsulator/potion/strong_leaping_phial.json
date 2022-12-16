@@ -1,0 +1,13 @@
+{
+  "type": "squirtgun:potion_phial_serializer",
+  "group": "squirtgun:encapsulator",
+  "input1": {
+    "item": "squirtgun:phial"
+  },
+  "input2": {
+    "potion": "minecraft:strong_leaping"
+  },
+  "output1": {
+    "item": "squirtgun:strong_leaping_phial"
+  }
+}

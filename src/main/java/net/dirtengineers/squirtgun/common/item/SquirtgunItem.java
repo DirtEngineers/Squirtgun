@@ -1,15 +1,12 @@
 package net.dirtengineers.squirtgun.common.item;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import net.dirtengineers.squirtgun.Constants;
-import net.dirtengineers.squirtgun.client.Keybinds;
+import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.client.capabilities.SquirtgunCapabilities;
 import net.dirtengineers.squirtgun.client.capabilities.squirtgun.AmmunitionCapabilityProvider;
 import net.dirtengineers.squirtgun.client.capabilities.squirtgun.IAmmunitionCapability;
-import net.dirtengineers.squirtgun.client.screens.ModScreens;
 import net.dirtengineers.squirtgun.common.entity.SquirtSlug;
 import net.dirtengineers.squirtgun.common.network.GunCapsUpdateC2SPacket;
-import net.dirtengineers.squirtgun.common.network.SquirtgunPacketHandler;
 import net.dirtengineers.squirtgun.registry.ItemRegistration;
 import net.dirtengineers.squirtgun.registry.SoundEventRegistration;
 import net.dirtengineers.squirtgun.util.TextUtility;
@@ -36,6 +33,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class SquirtgunItem extends BowItem {
@@ -77,20 +75,6 @@ public class SquirtgunItem extends BowItem {
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
 
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
-
-        // Only perform the shift action
-        if (pPlayer.isShiftKeyDown()) {
-            if (pLevel.isClientSide) {
-                if (Keybinds.shiftClickGuiBinding.getKey() == InputConstants.UNKNOWN) {
-                    ModScreens.openGunSettingsScreen();
-                    return InteractionResultHolder.pass(itemstack);
-                }
-            }
-
-            // INTENTIONALLY LEFT IN. I DON'T HAVE THE TIME TO FIX THIS ISSUE ATM
-            // @todo: migrate keybinding setting onto gadget so I can set a tag on the item
-            return InteractionResultHolder.pass(itemstack);
-        }
 
         boolean hasAmmo = itemstack.getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO, null).orElse(null).hasAmmunition();
 
@@ -135,9 +119,6 @@ public class SquirtgunItem extends BowItem {
             if (hasAmmo) {
                 if (!pLevel.isClientSide) {
                     SquirtSlug slug = makeSlugToFire(pStack, pLevel, player);
-                    if (slug.hasEffects()) {
-                        slug.setBaseDamage(0D);
-                    }
                     slug.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 3.0F, 1.0F);
                     pLevel.addFreshEntity(slug);
                 }
@@ -170,8 +151,13 @@ public class SquirtgunItem extends BowItem {
 
     private SquirtSlug makeSlugToFire(ItemStack pStack, Level pLevel, LivingEntity pEntityLiving) {
             IAmmunitionCapability ammunitionHandler = pStack.getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO, null).orElse(null);
-            ammunitionHandler.decrementShots();
-            return new SquirtSlug(pEntityLiving, pLevel, ammunitionHandler.getChemical());
+            if(!((Player) pEntityLiving).getAbilities().instabuild) {
+                ammunitionHandler.decrementShots();
+            }
+
+        return ammunitionHandler.getChemical() != null
+                ? new SquirtSlug(pEntityLiving, pLevel, ammunitionHandler.getChemical())
+                : new SquirtSlug(pEntityLiving, pLevel, ammunitionHandler.getPotionKey());
     }
 
     @Override
@@ -194,9 +180,9 @@ public class SquirtgunItem extends BowItem {
     public static ItemStack loadNewPhial(Player pPlayer, ItemStack pPhialStack) {
         IAmmunitionCapability ammunitionHandler = getPlayerGun(pPlayer).getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO, null).orElse(null);
         if (pPlayer.level.isClientSide
-                && pPhialStack.getItem() instanceof ChemicalPhial chemicalPhial
-                && ammunitionHandler.isChemicalValid(chemicalPhial.getChemical())) {
-            SquirtgunPacketHandler.sendToServer(new GunCapsUpdateC2SPacket(pPhialStack));
+                && pPhialStack.getItem() instanceof BasePhial phial
+                && (!Objects.equals(ammunitionHandler.getPotionKey(), "") || ammunitionHandler.isChemicalValid(phial.getChemical()))) {
+            Squirtgun.PACKET_HANDLER.sendToServer(new GunCapsUpdateC2SPacket(pPhialStack));
             return new ItemStack(ForgeRegistries.ITEMS.getValue(ItemRegistration.PHIAL.getId()), 1);
         }
         return pPhialStack;
