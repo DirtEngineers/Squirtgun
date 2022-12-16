@@ -1,12 +1,9 @@
 package net.dirtengineers.squirtgun.common.item;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import net.dirtengineers.squirtgun.Constants;
-import net.dirtengineers.squirtgun.client.Keybinds;
 import net.dirtengineers.squirtgun.client.capabilities.SquirtgunCapabilities;
 import net.dirtengineers.squirtgun.client.capabilities.squirtgun.AmmunitionCapabilityProvider;
 import net.dirtengineers.squirtgun.client.capabilities.squirtgun.IAmmunitionCapability;
-import net.dirtengineers.squirtgun.client.screens.ModScreens;
 import net.dirtengineers.squirtgun.common.entity.SquirtSlug;
 import net.dirtengineers.squirtgun.common.network.GunCapsUpdateC2SPacket;
 import net.dirtengineers.squirtgun.common.network.SquirtgunPacketHandler;
@@ -23,10 +20,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BowItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
@@ -44,9 +38,9 @@ public class SquirtgunItem extends BowItem {
         super(pProperties);
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack pStack, @javax.annotation.Nullable CompoundTag nbt) {
+    public ICapabilityProvider initCapabilities(ItemStack pStack, @Nullable CompoundTag nbt) {
         return new AmmunitionCapabilityProvider(pStack);
     }
 
@@ -74,46 +68,32 @@ public class SquirtgunItem extends BowItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
+    public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand pHand) {
 
-        ItemStack itemstack = pPlayer.getItemInHand(pHand);
-
-        // Only perform the shift action
-        if (pPlayer.isShiftKeyDown()) {
-            if (pLevel.isClientSide) {
-                if (Keybinds.shiftClickGuiBinding.getKey() == InputConstants.UNKNOWN) {
-                    ModScreens.openGunSettingsScreen();
-                    return InteractionResultHolder.pass(itemstack);
-                }
-            }
-
-            // INTENTIONALLY LEFT IN. I DON'T HAVE THE TIME TO FIX THIS ISSUE ATM
-            // @todo: migrate keybinding setting onto gadget so I can set a tag on the item
-            return InteractionResultHolder.pass(itemstack);
-        }
+        ItemStack itemstack = player.getItemInHand(pHand);
 
         boolean hasAmmo = itemstack.getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO, null).orElse(null).hasAmmunition();
 
-        net.minecraftforge.common.ForgeHooks.getProjectile(pPlayer, itemstack, hasAmmo ? new ItemStack(ItemRegistration.SQUIRTSLUG.get()) : ItemStack.EMPTY);
-        InteractionResultHolder<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(itemstack, pLevel, pPlayer, pHand, hasAmmo);
+        net.minecraftforge.common.ForgeHooks.getProjectile(player, itemstack, hasAmmo ? new ItemStack(ItemRegistration.SQUIRTSLUG.get()) : ItemStack.EMPTY);
+        InteractionResultHolder<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(itemstack, pLevel, player, pHand, hasAmmo);
         if (ret != null) return ret;
 
-        if (!pPlayer.getAbilities().instabuild && !hasAmmo) {
+        if (!player.getAbilities().instabuild && !hasAmmo) {
             return InteractionResultHolder.fail(itemstack);
         } else {
-            pPlayer.startUsingItem(pHand);
+            player.startUsingItem(pHand);
             pLevel.playSound(
-                    pPlayer,
-                    pPlayer.getX(),
-                    pPlayer.getY(),
-                    pPlayer.getZ(),
+                    player,
+                    player.getX(),
+                    player.getY(),
+                    player.getZ(),
                     SoundEventRegistration.GUN_USE.get(),
                     SoundSource.PLAYERS,
                     1.0F,
                     1.0F// / (pLevel.getRandom().nextFloat() * 0.4F + 1.2F) + 0.5F
             );
-            return InteractionResultHolder.consume(itemstack);
         }
+        return InteractionResultHolder.consume(itemstack);
     }
 
     @Override
