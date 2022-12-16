@@ -62,6 +62,7 @@ public class AbstractMachineBlock extends BaseEntityBlock {
         super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
     }
 
+    @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return this.blockEntityFunction.apply(pPos, pState);
     }
