@@ -1,5 +1,6 @@
 package net.dirtengineers.squirtgun.registry;
 
+import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.common.block.EncapsulatorMenu;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -27,6 +28,6 @@ public class MenuRegistration {
 
     static {
         MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, Squirtgun.MOD_ID);
-        ENCAPSULATOR_MENU = registerMenuType(EncapsulatorMenu::new, "encapsulator_menu");
+        ENCAPSULATOR_MENU = registerMenuType(EncapsulatorMenu::new, Constants.encapsulatorMenuName);
     }
 }

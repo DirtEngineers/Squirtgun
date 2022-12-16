@@ -2,7 +2,7 @@ package net.dirtengineers.squirtgun.datagen;
 
 import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
-import net.dirtengineers.squirtgun.common.item.BasePhial;
+import net.dirtengineers.squirtgun.common.item.ChemicalPhial;
 import net.dirtengineers.squirtgun.registry.ItemRegistration;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
@@ -20,8 +20,7 @@ public class ItemModelGenerator extends ItemModelProvider  {
     @Override
     protected void registerModels() {
         this.generatePhialModel();
-        ItemRegistration.CHEMICAL_PHIALS.forEach(this::generatePhial);
-        ItemRegistration.POTION_PHIALS.forEach(this::generatePhial);
+        ItemRegistration.PHIALS.keySet().forEach(this::generatePhial);
         String emptyPhial = Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(new ResourceLocation(Squirtgun.MOD_ID, Constants.phialItemName))).asItem().toString();
         this.withExistingParent(String.format("item/%s", emptyPhial), this.modLoc("item/phial_model"));
     }
@@ -32,7 +31,7 @@ public class ItemModelGenerator extends ItemModelProvider  {
                 .texture("layer1", this.modLoc("item/phial_layer_1"));
     }
 
-    private void generatePhial(BasePhial phial) {
+    private void generatePhial(ChemicalPhial phial) {
         this.withExistingParent(String.format("item/%s", phial), this.modLoc("item/phial_model"));
     }
 }

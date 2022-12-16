@@ -1,3 +1,0 @@
-reload screen not properly updating inventory in multiplayer
-Ammunition handler null in reload screen in multiplayer
-make slug look better

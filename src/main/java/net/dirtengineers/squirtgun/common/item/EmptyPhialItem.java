@@ -6,7 +6,6 @@ public class EmptyPhialItem extends BasePhial {
         super(pProperties);
         capacityUpgrade = CAPACITY_UPGRADE.BASE;
         chemical = null;
-        potionLocation = null;
         shotsAvailable = 0;
     }
 }

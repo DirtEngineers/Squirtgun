@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
-import net.dirtengineers.squirtgun.util.FakeItemRenderer_OLD;
+import net.dirtengineers.squirtgun.util.FakeItemRenderer;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.locale.Language;
@@ -38,7 +38,7 @@ public class PhialReloadScreenButton extends Button {
         this.blit(pPoseStack, this.x - 2, this.y - 2, 0, yOffset, getWidth() / 2 + 2, 20);
         this.blit(pPoseStack, this.x + this.width / 2, this.y - 2, 200 - getWidth() / 2 - 1, yOffset, getWidth() / 2 + 2, 20);
         if (this.getTargetStack() != null) {
-            FakeItemRenderer_OLD.renderFakeItem(this.getTargetStack(), this.x, this.y, this.width);
+            FakeItemRenderer.renderFakeItem(this.getTargetStack(), this.x, this.y, this.width);
         }
     }
 

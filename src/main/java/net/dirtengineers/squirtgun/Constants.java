@@ -22,6 +22,11 @@ public class Constants {
     public static final String quartzShardItemName = "quartz_shard";
     public static final String actuatorItemName = "actuator";
 
+    public static final String squirtgunTabName = "squirtguntab";
+    public static final String encapsulatorMenuName = "encapsulator_menu";
+    public static final String phialCreationSerializerName = "phial_creation_serializer";
+    public static final String phialCreationRecipeName = "phial_creation_recipe";
+
     // sound events
     public static final String SlugHitSoundName = "squirt_slug_hit";
     public static final String ReloadScreenCloseSoundName = "reload_screen_close";
@@ -34,10 +39,8 @@ public class Constants {
 
     // resource locations
     public static final String slugTextureLocation = "textures/entity/projectile/blank_slug.png";
-    public static final String chemicalPhialCreationRecipeLocationPrefix = "encapsulator/chemical/";
-    public static final String chemicalPhialCreationAdvancementLocationPrefix = "recipes/encapsulator/chemical/";
-    public static final String potionPhialCreationRecipeLocationPrefix = "encapsulator/potion/";
-    public static final String potionPhialCreationAdvancementLocationPrefix = "recipes/encapsulator/potion/";
+    public static final String encapsulatorPhialCreationRecipeLocationPrefix = "encapsulator/";
+    public static final String encapsulatorPhialCreationAdvancementLocationPrefix = "recipes/encapsulator/";
     public static final String encapsulatorMenuScreenTexture = "textures/gui/encapsulator_gui.png";
 
     // translation keys
@@ -46,10 +49,7 @@ public class Constants {
     public static final String encapsulatorEnergyRequirementTooltipKey = "tooltip.squirtgun.energy_requirement";
     public static final String phialItemNameTranslationPrefix = "item.squirtgun.";
     public static final String encapsulatorMenuScreenTitle = String.format("%s.container.encapsulator", Squirtgun.MOD_ID);
-    public static final String recipeRequiredInput = String.format("%s.container.required_input", Squirtgun.MOD_ID);
-    public static final String currentSelectedRecipe = String.format("%s.container.current_recipe", Squirtgun.MOD_ID);
-    public static final String guiSelectRecipe = String.format("%s.container.select_recipe", Squirtgun.MOD_ID);
-    public static final String guiSearch = String.format("%s.container.search", Squirtgun.MOD_ID);
+    public static final String openGunGui = String.format("%s.text.open_gui", Squirtgun.MOD_ID);
     public static final String gunGuiPhialIsLoaded = "tooltip.squirtgun.gui.phial_is_loaded";
     public static final String gunGuiPhialLoaded = "tooltip.squirtgun.gui.phial_loaded";
     public static final String gunGuiPhialAmmoLossWarning = "tooltip.squirtgun.gui.phial_ammo_loss";
@@ -67,12 +67,14 @@ public class Constants {
     //Keybinds
     public static final String KEY_CATEGORY_MOD = "key.category.squirtgun";
     public static final String KEY_GUN_AMMO_STATUS_DISPLAY = "key.squirtgun.gun_display_ammo_status";
-    public static final String openGunGui = String.format("%s.text.open_gui", Squirtgun.MOD_ID);
+
+    //Item Groups
+    public static final String squirtgunTabItemGroup = "itemGroup.squirtguntab";
+    public static final String squirtgunItemGroup = "itemGroup.squirtgun";
 
     //NBT
     public static final String SHOTS_AVAILABLE_TAG = Squirtgun.MOD_ID + ".shots_available";
     public static final String CHEMICAL_TAG = Squirtgun.MOD_ID + ".chemical";
-    public static final String POTION_TAG = Squirtgun.MOD_ID + ".potion";
 
     //Recipes
     public static final String encapsulatorRecipeGroupName = String.format("%s:encapsulator", Squirtgun.MOD_ID);
@@ -81,8 +83,6 @@ public class Constants {
     public static final Style HOVER_TEXT_STYLE = Style.EMPTY.withFont(Style.DEFAULT_FONT).withColor(ChatFormatting.YELLOW);
     public static final Style LOADED_PHIAL_TEXT_STYLE = Style.EMPTY.withFont(Style.DEFAULT_FONT).withBold(true).withColor(ChatFormatting.RED);
     public static final Style MOD_ID_TEXT_STYLE = Style.EMPTY.withFont(Style.DEFAULT_FONT).withItalic(true).withColor(ChatFormatting.BLUE);
-    public static final Style DISPLAY_ITEM_TEXT_STYLE = Style.EMPTY.withColor(ChatFormatting.WHITE);
-    public static final Style RECIPE_ITEM_REQUIRED_TEXT_STYLE = Style.EMPTY.withUnderlined(true).withColor(ChatFormatting.YELLOW);
 
     //Colors
     public static int BRASS_COLOR = 0XC6A874;

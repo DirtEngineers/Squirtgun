@@ -1,7 +1,6 @@
 package net.dirtengineers.squirtgun;
 
 import net.dirtengineers.squirtgun.common.block.EncapsulatorScreen;
-import net.dirtengineers.squirtgun.common.network.PacketHandler;
 import net.dirtengineers.squirtgun.registry.ItemRegistration;
 import net.dirtengineers.squirtgun.registry.MenuRegistration;
 import net.dirtengineers.squirtgun.registry.Registry;
@@ -21,7 +20,6 @@ import net.minecraftforge.fml.loading.FMLPaths;
 @Mod(Squirtgun.MOD_ID)
 public class Squirtgun {
     public static final String MOD_ID = "squirtgun";
-    public static final PacketHandler PACKET_HANDLER = new PacketHandler().register();
 
     public Squirtgun() {
         MinecraftForge.EVENT_BUS.register(this);

@@ -5,12 +5,7 @@ import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.registry.ItemRegistration;
 import net.dirtengineers.squirtgun.util.TextUtility;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.alchemy.Potion;
 import net.minecraftforge.common.data.LanguageProvider;
-import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.Map;
 
 public class LocalizationGenerator extends LanguageProvider {
     public LocalizationGenerator(DataGenerator gen, String locale) {
@@ -20,28 +15,16 @@ public class LocalizationGenerator extends LanguageProvider {
     @Override
     protected void addTranslations() {
         addManualTranslations();
-        ItemRegistration.CHEMICAL_PHIALS.forEach(
+        ItemRegistration.PHIALS.keySet().forEach(
                 phial -> this.add(
-                        Constants.phialItemNameTranslationPrefix + phial,
+                        Constants.phialItemNameTranslationPrefix +  phial,
                         TextUtility.capitalizeText(phial.toString().replace('_', ' '), ' ')));
-
-        ItemRegistration.POTION_PHIALS.forEach(
-                phial ->
-                    this.add(
-                            Constants.phialItemNameTranslationPrefix + phial,
-                            TextUtility.capitalizeText(phial.toString().replace('_', ' '), ' ')));
-
-        for(Map.Entry<ResourceKey<Potion>, Potion> potion : ForgeRegistries.POTIONS.getEntries().stream().toList()) {
-            if (potion.getValue().getEffects().size() > 0) {
-                this.add(
-                        String.format("%s:%s", potion.getKey().location().getNamespace(), potion.getKey().location().getPath()),
-                        String.format("%s%s", TextUtility.capitalizeText(potion.getKey().location().getPath().replace('_', ' '), ' '), " Potion"));
-            }
-        }
     }
 
     private void addManualTranslations(){
         //ITEMS
+        this.add(Constants.squirtgunTabItemGroup, "Squirtgun");
+        this.add(Constants.squirtgunItemGroup, "Squirtgun");
         this.add(String.format("item.squirtgun.%s", Constants.gunItemName), "Squirtgun");
         this.add(String.format("item.squirtgun.%s", Constants.phialItemName), "Empty Phial");
         this.add(String.format("item.squirtgun.%s", Constants.brassBlendItemName), "Brass Blend");
@@ -79,9 +62,5 @@ public class LocalizationGenerator extends LanguageProvider {
         this.add(Constants.gunGuiPhialAmmoLossWarning, "Warning: Currrently loaded ammo will be lost upon change.");
         this.add(Constants.gunGuiCancelButtonMessage, "Cancel Loading");
         this.add(Constants.gunGuiAgreeButtonMessage, "Load it!");
-        this.add(Constants.recipeRequiredInput, "Required input item:");
-        this.add(Constants.currentSelectedRecipe, "Current recipe:");
-        this.add(Constants.guiSearch, "Search...");
-        this.add(Constants.guiSelectRecipe, "Select recipe:");
     }
 }

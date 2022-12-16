@@ -1,16 +1,17 @@
 package net.dirtengineers.squirtgun.common.network;
 
-import com.smashingmods.alchemylib.api.network.AlchemyPacket;
 import net.dirtengineers.squirtgun.client.capabilities.SquirtgunCapabilities;
 import net.dirtengineers.squirtgun.client.capabilities.squirtgun.IAmmunitionCapability;
-import net.dirtengineers.squirtgun.common.item.BasePhial;
+import net.dirtengineers.squirtgun.common.item.ChemicalPhial;
 import net.dirtengineers.squirtgun.common.item.SquirtgunItem;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
 
-public class GunCapsUpdateC2SPacket implements AlchemyPacket {
+import java.util.function.Supplier;
+
+public class GunCapsUpdateC2SPacket {
 
     ItemStack insertStack;
 
@@ -26,37 +27,17 @@ public class GunCapsUpdateC2SPacket implements AlchemyPacket {
         pBuffer.writeItem(this.insertStack);
     }
 
-    @Override
-    public void handle(NetworkEvent.Context pContext) {
-        if (insertStack.getItem() instanceof BasePhial basePhial) {
-            Player player = pContext.getSender();
-            if(player != null) {
-                IAmmunitionCapability ammunitionHandler = SquirtgunItem.getPlayerGun(player).getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO, null).orElse(null);
-                if (basePhial.getChemical() != null) {
-                    ammunitionHandler.setChemical(basePhial.getChemical());
-                } else {
-                    ammunitionHandler.setPotionKey(basePhial.getPotionLocation());
+    public static void handle(GunCapsUpdateC2SPacket pPacket, Supplier<NetworkEvent.Context> pContext) {
+        pContext.get().enqueueWork(() -> {
+            if (pPacket.insertStack.getItem() instanceof ChemicalPhial chemicalPhial) {
+                Player player = pContext.get().getSender();
+                if(player != null) {
+                    IAmmunitionCapability ammunitionHandler = SquirtgunItem.getPlayerGun(player).getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO, null).orElse(null);
+                    ammunitionHandler.setChemical(chemicalPhial.getChemical());
+                    ammunitionHandler.setShotsAvailable(chemicalPhial.getShotsAvailable());
                 }
-                ammunitionHandler.setShotsAvailable(basePhial.getShotsAvailable());
             }
-        }
+        });
+        pContext.get().setPacketHandled(true);
     }
-
-//    public static void handle(GunCapsUpdateC2SPacket pPacket, Supplier<NetworkEvent.Context> pContext) {
-//        pContext.get().enqueueWork(() -> {
-//            if (pPacket.insertStack.getItem() instanceof BasePhial basePhial) {
-//                Player player = pContext.get().getSender();
-//                if(player != null) {
-//                    IAmmunitionCapability ammunitionHandler = SquirtgunItem.getPlayerGun(player).getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO, null).orElse(null);
-//                    if (basePhial.getChemical() != null) {
-//                        ammunitionHandler.setChemical(basePhial.getChemical());
-//                    } else {
-//                        ammunitionHandler.setPotionKey(basePhial.getPotionLocation());
-//                    }
-//                    ammunitionHandler.setShotsAvailable(basePhial.getShotsAvailable());
-//                }
-//            }
-//        });
-//        pContext.get().setPacketHandled(true);
-//    }
 }

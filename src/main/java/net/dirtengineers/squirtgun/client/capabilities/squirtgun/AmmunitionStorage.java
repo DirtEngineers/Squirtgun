@@ -16,7 +16,6 @@ public class AmmunitionStorage implements IAmmunitionCapability, INBTSerializabl
 
     private final ItemStack stack;
     protected Chemical chemical;
-    protected String potionKey;
     protected int shotsAvailable;
     protected final int MAX_SHOTS = 10;
     protected final int MIN_SHOTS = 0;
@@ -61,21 +60,8 @@ public class AmmunitionStorage implements IAmmunitionCapability, INBTSerializabl
     public void setChemical(Chemical pChemical) {
         if (isChemicalValid(pChemical)) {
             chemical = pChemical;
-            potionKey = "";
-            setChemicalTag();
+            setchemicalTag();
         }
-    }
-
-    @Override
-    public String getPotionKey() {
-        return potionKey;
-    }
-
-    @Override
-    public void setPotionKey(String pKey) {
-        potionKey = pKey;
-        chemical = null;
-        setPotionKeyTag();
     }
 
     @Override
@@ -84,26 +70,12 @@ public class AmmunitionStorage implements IAmmunitionCapability, INBTSerializabl
     }
 
     public String getAmmoStatus() {
-        return (chemical== null && Objects.equals(potionKey, "")) ? "---" : String.format("%s/%s", shotsAvailable, MAX_SHOTS);
+        return (chemical== null) ? "---" : String.format("%s/%s", shotsAvailable, MAX_SHOTS);
     }
 
-    private void setChemicalTag() {
+    private void setchemicalTag() {
         CompoundTag tag = stack.getOrCreateTag();
-        tag.remove(Constants.CHEMICAL_TAG);
-        tag.putString(Constants.CHEMICAL_TAG, chemical != null
-                ? String.format("%s:%s", chemical.getClass().getModule().getName(), chemical.asItem())
-                : "");
-        tag.remove(Constants.POTION_TAG);
-        tag.putString(Constants.POTION_TAG, potionKey);
-        stack.save(tag);
-    }
-
-    private void setPotionKeyTag() {
-        CompoundTag tag = stack.getOrCreateTag();
-        tag.remove(Constants.POTION_TAG);
-        tag.putString(Constants.POTION_TAG, potionKey);
-        tag.remove(Constants.CHEMICAL_TAG);
-        tag.putString(Constants.CHEMICAL_TAG, chemical != null
+        stack.getOrCreateTag().putString(Constants.CHEMICAL_TAG, chemical != null
                 ? String.format("%s:%s", chemical.getClass().getModule().getName(), chemical.asItem())
                 : "");
         stack.save(tag);
@@ -111,7 +83,6 @@ public class AmmunitionStorage implements IAmmunitionCapability, INBTSerializabl
 
     private void setShotsTag() {
         CompoundTag tag = stack.getOrCreateTag();
-        tag.remove(Constants.SHOTS_AVAILABLE_TAG);
         tag.putInt(Constants.SHOTS_AVAILABLE_TAG, shotsAvailable);
         stack.save(tag);
     }
@@ -122,23 +93,19 @@ public class AmmunitionStorage implements IAmmunitionCapability, INBTSerializabl
         pTag.putString(Constants.CHEMICAL_TAG, chemical != null
                 ? String.format("%s:%s", chemical.getClass().getModule().getName(), chemical.asItem())
                 : "");
-        pTag.putString(Constants.POTION_TAG, potionKey);
         pTag.putInt(Constants.SHOTS_AVAILABLE_TAG, shotsAvailable);
         return pTag;
     }
 
     @Override
-    public void deserializeNBT(CompoundTag pTag) {
-        this.chemical = (pTag.contains(Constants.CHEMICAL_TAG)
-                && !Objects.requireNonNull(pTag.get(Constants.CHEMICAL_TAG)).getAsString().equals(""))
-                ? (Chemical) ForgeRegistries.ITEMS.getValue(new ResourceLocation(pTag.getString(Constants.CHEMICAL_TAG)))
+    public void deserializeNBT(CompoundTag nbt) {
+        this.chemical = (nbt.contains(Constants.CHEMICAL_TAG)
+                && !Objects.requireNonNull(nbt.get(Constants.CHEMICAL_TAG)).getAsString().equals(""))
+                ? (Chemical) ForgeRegistries.ITEMS.getValue(new ResourceLocation(nbt.getString(Constants.CHEMICAL_TAG)))
                 : null;
-        this.potionKey = (pTag.contains(Constants.POTION_TAG))
-                ? pTag.getString(Constants.POTION_TAG)
-                : "";
-        this.shotsAvailable = (pTag.contains(Constants.SHOTS_AVAILABLE_TAG)
-                && !Objects.requireNonNull(pTag.get(Constants.SHOTS_AVAILABLE_TAG)).getAsString().equals(""))
-                ? pTag.getInt(Constants.SHOTS_AVAILABLE_TAG)
+        this.shotsAvailable = (nbt.contains(Constants.SHOTS_AVAILABLE_TAG)
+                && !Objects.requireNonNull(nbt.get(Constants.SHOTS_AVAILABLE_TAG)).getAsString().equals(""))
+                ? nbt.getInt(Constants.SHOTS_AVAILABLE_TAG)
                 : 0;
     }
 }

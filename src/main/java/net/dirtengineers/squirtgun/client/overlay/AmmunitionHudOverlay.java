@@ -12,8 +12,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
-import java.util.Objects;
-
 public class AmmunitionHudOverlay {
 
     private static int fadeTicks = 0;
@@ -39,21 +37,16 @@ public class AmmunitionHudOverlay {
             int y = 15;
             Font font = gui.getFont();
             Player player = Minecraft.getInstance().player;
-            if (player != null) {
+            if(player != null){
                 ItemStack pStack = player.getItemInHand(player.getUsedItemHand());
-
-                if (pStack.getItem() instanceof SquirtgunItem) {
+                if(pStack.getItem() instanceof SquirtgunItem) {
                     IAmmunitionCapability ammunitionHandler = pStack.getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO, null).orElse(null);
-
-                    Component ammoName = TextUtility.getFriendlyChemicalName(ammunitionHandler.getChemical());
-                    if (!Objects.equals(ammunitionHandler.getPotionKey(), "")) {
-                        ammoName = TextUtility.getFriendlyPotionName(ammunitionHandler.getPotionKey());
-                    }
-                    TextUtility.drawCenteredStringNoShadow(poseStack, font, ammoName, x, y - font.lineHeight);
-//                    if (ammunitionHandler.getChemical() != null) {
+                    Component chemicalName = TextUtility.getFriendlyChemicalName(ammunitionHandler.getChemical());
+                    TextUtility.drawCenteredStringNoShadow(poseStack, font, chemicalName, x, y - font.lineHeight);
+                    if(ammunitionHandler.getChemical() != null) {
                         Component status = Component.literal(ammunitionHandler.getAmmoStatus()).withStyle(Constants.HOVER_TEXT_STYLE);
                         TextUtility.drawCenteredStringNoShadow(poseStack, font, status, x, y);
-//                    }
+                    }
                 }
             }
         }

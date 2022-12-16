@@ -1,22 +1,8 @@
 package net.dirtengineers.squirtgun.common.item;
 
-import com.google.common.collect.Lists;
-import com.mojang.datafixers.util.Pair;
 import com.smashingmods.chemlib.api.Chemical;
 import net.dirtengineers.squirtgun.Constants;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffectUtil;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-
-import java.util.List;
-import java.util.Map;
 
 public abstract class BasePhial extends Item {
 
@@ -26,9 +12,7 @@ public abstract class BasePhial extends Item {
         TRIPLESHOTS
     }
 
-    private static final Component NO_EFFECT = Component.translatable("effect.none").withStyle(ChatFormatting.GRAY);
-    Chemical chemical = null;
-    String potionLocation = null;
+    Chemical chemical;
     CAPACITY_UPGRADE capacityUpgrade;
     int shotsAvailable;
     int maxShots;
@@ -36,6 +20,7 @@ public abstract class BasePhial extends Item {
 
     public BasePhial(Properties pProperties) {
         super(pProperties);
+        chemical = null;
         capacityUpgrade = CAPACITY_UPGRADE.BASE;
     }
 
@@ -66,57 +51,5 @@ public abstract class BasePhial extends Item {
 
     public Chemical getChemical() {
         return chemical;
-    }
-
-    public String getPotionLocation() {
-        return potionLocation;
-    }
-
-    public void addEffectsToTooltip(List<Component> pTooltips) {}
-
-    protected void addTooltipEffects(List<MobEffectInstance> pEffects, List<Component> pTooltips) {
-        List<Pair<Attribute, AttributeModifier>> list1 = Lists.newArrayList();
-        if (pEffects.isEmpty()) {
-            pTooltips.add(NO_EFFECT);
-        } else {
-            for(MobEffectInstance mobeffectinstance : pEffects) {
-                MutableComponent mutablecomponent = Component.translatable(mobeffectinstance.getDescriptionId());
-                MobEffect mobeffect = mobeffectinstance.getEffect();
-                Map<Attribute, AttributeModifier> map = mobeffect.getAttributeModifiers();
-                if (!map.isEmpty()) {
-                    for(Map.Entry<Attribute, AttributeModifier> entry : map.entrySet()) {
-                        AttributeModifier attributemodifier = entry.getValue();
-                        AttributeModifier attributemodifier1 = new AttributeModifier(attributemodifier.getName(), mobeffect.getAttributeModifierValue(mobeffectinstance.getAmplifier(), attributemodifier), attributemodifier.getOperation());
-                        list1.add(new Pair<>(entry.getKey(), attributemodifier1));
-                    }
-                }
-                if (mobeffectinstance.getAmplifier() > 0) {
-                    mutablecomponent = Component.translatable("potion.withAmplifier", mutablecomponent, Component.translatable("potion.potency." + mobeffectinstance.getAmplifier()));
-                }
-                if (mobeffectinstance.getDuration() > 20) {
-                    mutablecomponent = Component.translatable("potion.withDuration", mutablecomponent, MobEffectUtil.formatDuration(mobeffectinstance, 1.0F));
-                }
-                pTooltips.add(mutablecomponent.withStyle(mobeffect.getCategory().getTooltipFormatting()));
-            }
-        }
-
-        if (!list1.isEmpty()) {
-            for(Pair<Attribute, AttributeModifier> pair : list1) {
-                AttributeModifier attributemodifier2 = pair.getSecond();
-                double d0 = attributemodifier2.getAmount();
-                double d1;
-                if (attributemodifier2.getOperation() != AttributeModifier.Operation.MULTIPLY_BASE && attributemodifier2.getOperation() != AttributeModifier.Operation.MULTIPLY_TOTAL) {
-                    d1 = attributemodifier2.getAmount();
-                } else {
-                    d1 = attributemodifier2.getAmount() * 100.0D;
-                }
-                if (d0 > 0.0D) {
-                    pTooltips.add(Component.translatable("attribute.modifier.plus." + attributemodifier2.getOperation().toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d1), Component.translatable(pair.getFirst().getDescriptionId())).withStyle(ChatFormatting.BLUE));
-                } else if (d0 < 0.0D) {
-                    d1 *= -1.0D;
-                    pTooltips.add(Component.translatable("attribute.modifier.take." + attributemodifier2.getOperation().toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d1), Component.translatable(pair.getFirst().getDescriptionId())).withStyle(ChatFormatting.RED));
-                }
-            }
-        }
     }
 }

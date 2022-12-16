@@ -1,6 +1,5 @@
 package net.dirtengineers.squirtgun.common.network;
 
-import com.smashingmods.alchemylib.api.network.AlchemyPacket;
 import net.dirtengineers.squirtgun.Constants;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
@@ -8,8 +7,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.Objects;
+import java.util.function.Supplier;
 
-public class InventoryInsertC2SPacket implements AlchemyPacket {
+public class InventoryInsertC2SPacket {
     int inventorySlot;
     ItemStack insertStack;
 
@@ -28,31 +28,18 @@ public class InventoryInsertC2SPacket implements AlchemyPacket {
         pBuffer.writeItem(this.insertStack);
     }
 
-    @Override
-    public void handle(NetworkEvent.Context pContext) {
-        Player player = pContext.getSender();
-        Objects.requireNonNull(player);
-        if(inventorySlot == Constants.OFF_HAND_INDEX){
-            player.getInventory().offhand.add(insertStack);
-        } else if(inventorySlot == Constants.DROP_ITEM_INDEX){
-            player.drop(insertStack, false);
-        } else {
-            player.getInventory().add(inventorySlot, insertStack);
-        }
+    public static void handle(InventoryInsertC2SPacket pPacket, Supplier<NetworkEvent.Context> pContext) {
+        pContext.get().enqueueWork(() -> {
+            Player player = pContext.get().getSender();
+            Objects.requireNonNull(player);
+            if(pPacket.inventorySlot == Constants.OFF_HAND_INDEX){
+                player.getInventory().offhand.add(pPacket.insertStack);
+            } else if(pPacket.inventorySlot == Constants.DROP_ITEM_INDEX){
+                player.drop(pPacket.insertStack, false);
+            } else {
+                player.getInventory().add(pPacket.inventorySlot, pPacket.insertStack);
+            }
+        });
+        pContext.get().setPacketHandled(true);
     }
-
-//    public static void handle(InventoryInsertC2SPacket pPacket, Supplier<NetworkEvent.Context> pContext) {
-//        pContext.get().enqueueWork(() -> {
-//            Player player = pContext.get().getSender();
-//            Objects.requireNonNull(player);
-//            if(pPacket.inventorySlot == Constants.OFF_HAND_INDEX){
-//                player.getInventory().offhand.add(pPacket.insertStack);
-//            } else if(pPacket.inventorySlot == Constants.DROP_ITEM_INDEX){
-//                player.drop(pPacket.insertStack, false);
-//            } else {
-//                player.getInventory().add(pPacket.inventorySlot, pPacket.insertStack);
-//            }
-//        });
-//        pContext.get().setPacketHandled(true);
-//    }
 }

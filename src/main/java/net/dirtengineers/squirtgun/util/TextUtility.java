@@ -70,14 +70,6 @@ public class TextUtility {
                 .withStyle(Constants.HOVER_TEXT_STYLE);
     }
 
-    public static Component getFriendlyPotionName(String pPotionKey) {
-        return MutableComponent.create(
-                        new TranslatableContents(!Objects.equals(pPotionKey, "") ?
-                                pPotionKey
-                                : Constants.emptyFluidNameKey))
-                .withStyle(Constants.HOVER_TEXT_STYLE);
-    }
-
     public static boolean isEmptyFluid(Optional<Fluid> pFluid) {
         if (pFluid.isEmpty()) return true;
         return Objects.equals(pFluid.get().getFluidType().toString(), Constants.EMPTY_FLUID_NAME);

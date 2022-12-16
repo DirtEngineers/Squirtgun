@@ -30,7 +30,10 @@ Consider honey
 API-fying chemlib to load custom JSON for chemicals/fluids
 Hydrocarbons make target explode if on fire
 
+
+
 Look into custom mob effects for fluids
+
 
 https://maven.tamaized.com/#/releases/smashingmods/alchemylib
 
@@ -47,27 +50,24 @@ Write a description for the mod page.
 
 Adjust mob effects for fluids.
 
+Timbr:just make sure you're using forge tags in all the recipes and it'll automatically be compatible with mods that add alloying machines
+
+Investigate quartz-type glass in other mods                                         PENDING
+Investigate brass nuggets/ingots/blocks in other mods                               PENDING
+
 pachouli book entry
 
 !!--- API-ify chemlib
 One step would be to allow outside access to create/register compounds like a helper function to pass in the json.
-Do not allow duplicate paths
-Add the effects tooltip stuff based upon Potion tooltips
-RecipeSelectorScreen private void renderCurrentRecipe(PoseStack pPoseStack, int pMouseX, int pMouseY) remove input stack condition
 
+DESCRIPTION:
+Ever want to shoot your friends with various hazardous materials? Well, now you can!
 
---Lock button on menu screen not working correctly
---Item in encapsulator screen allows only one input slot to render in recipe selection screen -- by design, but why?
---Update recipe not working
-Can't set alpha on potion in recipe screen
+SquirtGun is an addon for ChemLib.
 
-reload screen thinks that you have initial phial all the time.
-also need to check inventory check
---set reload screen open to shift + left-click
+Approval requires a valid name, description, mod image, and upload.
+The mod image should be a picture of the squirt gun on some colored background.
 
---Make ammo not decrease in creative mode  done
---set base damage to 0.25
-
---Add ability to see phial effects
-
-Alchemylib -> AbstractFluidBlockEntity::isRecipeLocked() needs to change or be deleted.
+Description:
+Ever want to shoot your friends with various hazardous materials?  How about hosing down mobs with some nitric acid?  Well, now you can!
+Squirt Gun fire slugs of fluids from Chemlib like nitric acid for instant damage and blindness or ethanol for poison and confusion.
