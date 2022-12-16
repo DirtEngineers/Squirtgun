@@ -38,8 +38,7 @@ public class ClientForgeEventHandler {
     @SubscribeEvent
     public static void onKeyInput(InputEvent.Key event) {
 
-        Minecraft mineCraft = Minecraft.getInstance();
-        Player player = mineCraft.player;
+        Player player = Minecraft.getInstance().player;
         if (player != null) {
             if (Keybinds.shiftClickGuiBinding.consumeClick() && Minecraft.getInstance().screen == null) {
                 ItemStack gun = SquirtgunItem.getPlayerGun(Minecraft.getInstance().player);
