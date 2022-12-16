@@ -40,13 +40,12 @@ public class ClientForgeEventHandler {
 
         Player player = Minecraft.getInstance().player;
         if (player != null) {
-            if (Keybinds.shiftClickGuiBinding.consumeClick() && Minecraft.getInstance().screen == null) {
-                ItemStack gun = SquirtgunItem.getPlayerGun(Minecraft.getInstance().player);
-                if (!gun.isEmpty()) {
-                    ModScreens.openGunSettingsScreen();
-                }
+            boolean hasSquirtGun = player.getItemInHand(player.getUsedItemHand()).getItem() instanceof SquirtgunItem;
+
+            if (Keybinds.SQUIRTGUN_MENU.consumeClick() && Minecraft.getInstance().screen == null && hasSquirtGun) {
+                ModScreens.openGunSettingsScreen();
             }
-            if (GUN_AMMO_STATUS_DISPLAY_KEY.consumeClick() && player.getItemInHand(player.getUsedItemHand()).getItem() instanceof SquirtgunItem) {
+            if (GUN_AMMO_STATUS_DISPLAY_KEY.consumeClick() && hasSquirtGun) {
                 if(AmmunitionHudOverlay.displaySetting == Constants.HUD_DISPLAY_SETTING.ON) {
                     AmmunitionHudOverlay.resetFadeTicks();
                     AmmunitionHudOverlay.displaySetting = Constants.HUD_DISPLAY_SETTING.FADE;
