@@ -45,7 +45,6 @@ public class SquirtgunReloadScreen extends Screen {
     int bgWidth;
     private int bgLeft;
     int bgTop;
-    private final int titleOffsetY = 8;
     private final int topRowOffsetY = 30;
     private final int phialTableOffsetY = topRowOffsetY + buttonSize * 2;
     private int phialTableBottom;
@@ -64,6 +63,8 @@ public class SquirtgunReloadScreen extends Screen {
 
     @Override
     protected void init() {
+        super.init();
+
         if (player != null) {
             offhandLocationIndex = player.getInventory().items.size() + 1;
         }
@@ -101,6 +102,7 @@ public class SquirtgunReloadScreen extends Screen {
         renderBackground(pPoseStack);
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
 
+        int titleOffsetY = 8;
         drawCenteredString(
                 pPoseStack
                 , Minecraft.getInstance().font
