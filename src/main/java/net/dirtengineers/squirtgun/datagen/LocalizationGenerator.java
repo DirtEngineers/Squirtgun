@@ -49,12 +49,12 @@ public class LocalizationGenerator extends LanguageProvider {
         this.add("key.category.squirtgun", "Squirtgun");
         this.add("key.squirtgun.gun_ammo_load", "Load Ammunition");
         this.add("key.squirtgun.gun_display_ammo_status", "Toggle Ammunition Status Display");
+        this.add("squirtgun.text.gui_menu", "Open Squirtgun Menu");
 
         this.add("item.squirtgun.gun_functionality", "Squirtgun reload/settings");
         this.add("fluid.squirtgun.empty_fluid_name", "EMPTY");
         this.add("tooltip.squirtgun.energy_requirement", "Requires %d FE/t");
         this.add(Constants.encapsulatorMenuScreenTitle, "Dr. Clark's Fluid Encapsulation Matrix");
-        this.add(Constants.openGunGui, "Open Squirtgun Settings");
         this.add(Constants.reloadScreenCurrentAmmunition, "Current Ammunition: ");
         this.add(Constants.reloadScreenInventoryWarning, "No room in inventory for ");
         this.add(Constants.gunGuiPhialIsLoaded, "Loaded");
