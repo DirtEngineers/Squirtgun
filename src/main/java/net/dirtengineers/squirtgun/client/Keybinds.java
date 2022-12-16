@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.dirtengineers.squirtgun.Constants;
 import net.minecraft.client.KeyMapping;
 import net.minecraftforge.client.settings.KeyConflictContext;
+import net.minecraftforge.client.settings.KeyModifier;
 import org.lwjgl.glfw.GLFW;
 
 public class Keybinds {
@@ -16,7 +17,10 @@ public class Keybinds {
                     , Constants.KEY_CATEGORY_MOD);
 
     public static final KeyMapping shiftClickGuiBinding =
-            new KeyMapping(Constants.openGunGui,
-                    InputConstants.UNKNOWN.getValue(),
-                    Constants.squirtgunItemGroup);
+            new KeyMapping(Constants.openGunGui
+                    , KeyConflictContext.IN_GAME
+                    , KeyModifier.SHIFT
+                    , InputConstants.Type.MOUSE
+                    , InputConstants.MOUSE_BUTTON_LEFT
+                    , Constants.KEY_CATEGORY_MOD);
 }

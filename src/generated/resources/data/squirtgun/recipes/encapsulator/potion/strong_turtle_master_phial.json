@@ -1,5 +1,5 @@
 {
-  "type": "squirtgun:potion_phial_creation_serializer",
+  "type": "squirtgun:potion_phial_serializer",
   "group": "squirtgun:encapsulator",
   "input1": {
     "item": "squirtgun:phial"
@@ -7,7 +7,10 @@
   "input2": {
     "potion": "minecraft:strong_turtle_master"
   },
-  "result": {
+  "output1": {
     "item": "squirtgun:strong_turtle_master_phial"
+  },
+  "output2": {
+    "item": "minecraft:glass_bottle"
   }
 }

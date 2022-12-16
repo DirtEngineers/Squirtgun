@@ -12,6 +12,8 @@ public interface IAmmunitionCapability {
     void decrementShots();
     Chemical getChemical();
     void setChemical(Chemical pChemical);
+    String getPotionKey();
+    void setPotionKey(String pKey);
     boolean isChemicalValid(Chemical chemical);
     String getAmmoStatus();
 }

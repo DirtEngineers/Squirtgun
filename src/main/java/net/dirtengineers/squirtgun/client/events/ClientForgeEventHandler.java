@@ -8,7 +8,6 @@ import net.dirtengineers.squirtgun.client.screens.ModScreens;
 import net.dirtengineers.squirtgun.common.item.SquirtgunItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ComputeFovModifierEvent;
 import net.minecraftforge.client.event.InputEvent;
@@ -37,15 +36,11 @@ public class ClientForgeEventHandler {
 
     @SubscribeEvent
     public static void onKeyInput(InputEvent.Key event) {
-
         Minecraft mineCraft = Minecraft.getInstance();
         Player player = mineCraft.player;
         if (player != null) {
-            if (Keybinds.shiftClickGuiBinding.consumeClick() && Minecraft.getInstance().screen == null) {
-                ItemStack gun = SquirtgunItem.getPlayerGun(Minecraft.getInstance().player);
-                if (!gun.isEmpty()) {
-                    ModScreens.openGunSettingsScreen();
-                }
+            if (Keybinds.shiftClickGuiBinding.consumeClick() && player.getItemInHand(player.getUsedItemHand()).getItem() instanceof SquirtgunItem && Minecraft.getInstance().screen == null) {
+                ModScreens.openGunSettingsScreen();
             }
             if (GUN_AMMO_STATUS_DISPLAY_KEY.consumeClick() && player.getItemInHand(player.getUsedItemHand()).getItem() instanceof SquirtgunItem) {
                 if(AmmunitionHudOverlay.displaySetting == Constants.HUD_DISPLAY_SETTING.ON) {

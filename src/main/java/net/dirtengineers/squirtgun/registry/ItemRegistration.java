@@ -4,14 +4,16 @@ import com.smashingmods.chemlib.api.Chemical;
 import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.common.item.*;
-import net.dirtengineers.squirtgun.common.item.components.PhialCapItem;
 import net.dirtengineers.squirtgun.common.item.components.Actuator;
+import net.dirtengineers.squirtgun.common.item.components.PhialCapItem;
 import net.dirtengineers.squirtgun.common.item.materials.BrassBlendItem;
 import net.dirtengineers.squirtgun.common.item.materials.BrassIngotItem;
 import net.dirtengineers.squirtgun.common.item.materials.BrassNuggetItem;
 import net.dirtengineers.squirtgun.common.item.materials.FusedQuartzShard;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -29,7 +31,7 @@ import static com.smashingmods.chemlib.registry.ItemRegistry.getElements;
 
 
 public class ItemRegistration {
-    public static final CreativeModeTab SQUIRTGUN_TAB = new CreativeModeTab(Constants.squirtgunTabName) {
+    public static final CreativeModeTab SQUIRTGUN_TAB = new CreativeModeTab("squirtguntab") {
         public ItemStack makeIcon() {
             return new ItemStack(SQUIRTGUN.get());
         }
@@ -53,9 +55,10 @@ public class ItemRegistration {
     public static final RegistryObject<Item> GUN_ACTUATOR;
 
     //Collections
-    public static Map<ChemicalPhial, Chemical> PHIALS;
     public static Map<Chemical, Fluid> CHEMICAL_FLUIDS;
     public static List<Chemical> ammunitionChemicals;
+    public static List<ChemicalPhial> CHEMICAL_PHIALS;
+    public static List<PotionPhial> POTION_PHIALS;
 
     public static void buildChemical_Fluids() {
         for (Chemical chemical : ItemRegistration.ammunitionChemicals)
@@ -97,7 +100,22 @@ public class ItemRegistration {
                     ForgeRegistries.Keys.ITEMS,
                     phialLocation,
                     () -> new ChemicalPhial(chemical, BasePhial.CAPACITY_UPGRADE.BASE));
-            PHIALS.put((ChemicalPhial) ForgeRegistries.ITEMS.getValue(phialLocation), chemical);
+            CHEMICAL_PHIALS.add((ChemicalPhial) ForgeRegistries.ITEMS.getValue(phialLocation));
+        }
+
+        for(Map.Entry<ResourceKey<Potion>, Potion> potion : ForgeRegistries.POTIONS.getEntries().stream().toList()) {
+            if (potion.getValue().getEffects().size() != 0) {
+                phialLocation =
+                        new ResourceLocation(
+                                Squirtgun.MOD_ID,
+                                String.format("%s_phial", potion.getKey().location().getPath()));
+
+                pEvent.register(
+                        ForgeRegistries.Keys.ITEMS,
+                        phialLocation,
+                        () -> new PotionPhial(potion.getKey().location().toString(), BasePhial.CAPACITY_UPGRADE.BASE));
+                POTION_PHIALS.add((PotionPhial) ForgeRegistries.ITEMS.getValue(phialLocation));
+            }
         }
     }
 
@@ -125,7 +143,8 @@ public class ItemRegistration {
         FUSED_QUARTZ_SHARD = ITEMS.register(Constants.quartzShardItemName, () -> new FusedQuartzShard(ITEM_PROPERTIES_WITH_TAB));
         GUN_ACTUATOR = ITEMS.register(Constants.actuatorItemName, () -> new Actuator(ITEM_PROPERTIES_WITH_TAB));
 
-        PHIALS = new HashMap<>();
+        CHEMICAL_PHIALS = new ArrayList<>();
+        POTION_PHIALS = new ArrayList<>();
         CHEMICAL_FLUIDS = new HashMap<>();
         ammunitionChemicals = new ArrayList<>();
     }

@@ -1,6 +1,5 @@
 package net.dirtengineers.squirtgun.common.block;
 
-import com.smashingmods.alchemylib.api.block.AbstractProcessingBlock;
 import net.dirtengineers.squirtgun.Config;
 import net.dirtengineers.squirtgun.Constants;
 import net.minecraft.core.BlockPos;
@@ -30,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class EncapsulatorBlock extends AbstractProcessingBlock {
+public class EncapsulatorBlock extends AbstractMachineBlock {
     public static final VoxelShape base = Block.box(0.0, 0.0, 0.0, 16.0, 1.0, 16.0);
     public static final VoxelShape rest = Block.box(2.0, 1.0, 2.0, 14.0, 16.0, 14.0);
     public static final VoxelShape SHAPE;
@@ -40,11 +39,13 @@ public class EncapsulatorBlock extends AbstractProcessingBlock {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public VoxelShape getOcclusionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
         return SHAPE;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return SHAPE;
     }
@@ -56,6 +57,7 @@ public class EncapsulatorBlock extends AbstractProcessingBlock {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (!pLevel.isClientSide()) {
             BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
