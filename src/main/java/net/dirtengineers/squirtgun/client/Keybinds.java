@@ -15,8 +15,12 @@ public class Keybinds {
                     , GLFW.GLFW_KEY_Y
                     , Constants.KEY_CATEGORY_MOD);
 
-    public static final KeyMapping shiftClickGuiBinding =
-            new KeyMapping(Constants.openGunGui,
-                    InputConstants.UNKNOWN.getValue(),
-                    Constants.squirtgunItemGroup);
+    public static final KeyMapping SQUIRTGUN_MENU =
+            new KeyMapping(
+                    Constants.KEY_SQUIRTGUN_MENU,
+                    KeyConflictContext.IN_GAME,
+                    InputConstants.Type.KEYSYM,
+                    GLFW.GLFW_KEY_LEFT_SHIFT,
+                    Constants.KEY_CATEGORY_MOD
+            );
 }
