@@ -11,11 +11,13 @@ import net.dirtengineers.squirtgun.common.item.BasePhial;
 import net.dirtengineers.squirtgun.common.item.ChemicalPhial;
 import net.dirtengineers.squirtgun.common.item.EmptyPhialItem;
 import net.dirtengineers.squirtgun.common.item.SquirtgunItem;
+import net.dirtengineers.squirtgun.common.network.GetReloadPhialsListC2SPacket;
 import net.dirtengineers.squirtgun.common.network.InventoryInsertC2SPacket;
 import net.dirtengineers.squirtgun.common.network.InventoryRemoveC2SPacket;
 import net.dirtengineers.squirtgun.common.network.SquirtgunPacketHandler;
 import net.dirtengineers.squirtgun.registry.ItemRegistration;
 import net.dirtengineers.squirtgun.registry.SoundEventRegistration;
+import net.dirtengineers.squirtgun.util.ReloadScreenHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -49,10 +51,7 @@ public class SquirtgunReloadScreen extends Screen {
     private final int phialTableOffsetY = topRowOffsetY + buttonSize * 2;
     private int phialTableBottom;
     int destinationSlot = Constants.DROP_ITEM_INDEX;
-    int offhandLocationIndex = -1;
     ActionButton actionButton;
-    private final LinkedList<ItemStack> phials = new LinkedList<>();
-    private ItemStack phialSwapStack = ItemStack.EMPTY;
     private static final Player player = Minecraft.getInstance().player;
     boolean phialSelected;
 
@@ -66,10 +65,11 @@ public class SquirtgunReloadScreen extends Screen {
         super.init();
 
         if (player != null) {
-            offhandLocationIndex = player.getInventory().items.size() + 1;
+            ReloadScreenHelper.offhandLocationIndex = player.getInventory().items.size() + 1;
         }
         centerX = width / 2;
-        populatePhialsList();
+        // Send GetReloadPhialsListC2SPacket to server to get the updated list of phials
+        SquirtgunPacketHandler.sendToServer(new GetReloadPhialsListC2SPacket());
         calculateBGSizeAndPosition();
         UpdateLayout();
         phialSelected = false;
@@ -77,8 +77,8 @@ public class SquirtgunReloadScreen extends Screen {
 
     private void calculateBGSizeAndPosition() {
         bgHeight = phialTableOffsetY;
-        int rows = phials.size() / maxButtonColumns;
-        if (phials.size() % maxButtonColumns != 0) {
+        int rows = ReloadScreenHelper.phials.size() / maxButtonColumns;
+        if (ReloadScreenHelper.phials.size() % maxButtonColumns != 0) {
             rows++;
         }
         bgHeight += (positionShift * (rows + 1)) + 16;
@@ -151,51 +151,17 @@ public class SquirtgunReloadScreen extends Screen {
     @Override
     public void onClose() {
         if (player != null && phialSelected) {
-            ItemStack removeStack = phialSwapStack.copy();// phial to remove from inventory
-            ItemStack insertStack = SquirtgunItem.loadNewPhial(player, phialSwapStack);
+            ItemStack removeStack = ReloadScreenHelper.phialSwapStack.copy();// phial to remove from inventory
+            ItemStack insertStack = SquirtgunItem.loadNewPhial(player, ReloadScreenHelper.phialSwapStack);
             if (insertStack.getItem() instanceof EmptyPhialItem) {
                 setInventorySlotForPlacement();
                 SquirtgunPacketHandler.sendToServer(new InventoryInsertC2SPacket(destinationSlot, insertStack));
-                destinationSlot = removeStack.getCount() == offhandLocationIndex ? Constants.OFF_HAND_INDEX : removeStack.getCount();
+                destinationSlot = removeStack.getCount() == ReloadScreenHelper.offhandLocationIndex ? Constants.OFF_HAND_INDEX : removeStack.getCount();
                 SquirtgunPacketHandler.sendToServer(new InventoryRemoveC2SPacket(destinationSlot, removeStack));//PHIAL_SWAP
                 player.playSound(SoundEventRegistration.PHIAL_SWAP.get());
             }
         }
         super.onClose();
-    }
-
-    private void populatePhialsList() {
-        if (player != null) {
-            phials.clear();
-            for (int pSlot = 0; pSlot < player.getInventory().items.size(); pSlot++) {
-                if (player.getInventory().items.get(pSlot).getItem() instanceof ChemicalPhial) {
-                    ItemStack tempStack = player.getInventory().items.get(pSlot).copy();
-                    tempStack.setCount(pSlot);
-                    addToPhials(tempStack);
-                }
-            }
-            if (player.getInventory().offhand.get(0).getItem() instanceof ChemicalPhial) {
-                ItemStack tempStack = player.getInventory().offhand.get(0).copy();
-                tempStack.setCount(offhandLocationIndex);
-                addToPhials(tempStack);
-            }
-            //Get from gun
-            Optional<BasePhial> phialOptional = Optional.of((BasePhial) Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(ItemRegistration.PHIAL.getId())));
-            IAmmunitionCapability ammunitionHandler = player.getItemInHand(player.getUsedItemHand()).getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO).orElse(null);
-            if (ammunitionHandler.getChemical() != null) {
-                phialOptional = ItemRegistration.PHIALS
-                        .entrySet()
-                        .stream()
-                        .filter(entry -> ammunitionHandler.getChemical().equals(entry.getValue()))
-                        .findFirst()
-                        .map(Map.Entry::getKey);
-            }
-            phialSwapStack = phialOptional.map(
-                            chemicalPhial -> new ItemStack(chemicalPhial, 1))
-                    .orElseGet(() -> new ItemStack(ForgeRegistries.ITEMS.getValue(ItemRegistration.PHIAL.getId()), 1));
-
-            phials.sort(new ItemStackComparator());
-        }
     }
 
     private void fillPhialTable() {
@@ -204,7 +170,7 @@ public class SquirtgunReloadScreen extends Screen {
         int xPos = centerX - calculateLeftOffset();
         int yPos = bgTop + phialTableOffsetY;
 
-        for (ItemStack phial : phials) {
+        for (ItemStack phial : ReloadScreenHelper.phials) {
             addRenderableWidget(makePhialButton(
                     phial
                     , false
@@ -213,7 +179,7 @@ public class SquirtgunReloadScreen extends Screen {
 
             // Spaces the buttons
             buttonsInRow++;
-            if (buttonsInRow == maxButtonColumns && (buttonRows + 1) * maxButtonColumns != phials.size()) {
+            if (buttonsInRow == maxButtonColumns && (buttonRows + 1) * maxButtonColumns != ReloadScreenHelper.phials.size()) {
                 buttonsInRow = 0;
                 buttonRows++;
                 yPos += positionShift + 1;
@@ -224,7 +190,7 @@ public class SquirtgunReloadScreen extends Screen {
 
     private void makeSwapStackButton() {
         PhialReloadScreenButton btn = makePhialButton(
-                phialSwapStack
+                ReloadScreenHelper.phialSwapStack
                 , true
                 , centerX - positionShift / 2
                 , bgTop + topRowOffsetY);
@@ -232,19 +198,21 @@ public class SquirtgunReloadScreen extends Screen {
     }
 
     private int calculateLeftOffset() {
-        int buttonColumns = Math.min(phials.size(), maxButtonColumns);
+        int buttonColumns = Math.min(ReloadScreenHelper.phials.size(), maxButtonColumns);
         return (int) (positionShift * (buttonColumns * 0.5));
     }
 
     private PhialReloadScreenButton makePhialButton(ItemStack pPhialStack, boolean isSwapStack, int pX, int pY) {
-        boolean isSameAsSwapStack = ItemStackComparator.getItemPath(pPhialStack).compareToIgnoreCase(ItemStackComparator.getItemPath(phialSwapStack)) == 0;
+        boolean isSameAsSwapStack = ReloadScreenHelper.ItemStackComparator.getItemPath(pPhialStack)
+                .compareToIgnoreCase(ReloadScreenHelper.ItemStackComparator.getItemPath(ReloadScreenHelper.phialSwapStack)) == 0;
         PhialReloadScreenButton btn = new PhialReloadScreenButton(
                 pX
                 , pY
                 , buttonSize
                 , buttonSize
                 , MutableComponent.create(new TranslatableContents(pPhialStack.getItem().getDescriptionId())).withStyle(Style.EMPTY.withFont(Style.DEFAULT_FONT))
-                , pButton -> this.swapPhials((PhialReloadScreenButton) pButton));
+                , pButton -> this.swapPhials((PhialReloadScreenButton) pButton)
+        );
         btn.setTargetStack(pPhialStack);
         btn.active = !isSwapStack;
         btn.setDisplayLoadedMessage(isSameAsSwapStack && !isSwapStack);
@@ -280,7 +248,7 @@ public class SquirtgunReloadScreen extends Screen {
     private void swapPhials(PhialReloadScreenButton pButton) {
         if (pButton.getTargetStack() != null && player != null) {
             if (pButton.getTargetStack().getItem() instanceof ChemicalPhial) {
-                phialSwapStack = pButton.getTargetStack().copy();
+                ReloadScreenHelper.phialSwapStack = pButton.getTargetStack().copy();
                 phialSelected = true;
                 UpdateLayout();
             }
@@ -299,7 +267,7 @@ public class SquirtgunReloadScreen extends Screen {
             }
         }
         // no appropriate stacks in inventory
-        // Any empties NOT in the hotbar?
+        // Any empties NOT in the hot bar?
         if (destinationSlot == Constants.DROP_ITEM_INDEX) {
             for (int slotNumber = 9; slotNumber < player.getInventory().items.size(); ++slotNumber) {
                 if (player.getInventory().items.get(slotNumber).isEmpty()) {
@@ -308,7 +276,7 @@ public class SquirtgunReloadScreen extends Screen {
                 }
             }
         }
-        // Hotbar, then?
+        // Hot-bar, then?
         if (destinationSlot == Constants.DROP_ITEM_INDEX) {
             for (int slotNumber = 0; slotNumber < 8; ++slotNumber) {
                 if (player.getInventory().items.get(slotNumber).isEmpty()) {
@@ -317,37 +285,13 @@ public class SquirtgunReloadScreen extends Screen {
                 }
             }
         }
-        //Off hand perhaps?
+        //Offhand perhaps?
         if (destinationSlot == Constants.DROP_ITEM_INDEX) {
             destinationSlot = player.getInventory().offhand.get(0).isEmpty() ? Constants.OFF_HAND_INDEX : Constants.DROP_ITEM_INDEX;
         }
     }
 
-    private void addToPhials(ItemStack pStack) {
-        if (phialsGetStackIndex(pStack) < 0) {
-            phials.add(pStack);
-        }
-    }
 
-    private int phialsGetStackIndex(ItemStack pStack) {
-        for (ItemStack phial : phials) {
-            if (ForgeRegistries.ITEMS.getResourceKey(phial.getItem()).equals(ForgeRegistries.ITEMS.getResourceKey(pStack.getItem()))) {
-                return phials.indexOf(phial);
-            }
-        }
-        return -1;
-    }
 
-    static class ItemStackComparator implements Comparator<ItemStack> {
 
-        @Override
-        public int compare(ItemStack itemStack1, ItemStack itemStack2) {
-            return Integer.compare(getItemPath(itemStack1).compareToIgnoreCase(getItemPath(itemStack2)), 0);
-        }
-
-        public static String getItemPath(ItemStack pStack) {
-            ResourceKey<Item> key = ForgeRegistries.ITEMS.getResourceKey(pStack.getItem()).orElse(null);
-            return key != null ? key.location().getPath() : "";
-        }
-    }
 }
