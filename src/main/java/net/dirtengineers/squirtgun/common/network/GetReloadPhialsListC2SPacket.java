@@ -27,6 +27,7 @@ public class GetReloadPhialsListC2SPacket extends ReloadScreenHelper {
 
     public static void handle(Supplier<NetworkEvent.Context> pContext) {
         pContext.get().enqueueWork(() -> {
+            phials.clear();
             ServerPlayer player = pContext.get().getSender();
             Objects.requireNonNull(player);
 
