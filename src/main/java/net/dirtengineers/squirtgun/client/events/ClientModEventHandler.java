@@ -23,8 +23,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import java.util.Map;
 import java.util.Objects;
 
-import static net.dirtengineers.squirtgun.client.Keybinds.GUN_AMMO_STATUS_DISPLAY_KEY;
-import static net.dirtengineers.squirtgun.client.Keybinds.shiftClickGuiBinding;
+import static net.dirtengineers.squirtgun.client.Keybinds.*;
 
 @Mod.EventBusSubscriber(modid = Squirtgun.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientModEventHandler {
@@ -41,7 +40,7 @@ public class ClientModEventHandler {
     @SubscribeEvent
     public static void onKeyRegister(RegisterKeyMappingsEvent event) {
         event.register(GUN_AMMO_STATUS_DISPLAY_KEY);
-        event.register(shiftClickGuiBinding);
+        event.register(SQUIRTGUN_MENU);
     }
 
     @SubscribeEvent
