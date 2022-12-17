@@ -4,6 +4,6 @@ import net.minecraft.client.Minecraft;
 
 public class ModScreens {
     public static void openGunSettingsScreen() {
-        Minecraft.getInstance().setScreen(new SquirtgunReloadScreen());
+        Minecraft.getInstance().setScreen(new SquirtgunReloadScreen.ScreenRender());
     }
 }

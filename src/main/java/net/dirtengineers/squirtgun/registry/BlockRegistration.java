@@ -22,6 +22,7 @@ public class BlockRegistration {
         BLOCKS.register(eventBus);
     }
 
+
     static{
         BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, Squirtgun.MOD_ID);
         ENCAPSULATOR_BLOCK = BLOCKS.register(Constants.encapsulatorBlockName, EncapsulatorBlock::new);

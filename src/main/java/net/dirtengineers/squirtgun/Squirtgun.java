@@ -17,11 +17,15 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Mod(Squirtgun.MOD_ID)
 public class Squirtgun {
     public static final String MOD_ID = "squirtgun";
     public static final PacketHandler PACKET_HANDLER = new PacketHandler().register();
+
+    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
     public Squirtgun() {
         MinecraftForge.EVENT_BUS.register(this);

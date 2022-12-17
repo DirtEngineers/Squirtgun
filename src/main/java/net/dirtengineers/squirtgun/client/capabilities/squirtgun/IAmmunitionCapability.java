@@ -5,13 +5,22 @@ import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 
 @AutoRegisterCapability
 public interface IAmmunitionCapability {
+
     void setShotsAvailable(int pShots);
+
     boolean hasAmmunition();
+
     void decrementShots();
+
     Chemical getChemical();
+
     void setChemical(Chemical pChemical);
+
     String getPotionKey();
+
     void setPotionKey(String pKey);
-    boolean isChemicalValid(Chemical chemical);
+
+    boolean isChemicalValid(Chemical pChemical);
+
     String getAmmoStatus();
 }

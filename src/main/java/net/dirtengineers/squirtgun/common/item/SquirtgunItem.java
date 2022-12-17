@@ -42,9 +42,9 @@ public class SquirtgunItem extends BowItem {
         super(pProperties);
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack pStack, @javax.annotation.Nullable CompoundTag nbt) {
+    public ICapabilityProvider initCapabilities(ItemStack pStack, @Nullable CompoundTag nbt) {
         return new AmmunitionCapabilityProvider(pStack);
     }
 
@@ -72,20 +72,20 @@ public class SquirtgunItem extends BowItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
+    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pInteractionHand) {
 
-        ItemStack itemstack = pPlayer.getItemInHand(pHand);
+        ItemStack itemstack = pPlayer.getItemInHand(pInteractionHand);
 
         boolean hasAmmo = itemstack.getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO, null).orElse(null).hasAmmunition();
 
         net.minecraftforge.common.ForgeHooks.getProjectile(pPlayer, itemstack, hasAmmo ? new ItemStack(ItemRegistration.SQUIRTSLUG.get()) : ItemStack.EMPTY);
-        InteractionResultHolder<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(itemstack, pLevel, pPlayer, pHand, hasAmmo);
+        InteractionResultHolder<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(itemstack, pLevel, pPlayer, pInteractionHand, hasAmmo);
         if (ret != null) return ret;
 
         if (!pPlayer.getAbilities().instabuild && !hasAmmo) {
             return InteractionResultHolder.fail(itemstack);
         } else {
-            pPlayer.startUsingItem(pHand);
+            pPlayer.startUsingItem(pInteractionHand);
             pLevel.playSound(
                     pPlayer,
                     pPlayer.getX(),
@@ -94,10 +94,10 @@ public class SquirtgunItem extends BowItem {
                     SoundEventRegistration.GUN_USE.get(),
                     SoundSource.PLAYERS,
                     1.0F,
-                    1.0F// / (pLevel.getRandom().nextFloat() * 0.4F + 1.2F) + 0.5F
+                    1.0F // (pLevel.getRandom().nextFloat() * 0.4F + 1.2F) + 0.5F
             );
-            return InteractionResultHolder.consume(itemstack);
         }
+        return InteractionResultHolder.consume(itemstack);
     }
 
     @Override

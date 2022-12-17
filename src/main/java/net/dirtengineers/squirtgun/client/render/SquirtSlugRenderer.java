@@ -8,10 +8,14 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 
 public class SquirtSlugRenderer extends ArrowRenderer<SquirtSlug> {
-    public SquirtSlugRenderer(EntityRendererProvider.Context pContext) {super(pContext);}
+    public SquirtSlugRenderer(EntityRendererProvider.Context pContext) {
+        super(pContext);
+    }
 
     public static final ResourceLocation SQUIRT_SLUG_TEXTURE = new ResourceLocation( Squirtgun.MOD_ID, Constants.slugTextureLocation);
 
     @Override
-    public ResourceLocation getTextureLocation(SquirtSlug pEntity) {return SQUIRT_SLUG_TEXTURE;}
+    public ResourceLocation getTextureLocation(SquirtSlug pEntity) {
+        return SQUIRT_SLUG_TEXTURE;
+    }
 }

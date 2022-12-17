@@ -36,8 +36,8 @@ public class AbstractMachineBlock extends BaseEntityBlock {
         return pState.setValue(FACING, pRotation.rotate(pState.getValue(FACING)));
     }
 
-    @SuppressWarnings("deprecation")
     @Override
+    @SuppressWarnings("deprecation")
     public BlockState mirror(BlockState pState, Mirror pMirror) {
         return pState.rotate(pMirror.getRotation(pState.getValue(FACING)));
     }
@@ -47,14 +47,14 @@ public class AbstractMachineBlock extends BaseEntityBlock {
         pBuilder.add(FACING);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
+    @SuppressWarnings("deprecation")
     public RenderShape getRenderShape(BlockState pState) {
         return RenderShape.MODEL;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
+    @SuppressWarnings("deprecation")
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
         if (pState.getBlock() != pNewState.getBlock()) {
             BlockEntity blockEntity = pLevel.getBlockEntity(pPos);

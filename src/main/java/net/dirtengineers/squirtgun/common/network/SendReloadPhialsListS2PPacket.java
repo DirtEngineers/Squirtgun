@@ -1,26 +1,42 @@
 package net.dirtengineers.squirtgun.common.network;
 
+import com.smashingmods.alchemylib.api.network.AlchemyPacket;
+import net.dirtengineers.squirtgun.client.screens.SquirtgunReloadScreen;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Supplier;
+import java.util.LinkedList;
 
-public class SendReloadPhialsListS2PPacket {
+public class SendReloadPhialsListS2PPacket implements AlchemyPacket {
 
-    public SendReloadPhialsListS2PPacket() {}
+    private final LinkedList<ItemStack> packetPhials;
 
-    public SendReloadPhialsListS2PPacket(FriendlyByteBuf pBuffer) {}
+    private boolean inventoryEmpty;
 
-    public void encode(FriendlyByteBuf pBuffer) {
-//        pBuffer.writeItemStack(ItemStack.EMPTY, false);
+    public SendReloadPhialsListS2PPacket(LinkedList<ItemStack> phials) {
+        this.packetPhials = phials;
+
     }
 
-    public void handle(Supplier<NetworkEvent.Context> pContext) {
-        pContext.get().enqueueWork(() -> {
-//            DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-//                    () -> () -> SquirtgunReloadScreen.updateTest(true));
-        });
+    public SendReloadPhialsListS2PPacket(FriendlyByteBuf pBuffer) {
+        int size = pBuffer.readInt();
+        this.packetPhials = new LinkedList<>();
+        for (int i = 0; i < size; i++) {
+            this.packetPhials.add(pBuffer.readItem());
+        }
+    }
 
-        pContext.get().setPacketHandled(true);
+    public void encode(FriendlyByteBuf pBuffer) {
+        pBuffer.writeInt(packetPhials.size());
+        for (ItemStack phial : packetPhials) {
+            pBuffer.writeItemStack(phial, false);
+        }
+    }
+
+    @Override
+    public void handle(NetworkEvent.@NotNull Context pContext) {
+        SquirtgunReloadScreen.phials = this.packetPhials;
     }
 }

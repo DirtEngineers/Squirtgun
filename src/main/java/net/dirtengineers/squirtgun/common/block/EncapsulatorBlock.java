@@ -14,7 +14,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -30,9 +29,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class EncapsulatorBlock extends AbstractMachineBlock {
-    public static final VoxelShape base = Block.box(0.0, 0.0, 0.0, 16.0, 1.0, 16.0);
-    public static final VoxelShape rest = Block.box(2.0, 1.0, 2.0, 14.0, 16.0, 14.0);
-    public static final VoxelShape SHAPE;
+
+    public static final VoxelShape SHAPE = Shapes.block();
 
     public EncapsulatorBlock() {
         super(EncapsulatorBlockEntity::new);
@@ -76,15 +74,11 @@ public class EncapsulatorBlock extends AbstractMachineBlock {
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        return !pLevel.isClientSide() ? (level, pBlockPos, pBlockState, pBlockEntity) -> {
+       return !pLevel.isClientSide() ? (level, pBlockPos, pBlockState, pBlockEntity) -> {
             if (pBlockEntity instanceof EncapsulatorBlockEntity blockEntity) {
                 blockEntity.tick();
             }
 
         } : null;
-    }
-
-    static {
-        SHAPE = Shapes.or(base, rest);
     }
 }
