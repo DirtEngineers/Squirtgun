@@ -12,6 +12,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -19,7 +20,9 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
@@ -40,8 +43,10 @@ public class SquirtSlug extends AbstractArrow implements IEntityAdditionalSpawnD
 
     private double baseDamage = 0.25D;
     private int life;
+    //TODO: consider removing fluid
     private Fluid fluid;
     private Chemical chemical;
+    private Potion potion;
     private final int maxGroundTime = 10;
     private static final int NO_EFFECT_COLOR = -1;
     private static final EntityDataAccessor<Integer> ID_EFFECT_COLOR =
@@ -50,9 +55,17 @@ public class SquirtSlug extends AbstractArrow implements IEntityAdditionalSpawnD
 
     public SquirtSlug(LivingEntity pShooter, Level pLevel, Chemical pChemical) {
         super(EntityRegistration.SQUIRT_SLUG.get(), pShooter, pLevel);
+        this.potion = null;
         this.chemical = pChemical;
         this.fluid = CHEMICAL_FLUIDS.get(chemical);
+        setEffects();
+    }
 
+    public SquirtSlug(LivingEntity pShooter, Level pLevel, String pPotionKey) {
+        super(EntityRegistration.SQUIRT_SLUG.get(), pShooter, pLevel);
+        this.chemical = null;
+        this.fluid = null;
+        this.potion = ForgeRegistries.POTIONS.getValue(new ResourceLocation(pPotionKey));
         setEffects();
     }
 
@@ -66,12 +79,13 @@ public class SquirtSlug extends AbstractArrow implements IEntityAdditionalSpawnD
             for (MobEffectInstance effect : this.chemical.getEffects()) {
                 this.effects.add(new MobEffectInstance(effect));
             }
-            this.updateColor();
         }
-    }
-
-    public boolean hasEffects(){
-        return !this.effects.isEmpty();
+        if (this.potion != null) {
+            for (MobEffectInstance effect : this.potion.getEffects()) {
+                this.effects.add(new MobEffectInstance(effect));
+            }
+        }
+        this.updateColor();
     }
 
     public void tick() {
@@ -90,8 +104,7 @@ public class SquirtSlug extends AbstractArrow implements IEntityAdditionalSpawnD
     protected void doPostHurtEffects(LivingEntity pLiving) {
         super.doPostHurtEffects(pLiving);
         Entity entity = this.getEffectSource();
-
-        if(chemical.getChemicalName().equals("milk")) {
+        if(chemical != null) {
             pLiving.removeAllEffects();
         } else {
             for(MobEffectInstance mobeffectinstance : this.effects) {
@@ -173,7 +186,6 @@ public class SquirtSlug extends AbstractArrow implements IEntityAdditionalSpawnD
     }
 
     protected void onHit() {
-        //TODO: Refactor sound events
         this.setSoundEvent(SoundEventRegistration.SQUIRT_SLUG_HIT.get());
     }
 
@@ -183,9 +195,13 @@ public class SquirtSlug extends AbstractArrow implements IEntityAdditionalSpawnD
     }
 
     private void updateColor() {
-        int pValue = this.fluid == null ? -1 : IClientFluidTypeExtensions.of(this.fluid).getTintColor();
+        int pValue;
+        pValue = this.fluid != null ? IClientFluidTypeExtensions.of(this.fluid).getTintColor() : -1;
         if (pValue == -1) {
-            pValue = this.chemical == null ? -1 : this.chemical.getColor();
+            pValue = this.chemical != null ? this.chemical.getColor() : -1;
+        }
+        if(pValue == -1) {
+            pValue = this.potion != null ? this.potion.getEffects().get(0).getEffect().getColor() : -1;
         }
         this.entityData.set(ID_EFFECT_COLOR, pValue);
     }
@@ -232,12 +248,11 @@ public class SquirtSlug extends AbstractArrow implements IEntityAdditionalSpawnD
 
     @Override
     public void writeSpawnData(FriendlyByteBuf buffer) {
-        buffer.writeResourceLocation(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(this.chemical.asItem())));
+        buffer.writeResourceLocation(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey((Item) this.chemical)));
     }
 
     @Override
     public void readSpawnData(FriendlyByteBuf additionalData) {
-        chemical = (Chemical) ForgeRegistries.ITEMS.getValue(additionalData.readResourceLocation());
-
+        this.chemical = (Chemical) ForgeRegistries.ITEMS.getValue(additionalData.readResourceLocation());
     }
 }

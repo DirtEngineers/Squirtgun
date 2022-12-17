@@ -10,18 +10,17 @@ public interface IAmmunitionCapability {
 
     boolean hasAmmunition();
 
-    int getMaxShots();
-
-    int getShotsAvailable();
-
     void decrementShots();
 
     Chemical getChemical();
 
     void setChemical(Chemical pChemical);
 
+    String getPotionKey();
+
+    void setPotionKey(String pKey);
+
     boolean isChemicalValid(Chemical pChemical);
 
     String getAmmoStatus();
-
 }

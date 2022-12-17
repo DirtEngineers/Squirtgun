@@ -41,7 +41,7 @@ public class ClientForgeEventHandler {
         if (player != null) {
             boolean hasSquirtGun = player.getItemInHand(player.getUsedItemHand()).getItem() instanceof SquirtgunItem;
 
-            if (Keybinds.SQUIRTGUN_MENU.consumeClick() && Minecraft.getInstance().screen == null && hasSquirtGun) {
+            if (Keybinds.shiftClickGuiBinding.consumeClick() && Minecraft.getInstance().screen == null && hasSquirtGun) {
                 ModScreens.openGunSettingsScreen();
             }
             if (GUN_AMMO_STATUS_DISPLAY_KEY.consumeClick() && hasSquirtGun) {
