@@ -1,12 +1,10 @@
 package net.dirtengineers.squirtgun.common.item;
 
 import net.dirtengineers.squirtgun.Constants;
-import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.client.capabilities.SquirtgunCapabilities;
 import net.dirtengineers.squirtgun.client.capabilities.squirtgun.AmmunitionCapabilityProvider;
 import net.dirtengineers.squirtgun.client.capabilities.squirtgun.IAmmunitionCapability;
 import net.dirtengineers.squirtgun.common.entity.SquirtSlug;
-import net.dirtengineers.squirtgun.common.network.GunCapsUpdateC2SPacket;
 import net.dirtengineers.squirtgun.registry.ItemRegistration;
 import net.dirtengineers.squirtgun.registry.SoundEventRegistration;
 import net.dirtengineers.squirtgun.util.TextUtility;
@@ -28,12 +26,10 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 
 public class SquirtgunItem extends BowItem {
@@ -177,14 +173,10 @@ public class SquirtgunItem extends BowItem {
         return heldItem;
     }
 
-    public static ItemStack loadNewPhial(Player pPlayer, ItemStack pPhialStack) {
+    public static boolean canLoadPhial(Player pPlayer, ItemStack pPhialStack) {
         IAmmunitionCapability ammunitionHandler = getPlayerGun(pPlayer).getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO, null).orElse(null);
-        if (pPlayer.level.isClientSide
-                && pPhialStack.getItem() instanceof BasePhial phial
-                && (!Objects.equals(ammunitionHandler.getPotionKey(), "") || ammunitionHandler.isChemicalValid(phial.getChemical()))) {
-            Squirtgun.PACKET_HANDLER.sendToServer(new GunCapsUpdateC2SPacket(pPhialStack));
-            return new ItemStack(ForgeRegistries.ITEMS.getValue(ItemRegistration.PHIAL.getId()), 1);
-        }
-        return pPhialStack;
+        return pPhialStack.getItem() instanceof BasePhial phial
+                && !(phial instanceof EmptyPhialItem)
+                && ammunitionHandler.isChemicalValid(phial.getChemical());
     }
 }

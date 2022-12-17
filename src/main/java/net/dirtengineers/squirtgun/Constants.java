@@ -60,8 +60,8 @@ public class Constants {
 
     // general
     public static String EMPTY_FLUID_NAME = "minecraft:empty";
-    public static int DROP_ITEM_INDEX = Integer.MAX_VALUE;
-    public static int OFF_HAND_INDEX = -1;
+    public static final int DROP_ITEM_INDEX = Integer.MAX_VALUE;
+    public static final int OFF_HAND_INDEX = -1;
     public static int SLUG_SHOT_SIZE_MB = 100;
 
     //Keybinds

@@ -4,9 +4,9 @@ import com.smashingmods.alchemylib.api.network.AlchemyPacket;
 import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.client.capabilities.SquirtgunCapabilities;
 import net.dirtengineers.squirtgun.client.capabilities.squirtgun.IAmmunitionCapability;
-import net.dirtengineers.squirtgun.client.screens.SquirtgunReloadScreen;
 import net.dirtengineers.squirtgun.common.item.BasePhial;
 import net.dirtengineers.squirtgun.common.item.EmptyPhialItem;
+import net.dirtengineers.squirtgun.common.item.SquirtgunItem;
 import net.dirtengineers.squirtgun.registry.ItemRegistration;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -45,16 +45,13 @@ public class GetReloadPhialsListC2SPacket implements AlchemyPacket {
 
     @Override
     public void handle(NetworkEvent.@NotNull Context pContext) {
-        IAmmunitionCapability ammunitionHandler = insertStack.getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO).orElse(null);
-
-        if (!packetPhials.isEmpty()) {
-            packetPhials.clear();
-        }
-
         ServerPlayer player = pContext.getSender();
         if (player == null) {
             return;
         }
+        IAmmunitionCapability ammunitionHandler = SquirtgunItem.getPlayerGun(pContext.getSender()).getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO).orElse(null);
+
+        packetPhials.clear();
 
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
             ItemStack stack = player.getInventory().getItem(i);
@@ -67,7 +64,7 @@ public class GetReloadPhialsListC2SPacket implements AlchemyPacket {
 
         if (player.getInventory().offhand.get(0).getItem() instanceof BasePhial) {
             ItemStack tempStack = player.getInventory().offhand.get(0).copy();
-            tempStack.setCount(SquirtgunReloadScreen.offhandLocationIndex);
+            tempStack.setCount(player.getInventory().items.size() + 1);
             addToPhials(tempStack);
         }
 

@@ -15,12 +15,10 @@ public class PacketHandler extends AbstractPacketHandler {
 
     @Override
     public @NotNull PacketHandler register() {
-        registerMessage(GunCapsUpdateC2SPacket.class, GunCapsUpdateC2SPacket::new);
-        registerMessage(InventoryInsertC2SPacket.class, InventoryInsertC2SPacket::new);
-        registerMessage(InventoryRemoveC2SPacket.class, InventoryRemoveC2SPacket::new);
         registerMessage(SetRecipeC2SPacket.class, SetRecipeC2SPacket::new);
         registerMessage(GetReloadPhialsListC2SPacket.class, GetReloadPhialsListC2SPacket::new);
         registerMessage(SendReloadPhialsListS2PPacket.class, SendReloadPhialsListS2PPacket::new);
+        registerMessage(GunReloadC2SPacket.class, GunReloadC2SPacket::new);
 
         return this;
     }

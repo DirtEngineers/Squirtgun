@@ -9,11 +9,9 @@ import net.dirtengineers.squirtgun.client.buttons.PhialReloadScreenButton;
 import net.dirtengineers.squirtgun.client.capabilities.SquirtgunCapabilities;
 import net.dirtengineers.squirtgun.client.capabilities.squirtgun.IAmmunitionCapability;
 import net.dirtengineers.squirtgun.common.item.BasePhial;
-import net.dirtengineers.squirtgun.common.item.EmptyPhialItem;
 import net.dirtengineers.squirtgun.common.item.SquirtgunItem;
 import net.dirtengineers.squirtgun.common.network.GetReloadPhialsListC2SPacket;
-import net.dirtengineers.squirtgun.common.network.InventoryInsertC2SPacket;
-import net.dirtengineers.squirtgun.common.network.InventoryRemoveC2SPacket;
+import net.dirtengineers.squirtgun.common.network.GunReloadC2SPacket;
 import net.dirtengineers.squirtgun.registry.SoundEventRegistration;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -34,7 +32,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * The outer class {@link SquirtgunReloadScreen} is accessed by client and server for Phial updates and a few other 'Common' Field & Methods.
@@ -85,7 +82,6 @@ public class SquirtgunReloadScreen {
         private final int topRowOffsetY = 30;
         private final int phialTableOffsetY = topRowOffsetY + buttonSize * 2;
         private int phialTableBottom;
-        int destinationSlot = Constants.DROP_ITEM_INDEX;
         ActionButton actionButton;
         private static final Player player = Minecraft.getInstance().player;
         boolean phialSelected;
@@ -118,7 +114,7 @@ public class SquirtgunReloadScreen {
             if (player != null) {
                 offhandLocationIndex = player.getInventory().items.size() + 1;
                 ammunitionHandler = player.getItemInHand(player.getUsedItemHand()).getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO).orElse(null);
-                updatePhialsListFromServer();
+                getPhialsListFromServer();
             }
             if(ammunitionHandler == null) {
                 super.onClose();
@@ -136,12 +132,14 @@ public class SquirtgunReloadScreen {
             clearWidgets();
         }
 
-        private void updatePhialsListFromServer() {
+        private void getPhialsListFromServer() {
             /*
                 Request server to update Phials list
             */
-            phialsListIsDirty = true;
-            Squirtgun.PACKET_HANDLER.sendToServer(new GetReloadPhialsListC2SPacket(player.getItemInHand(player.getUsedItemHand())));
+            if(player != null) {
+                phialsListIsDirty = true;
+                Squirtgun.PACKET_HANDLER.sendToServer(new GetReloadPhialsListC2SPacket(player.getItemInHand(player.getUsedItemHand())));
+            }
         }
 
         private void calculateBGSizeAndPosition() {
@@ -207,13 +205,8 @@ public class SquirtgunReloadScreen {
         @Override
         public void onClose() {
             if (player != null && phialSelected) {
-                ItemStack removeStack = phialSwapStack.copy();// phial to remove from inventory
-                ItemStack insertStack = SquirtgunItem.loadNewPhial(player, phialSwapStack);
-                if (insertStack.getItem() instanceof EmptyPhialItem) {
-                    setInventorySlotForPlacement();
-                    Squirtgun.PACKET_HANDLER.sendToServer(new InventoryInsertC2SPacket(destinationSlot, insertStack));
-                    destinationSlot = removeStack.getCount() == offhandLocationIndex ? Constants.OFF_HAND_INDEX : removeStack.getCount();
-                    Squirtgun.PACKET_HANDLER.sendToServer(new InventoryRemoveC2SPacket(destinationSlot, removeStack));
+                if(SquirtgunItem.canLoadPhial(player, phialSwapStack.copy())) {
+                    Squirtgun.PACKET_HANDLER.sendToServer(new GunReloadC2SPacket(phialSwapStack.copy()));
                     player.playSound(SoundEventRegistration.PHIAL_SWAP.get());
                 }
             }
@@ -308,44 +301,8 @@ public class SquirtgunReloadScreen {
                 if (pButton.getTargetStack().getItem() instanceof BasePhial) {
                     phialSwapStack = pButton.getTargetStack().copy();
                     phialSelected = true;
-                    updatePhialsListFromServer();
+                    UpdateLayout();
                 }
-            }
-        }
-
-        private void setInventorySlotForPlacement() {
-            destinationSlot = Constants.DROP_ITEM_INDEX;
-            ItemStack stack;
-            for (int slotNumber = 0; slotNumber < Objects.requireNonNull(player).getInventory().items.size(); ++slotNumber) {
-                stack = player.getInventory().items.get(slotNumber);
-                if (stack.getCount() < stack.getMaxStackSize()
-                        && stack.getItem() instanceof EmptyPhialItem) {
-                    destinationSlot = slotNumber;
-                    break;
-                }
-            }
-            // no appropriate stacks in inventory
-            // Any empties NOT in the hotbar?
-            if (destinationSlot == Constants.DROP_ITEM_INDEX) {
-                for (int slotNumber = 9; slotNumber < player.getInventory().items.size(); ++slotNumber) {
-                    if (player.getInventory().items.get(slotNumber).isEmpty()) {
-                        destinationSlot = slotNumber;
-                        break;
-                    }
-                }
-            }
-            // Hotbar, then?
-            if (destinationSlot == Constants.DROP_ITEM_INDEX) {
-                for (int slotNumber = 0; slotNumber < 8; ++slotNumber) {
-                    if (player.getInventory().items.get(slotNumber).isEmpty()) {
-                        destinationSlot = slotNumber;
-                        break;
-                    }
-                }
-            }
-            //Offhand perhaps?
-            if (destinationSlot == Constants.DROP_ITEM_INDEX) {
-                destinationSlot = player.getInventory().offhand.get(0).isEmpty() ? Constants.OFF_HAND_INDEX : Constants.DROP_ITEM_INDEX;
             }
         }
     }
