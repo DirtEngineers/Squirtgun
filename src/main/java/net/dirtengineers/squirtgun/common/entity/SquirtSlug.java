@@ -49,8 +49,7 @@ public class SquirtSlug extends AbstractArrow implements IEntityAdditionalSpawnD
     private Potion potion;
     private final int maxGroundTime = 10;
     private static final int NO_EFFECT_COLOR = -1;
-    private static final EntityDataAccessor<Integer> ID_EFFECT_COLOR =
-            SynchedEntityData.defineId(SquirtSlug.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> ID_EFFECT_COLOR = SynchedEntityData.defineId(SquirtSlug.class, EntityDataSerializers.INT);
     private final Set<MobEffectInstance> effects = Sets.newHashSet();
 
     public SquirtSlug(LivingEntity pShooter, Level pLevel, Chemical pChemical) {

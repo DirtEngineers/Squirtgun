@@ -23,32 +23,25 @@ public class LocalizationGenerator extends LanguageProvider {
         ItemRegistration.CHEMICAL_PHIALS.forEach(
                 phial -> this.add(
                         Constants.phialItemNameTranslationPrefix + phial,
-                        TextUtility.capitalizeText(phial.toString().replace('_', ' '), ' ')
-                )
-        );
+                        TextUtility.capitalizeText(phial.toString().replace('_', ' '), ' ')));
 
         ItemRegistration.POTION_PHIALS.forEach(
-                phial -> this.add(
-                                Constants.phialItemNameTranslationPrefix + phial,
-                                TextUtility.capitalizeText(phial.toString().replace('_', ' '), ' ')
-                )
-        );
+                phial ->
+                    this.add(
+                            Constants.phialItemNameTranslationPrefix + phial,
+                            TextUtility.capitalizeText(phial.toString().replace('_', ' '), ' ')));
 
         for(Map.Entry<ResourceKey<Potion>, Potion> potion : ForgeRegistries.POTIONS.getEntries().stream().toList()) {
             if (potion.getValue().getEffects().size() > 0) {
                 this.add(
                         String.format("%s:%s", potion.getKey().location().getNamespace(), potion.getKey().location().getPath()),
-                        String.format("%s%s", TextUtility.capitalizeText(
-                                potion.getKey().location().getPath().replace('_', ' '),
-                                ' '), " Potion")
-                );
+                        String.format("%s%s", TextUtility.capitalizeText(potion.getKey().location().getPath().replace('_', ' '), ' '), " Potion"));
             }
         }
     }
 
     private void addManualTranslations(){
-
-        // ITEMS
+        //ITEMS
         this.add(String.format("item.squirtgun.%s", Constants.gunItemName), "Squirtgun");
         this.add(String.format("item.squirtgun.%s", Constants.phialItemName), "Empty Phial");
         this.add(String.format("item.squirtgun.%s", Constants.brassBlendItemName), "Brass Blend");
@@ -60,8 +53,7 @@ public class LocalizationGenerator extends LanguageProvider {
         this.add(String.format("block.squirtgun.%s", Constants.brassBlockName), "Block of Brass");
         this.add(String.format("item.squirtgun.%s", Constants.actuatorItemName), "Actuator");
         this.add(String.format("block.squirtgun.%s", Constants.encapsulatorBlockName), "Dr. Clark's Fluid Encapsulation Matrix");
-
-        // SOUNDS
+        //Sounds
         this.add("sounds.squirtgun.squirt_slug_hit", "EWWW!");
         this.add("sounds.squirtgun.reload_screen_close", "YEEEEHAAAA!");
         this.add("sounds.squirtgun.phial_swap", "Phial Swapped");
@@ -70,13 +62,11 @@ public class LocalizationGenerator extends LanguageProvider {
         this.add("sounds.squirtgun.gun_fire", "BOOM!");
         this.add("sounds.squirtgun.phial_complete", "Ding!  Fries are done.");
         this.add("sounds.squirtgun.encapsulator_processing", "Time to make the doughnuts.");
-
-        // KEY BINDS
+        //Keybinds
         this.add("key.category.squirtgun", "Squirtgun");
         this.add("key.squirtgun.gun_ammo_load", "Load Ammunition");
         this.add("key.squirtgun.gun_display_ammo_status", "Toggle Ammunition Status Display");
 
-        // THESE ARE? BUTTONS BUCK?
         this.add("item.squirtgun.gun_functionality", "Squirtgun reload/settings");
         this.add("fluid.squirtgun.empty_fluid_name", "EMPTY");
         this.add("tooltip.squirtgun.energy_requirement", "Requires %d FE/t");
