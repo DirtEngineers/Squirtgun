@@ -16,8 +16,9 @@ import com.smashingmods.alchemylib.client.button.PauseButton;
 import com.smashingmods.alchemylib.client.button.RecipeSelectorButton;
 import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
-import net.dirtengineers.squirtgun.client.screens.RecipeDisplayUtil;
 import net.dirtengineers.squirtgun.client.screens.RecipeSelectorScreen;
+import net.dirtengineers.squirtgun.client.utility.RecipeDisplayUtil;
+import net.dirtengineers.squirtgun.client.utility.TextUtility;
 import net.dirtengineers.squirtgun.common.recipe.AbstractPhialRecipe;
 import net.dirtengineers.squirtgun.registry.RecipeRegistration;
 import net.minecraft.client.renderer.GameRenderer;
@@ -106,7 +107,7 @@ public class EncapsulatorScreen extends AbstractProcessingScreen<EncapsulatorMen
 
             if (pMouseX >= recipeLeftPos - 3 && pMouseX < recipeLeftPos + 11 && pMouseY >= recipeTopPos - 4 && pMouseY < recipeTopPos + 20) {
                 renderTooltip(pPoseStack
-                        , RecipeDisplayUtil.getItemTooltipComponent(currentOutput, MutableComponent.create(new TranslatableContents(Constants.currentSelectedRecipe)))
+                        , TextUtility.getRecipeItemTooltipComponent(currentOutput, MutableComponent.create(new TranslatableContents(Constants.currentSelectedRecipe)))
                         , Optional.empty()
                         , pMouseX
                         , pMouseY);
@@ -127,7 +128,7 @@ public class EncapsulatorScreen extends AbstractProcessingScreen<EncapsulatorMen
                         itemRenderer.renderGuiItemDecorations(font, itemStack, xOrigin, y);
 
                         if (pMouseX >= xOrigin - 2 && pMouseX < xOrigin + 16 && pMouseY >= y - 1 && pMouseY < y + 17) {
-                            List<Component> components = RecipeDisplayUtil.getItemTooltipComponent(itemStack, MutableComponent.create(new TranslatableContents(Constants.recipeRequiredInput)));
+                            List<Component> components = TextUtility.getRecipeItemTooltipComponent(itemStack, MutableComponent.create(new TranslatableContents(Constants.recipeRequiredInput)));
                             this.renderTooltip(pPoseStack, components, Optional.empty(), pMouseX, pMouseY);
                         }
                     }

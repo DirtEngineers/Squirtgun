@@ -32,6 +32,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The outer class {@link SquirtgunReloadScreen} is accessed by client and server for Phial updates and a few other 'Common' Field & Methods.
@@ -169,7 +170,7 @@ public class SquirtgunReloadScreen {
             this.children().forEach(e -> {
                 if (e instanceof PhialReloadScreenButton btn) {
                     if (btn.isMouseOver(pMouseX, pMouseY)) {
-                        renderTooltip(pPoseStack, btn.getTooltip(), pMouseX, pMouseY);
+                        renderTooltip(pPoseStack, btn.getTooltip(), Optional.empty(), pMouseX, pMouseY);
                     }
                 }
                 if (e instanceof ActionButton btn) {

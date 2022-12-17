@@ -2,8 +2,8 @@ package net.dirtengineers.squirtgun.datagen;
 
 import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
+import net.dirtengineers.squirtgun.client.utility.TextUtility;
 import net.dirtengineers.squirtgun.registry.ItemRegistration;
-import net.dirtengineers.squirtgun.util.TextUtility;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.alchemy.Potion;

@@ -8,6 +8,8 @@ import com.smashingmods.alchemylib.api.recipe.AbstractProcessingRecipe;
 import com.smashingmods.alchemylib.api.recipe.ProcessingRecipe;
 import net.dirtengineers.squirtgun.Constants;
 import net.dirtengineers.squirtgun.Squirtgun;
+import net.dirtengineers.squirtgun.client.utility.RecipeDisplayUtil;
+import net.dirtengineers.squirtgun.client.utility.TextUtility;
 import net.dirtengineers.squirtgun.common.block.EncapsulatorBlockEntity;
 import net.dirtengineers.squirtgun.common.network.SetRecipeC2SPacket;
 import net.dirtengineers.squirtgun.common.recipe.AbstractPhialRecipe;
@@ -156,7 +158,7 @@ public class RecipeSelectorScreen<P extends AbstractProcessingScreen<?>, B exten
             int yStart = this.recipeBoxTopPos + firstDisplayedIndex / 5 * 18 + 3;
             this.renderFloatingItem(target, xStart, yStart);
             if (pMouseX >= xStart - 1 && pMouseX <= xStart + 16 && pMouseY >= yStart - 1 && pMouseY <= yStart + 16) {
-                List<Component> components = RecipeDisplayUtil.getItemTooltipComponent(target, MutableComponent.create(new TranslatableContents(Constants.guiSelectRecipe)));
+                List<Component> components = TextUtility.getRecipeItemTooltipComponent(target, MutableComponent.create(new TranslatableContents(Constants.guiSelectRecipe)));
                 this.renderTooltip(pPoseStack, components, Optional.empty(), pMouseX, pMouseY);
             }
         }
@@ -187,7 +189,7 @@ public class RecipeSelectorScreen<P extends AbstractProcessingScreen<?>, B exten
                 if (pIndex < pInputSize) {
                     ItemStack itemStack = RecipeDisplayUtil.getRecipeInputByIndex(recipe, pIndex);
                     if (pMouseX >= pX - 1 && pMouseX < pX + 17 && pMouseY >= pY - 1 && pMouseY < pY + 17 && !itemStack.isEmpty()) {
-                        List<Component> components = RecipeDisplayUtil.getItemTooltipComponent(itemStack, MutableComponent.create(new TranslatableContents(Constants.recipeRequiredInput)));
+                        List<Component> components = TextUtility.getRecipeItemTooltipComponent(itemStack, MutableComponent.create(new TranslatableContents(Constants.recipeRequiredInput)));
                         this.renderTooltip(pPoseStack, components, Optional.empty(), pMouseX, pMouseY);
                     }
                 }
@@ -195,7 +197,7 @@ public class RecipeSelectorScreen<P extends AbstractProcessingScreen<?>, B exten
             ItemStack target = RecipeDisplayUtil.getTarget(recipe);
             this.renderFloatingItem(target, this.leftPos + 21, this.topPos + 30);
             if (pMouseX >= this.leftPos + 17 && pMouseX < this.leftPos + 41 && pMouseY >= this.topPos + 27 && pMouseY <= this.topPos + 50) {
-                List<Component> components = RecipeDisplayUtil.getItemTooltipComponent(target, MutableComponent.create(new TranslatableContents(Constants.currentSelectedRecipe)));
+                List<Component> components = TextUtility.getRecipeItemTooltipComponent(target, MutableComponent.create(new TranslatableContents(Constants.currentSelectedRecipe)));
                 this.renderTooltip(pPoseStack, components, Optional.empty(), pMouseX, pMouseY);
             }
         } else {

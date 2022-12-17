@@ -3,20 +3,23 @@ package net.dirtengineers.squirtgun.client.buttons;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.dirtengineers.squirtgun.Constants;
-import net.dirtengineers.squirtgun.Squirtgun;
+import net.dirtengineers.squirtgun.client.utility.TextUtility;
 import net.dirtengineers.squirtgun.util.FakeItemRenderer_OLD;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.contents.LiteralContents;
 import net.minecraft.network.chat.contents.TranslatableContents;
-import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class PhialReloadScreenButton extends Button {
     ItemStack targetStack;
@@ -50,21 +53,17 @@ public class PhialReloadScreenButton extends Button {
         this.targetStack = targetStack;
     }
 
-    public List<FormattedCharSequence> getTooltip() {
-        if (displayLoadedMessage) {
-            return Language.getInstance().getVisualOrder(List.of(this.getMessage()
-                                    , MutableComponent.create(new TranslatableContents(Constants.gunGuiPhialIsLoaded)).withStyle(Constants.LOADED_PHIAL_TEXT_STYLE)));
+    public List<Component> getTooltip() {
+        List<Component> components = new ArrayList<>();
+        if (!active || displayLoadedMessage) {
+            components.add(MutableComponent.create(new TranslatableContents(Constants.gunGuiPhialLoaded)).withStyle(Constants.HOVER_TEXT_STYLE));
         }
+        TextUtility.getTooltipComponents(this.targetStack, components, false);
 
-        if (!active) {
-            return Language.getInstance().getVisualOrder(List.of(
-                    MutableComponent.create(new TranslatableContents(Constants.gunGuiPhialLoaded)).withStyle(Constants.HOVER_TEXT_STYLE)
-                    , this.getMessage()
-                    , MutableComponent.create(Component.literal(Squirtgun.MOD_ID).getContents()).withStyle(Constants.MOD_ID_TEXT_STYLE)));
-        }
+        String namespace = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(this.targetStack.getItem())).getNamespace();
+        components.add(MutableComponent.create(new LiteralContents(StringUtils.capitalize(namespace))).withStyle(Constants.MOD_ID_TEXT_STYLE));
 
-
-        return Language.getInstance().getVisualOrder(List.of(this.getMessage()));
+        return components;
     }
 
     @Override

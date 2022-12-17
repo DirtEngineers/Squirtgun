@@ -1,85 +1,87 @@
-package net.dirtengineers.squirtgun.client.screens;
+package net.dirtengineers.squirtgun.client.utility;
 
-import com.smashingmods.alchemistry.common.recipe.combiner.CombinerRecipe;
-import com.smashingmods.alchemylib.api.blockentity.processing.AbstractProcessingBlockEntity;
-import com.smashingmods.alchemylib.api.recipe.ProcessingRecipe;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.smashingmods.chemlib.api.Chemical;
 import com.smashingmods.chemlib.api.ChemicalItemType;
 import com.smashingmods.chemlib.common.items.ChemicalItem;
 import com.smashingmods.chemlib.common.items.CompoundItem;
 import com.smashingmods.chemlib.common.items.ElementItem;
 import net.dirtengineers.squirtgun.Constants;
-import net.dirtengineers.squirtgun.common.block.EncapsulatorBlockEntity;
 import net.dirtengineers.squirtgun.common.item.ChemicalPhial;
 import net.dirtengineers.squirtgun.common.item.PotionPhial;
-import net.dirtengineers.squirtgun.common.recipe.AbstractPhialRecipe;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.LiteralContents;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicReference;
 
-public class RecipeDisplayUtil {
-    public RecipeDisplayUtil() {
+public class TextUtility {
+
+    public static List<Component> getRecipeItemTooltipComponent(ItemStack pItemStack, MutableComponent pComponent) {
+        List<Component> components = new ArrayList<>();
+        components.add(pComponent.withStyle(Constants.RECIPE_ITEM_REQUIRED_TEXT_STYLE));
+        getTooltipComponents(pItemStack, components, true);
+
+        String namespace = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(pItemStack.getItem())).getNamespace();
+        components.add(MutableComponent.create(new LiteralContents(StringUtils.capitalize(namespace))).withStyle(Constants.MOD_ID_TEXT_STYLE));
+        return components;
     }
 
-    public static List<Component> getItemTooltipComponent(ItemStack pItemStack, MutableComponent pComponent) {
-        List<Component> components = new ArrayList<>();
-        String namespace = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(pItemStack.getItem())).getNamespace();
-        components.add(pComponent.withStyle(Constants.RECIPE_ITEM_REQUIRED_TEXT_STYLE));
-
+    public static void getTooltipComponents(ItemStack pItemStack, List<Component> pComponents, boolean showStackCount) {
         Item pItemStackItem = pItemStack.getItem();
         if (pItemStackItem instanceof PotionPhial potionPhial) {
-            getPotionPhialComponents(potionPhial, pItemStack, components);
+            getPotionPhialComponents(potionPhial, pItemStack, pComponents, showStackCount);
         } else {
             if (pItemStackItem instanceof ChemicalPhial chemicalPhial) {
-                getChemicalPhialComponents(chemicalPhial, pItemStack, components);
+                getChemicalPhialComponents(chemicalPhial, pItemStack, pComponents, showStackCount);
             }
             else
             {
                 if(pItemStackItem instanceof PotionItem) {
-                    getPotionComponents(pItemStack, components);
+                    getPotionComponents(pItemStack, pComponents);
                 }
                 else {
                     if (pItemStackItem instanceof Chemical chemical) {
-                        getChemicalComponents(chemical, components);
+                        getChemicalComponents(chemical, pComponents);
                     } else {
-                        components.add(MutableComponent.create(new LiteralContents(String.format("%dx %s", pItemStack.getCount(), pItemStackItem.getDescription().getString()))));
+                        pComponents.add(MutableComponent.create(new LiteralContents(String.format("%dx %s", pItemStack.getCount(), pItemStackItem.getDescription().getString()))));
                     }
                 }
             }
         }
-        components.add(MutableComponent.create(new LiteralContents(StringUtils.capitalize(namespace))).withStyle(ChatFormatting.BLUE));
-        return components;
     }
 
-    private static void getPotionPhialComponents(PotionPhial pPhial, ItemStack pItemStack, List<Component> pComponents) {
+    private static void getPotionPhialComponents(PotionPhial pPhial, ItemStack pItemStack, List<Component> pComponents, boolean showStackCount) {
         String potionName = new ResourceLocation(Objects.requireNonNull(Objects.requireNonNull(pPhial.getPotionStack().getTag()).get("Potion")).getAsString()).getPath();
         String description = MutableComponent.create(
                 new TranslatableContents(
                         String.format("item.minecraft.potion.effect.%s",
                                 StringUtils.removeStart(StringUtils.removeStart(potionName, "strong_"), "long_"))
                 )).withStyle(Constants.DISPLAY_ITEM_TEXT_STYLE).getString();
-        pComponents.add(MutableComponent.create(new LiteralContents(String.format("%dx %s", pItemStack.getCount(), description))));
+        if (showStackCount)
+            pComponents.add(MutableComponent.create(new LiteralContents(String.format("%dx %s", pItemStack.getCount(), description))));
+        else pComponents.add(MutableComponent.create(new LiteralContents(String.format("%s", description))));
         pPhial.addEffectsToTooltip(pComponents);
     }
 
-    private static void getChemicalPhialComponents(ChemicalPhial pPhial, ItemStack pItemStack, List<Component> pComponents) {
-        pComponents.add(MutableComponent.create(new LiteralContents(String.format("%dx %s", pItemStack.getCount(), pPhial.getDescription().getString()))));
+    private static void getChemicalPhialComponents(ChemicalPhial pPhial, ItemStack pItemStack, List<Component> pComponents, boolean showStackCount) {
+        if (showStackCount)
+            pComponents.add(MutableComponent.create(new LiteralContents(String.format("%dx %s", pItemStack.getCount(), pPhial.getDescription().getString()))));
+        else pComponents.add(MutableComponent.create(new LiteralContents(String.format("%s", pPhial.getDescription().getString()))));
         pPhial.addEffectsToTooltip(pComponents);
     }
 
@@ -121,45 +123,59 @@ public class RecipeDisplayUtil {
         }
     }
 
-    public static Pair<ResourceLocation, String> getSearchablePair(ProcessingRecipe pRecipe) {
-        ResourceLocation left;
-        String right;
-        if (pRecipe instanceof AbstractPhialRecipe phialRecipe) {
-            left = ForgeRegistries.ITEMS.getKey(phialRecipe.getResultItem().getItem());
-            right = phialRecipe.getResultItem().getDisplayName().getString().toLowerCase();
-            return Pair.of(left, right);
-        }
-        return Pair.of(new ResourceLocation("minecraft:empty"), "");
-    }
-
-    public static ItemStack getTarget(ProcessingRecipe pRecipe) {
-        if (pRecipe instanceof AbstractPhialRecipe phialRecipe) {
-            return phialRecipe.getOutput().get(0);
-        }
-        return ItemStack.EMPTY;
-    }
-
-    public static ItemStack getRecipeInputByIndex(ProcessingRecipe pRecipe, int pIndex) {
-        AtomicReference<ItemStack> toReturn = new AtomicReference<>(ItemStack.EMPTY);
-        if (pRecipe instanceof CombinerRecipe combinerRecipe) {
-            if (pIndex >= 0 && pIndex < combinerRecipe.getInput().size()) {
-                new Random().ints(0, combinerRecipe.getInput().get(pIndex).toStacks().size())
-                        .findFirst()
-                        .ifPresent(random -> toReturn.set(combinerRecipe.getInput().get(pIndex).toStacks().get(random)));
+    public static LinkedList<String> padStrings(LinkedList<String> pStrings) {
+        LinkedList<String> outList = new LinkedList<>();
+        if (!pStrings.isEmpty()) {
+            int max = pStrings.stream().map(String::length).max(Integer::compareTo).get();
+            for (String pString : pStrings) {
+                if (pString.length() < max) {
+                    outList.add(" ".repeat(Math.max(0, ((max - pString.length()) / 2))) + pString);
+                } else {
+                    outList.add(pString);
+                }
             }
         }
-        if (pRecipe instanceof AbstractPhialRecipe phialRecipe) {
-            if (pIndex >= 0 && pIndex < phialRecipe.getInput().size()) {
-                    toReturn.set(phialRecipe.getInput().get(pIndex));
-            }
-        }
-            return toReturn.get();
+        return outList;
     }
 
-    public static int getInputSize(AbstractProcessingBlockEntity pBlockEntity) {
-        if (pBlockEntity instanceof EncapsulatorBlockEntity) {
-            return 2;
+    public static void drawCenteredStringNoShadow(PoseStack pPoseStack, Font pFont, Component pText, int pX, int pY) {
+        FormattedCharSequence formattedcharsequence = pText.getVisualOrderText();
+        pFont.draw(
+                pPoseStack,
+                formattedcharsequence,
+                (float) (pX - pFont.width(formattedcharsequence) / 2),
+                (float) pY,
+                Objects.requireNonNull(pText.getStyle().getColor()).getValue());
+    }
+
+    public static Component getFriendlyChemicalName(Chemical pChemical) {
+        return MutableComponent.create(
+                        new TranslatableContents(pChemical != null ?
+                                String.format("item.%s.%s", pChemical.getClass().getModule().getName(), pChemical.asItem())
+                                : Constants.emptyFluidNameKey))
+                .withStyle(Constants.HOVER_TEXT_STYLE);
+    }
+
+    public static Component getFriendlyPotionName(String pPotionKey) {
+        return MutableComponent.create(
+                        new TranslatableContents(!Objects.equals(pPotionKey, "") ?
+                                pPotionKey
+                                : Constants.emptyFluidNameKey))
+                .withStyle(Constants.HOVER_TEXT_STYLE);
+    }
+
+    public static String capitalizeText(String text, char delimiter) {
+        final char[] buffer = text.toCharArray();
+        boolean capitalizeNext = true;
+        for (int i = 0; i < buffer.length; i++) {
+            final char ch = buffer[i];
+            if (ch == delimiter) {
+                capitalizeNext = true;
+            } else if (capitalizeNext) {
+                buffer[i] = Character.toTitleCase(ch);
+                capitalizeNext = false;
+            }
         }
-        return 0;
+        return new String(buffer);
     }
 }
