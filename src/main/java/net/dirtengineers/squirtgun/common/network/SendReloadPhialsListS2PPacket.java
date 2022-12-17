@@ -13,11 +13,11 @@ public class SendReloadPhialsListS2PPacket implements AlchemyPacket {
 
     private final LinkedList<ItemStack> packetPhials;
 
-    private boolean inventoryEmpty;
+    private final ItemStack swapPhialStack;
 
-    public SendReloadPhialsListS2PPacket(LinkedList<ItemStack> phials) {
-        this.packetPhials = phials;
-
+    public SendReloadPhialsListS2PPacket(LinkedList<ItemStack> pPhials, ItemStack pSwapPhial) {
+        this.packetPhials = pPhials;
+        this.swapPhialStack = pSwapPhial;
     }
 
     public SendReloadPhialsListS2PPacket(FriendlyByteBuf pBuffer) {
@@ -26,6 +26,7 @@ public class SendReloadPhialsListS2PPacket implements AlchemyPacket {
         for (int i = 0; i < size; i++) {
             this.packetPhials.add(pBuffer.readItem());
         }
+        this.swapPhialStack = pBuffer.readItem();
     }
 
     public void encode(FriendlyByteBuf pBuffer) {
@@ -33,10 +34,13 @@ public class SendReloadPhialsListS2PPacket implements AlchemyPacket {
         for (ItemStack phial : packetPhials) {
             pBuffer.writeItemStack(phial, false);
         }
+        pBuffer.writeItem(swapPhialStack);
     }
 
     @Override
     public void handle(NetworkEvent.@NotNull Context pContext) {
         SquirtgunReloadScreen.phials = this.packetPhials;
+        SquirtgunReloadScreen.phialSwapStack = this.swapPhialStack;
+        SquirtgunReloadScreen.phialsListIsDirty = true;
     }
 }

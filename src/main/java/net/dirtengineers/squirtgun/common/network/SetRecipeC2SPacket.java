@@ -51,22 +51,4 @@ public class SetRecipeC2SPacket implements AlchemyPacket {
             }
         });
     }
-
-//    public static void handle(SetRecipeC2SPacket pPacket, Supplier<NetworkEvent.Context> pContext) {
-//        pContext.get().enqueueWork(() -> {
-//            Player player = pContext.get().getSender();
-//            Objects.requireNonNull(player);
-//            Objects.requireNonNull(player.getLevel());
-//            Level level = player.getLevel();
-//            BlockEntity blockEntity = player.getLevel().getBlockEntity(pPacket.blockPos);
-//            RecipeRegistration.getRecipeByGroupAndId(pPacket.group, pPacket.recipeId, level).ifPresent((recipe) -> {
-//                if (blockEntity instanceof AbstractProcessingBlockEntity processingBlockEntity) {
-//                    processingBlockEntity.setProgress(0);
-//                    processingBlockEntity.setRecipe(recipe);
-//                    processingBlockEntity.setChanged();
-//                }
-//            });
-//        });
-//        pContext.get().setPacketHandled(true);
-//    }
 }

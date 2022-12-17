@@ -1,6 +1,5 @@
 package net.dirtengineers.squirtgun.common.network;
 
-import com.electronwill.nightconfig.core.AbstractConfig;
 import com.smashingmods.alchemylib.api.network.AlchemyPacket;
 import net.dirtengineers.squirtgun.Squirtgun;
 import net.dirtengineers.squirtgun.client.capabilities.SquirtgunCapabilities;
@@ -19,10 +18,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.LinkedList;
 import java.util.Objects;
 
-import static net.dirtengineers.squirtgun.client.screens.SquirtgunReloadScreen.*;
+import static net.dirtengineers.squirtgun.client.screens.SquirtgunReloadScreen.ItemStackComparator;
 
 /**
- * This class represents a packet that is sent from the client to the server to request a list of chemical phials
+ * This class represents a packet that is sent from the client to the server to request a list of phials
  * that are available for reloading in the player's inventory.
  *
  * @author X_Niter
@@ -32,40 +31,21 @@ public class GetReloadPhialsListC2SPacket implements AlchemyPacket {
     private static final LinkedList<ItemStack> packetPhials = new LinkedList<>();
 
     ItemStack insertStack;
-
-    /**
-     * Constructs a new GetReloadPhialsListC2SPacket instance.
-     */
     public GetReloadPhialsListC2SPacket(ItemStack pItemStack) {
         insertStack = pItemStack;
     }
 
-    /**
-     * Constructs a new GetReloadPhialsListC2SPacket instance from the given FriendlyByteBuf.
-     *
-     * @param pFriendlyByteBuf the FriendlyByteBuf to read data from
-     */
     public GetReloadPhialsListC2SPacket(FriendlyByteBuf pFriendlyByteBuf) {
         this.insertStack = pFriendlyByteBuf.readItem();
     }
 
-    /**
-     * Encodes this packet's data into the given FriendlyByteBuf.
-     *
-     * @param pBuffer the FriendlyByteBuf to write data to
-     */
     public void encode(@NotNull FriendlyByteBuf pBuffer) {
         pBuffer.writeItem(this.insertStack);
     }
 
-    /**
-     * Handles this packet's logic.
-     *
-     * @param pContext the context in which the packet is being handled
-     */
     @Override
     public void handle(NetworkEvent.@NotNull Context pContext) {
-        IAmmunitionCapability fIAmmunitionCapability = insertStack.getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO).orElse(null);
+        IAmmunitionCapability ammunitionHandler = insertStack.getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO).orElse(null);
 
         if (!packetPhials.isEmpty()) {
             packetPhials.clear();
@@ -91,30 +71,29 @@ public class GetReloadPhialsListC2SPacket implements AlchemyPacket {
             addToPhials(tempStack);
         }
 
-        BasePhial basePhial = null;
-        if (fIAmmunitionCapability.getChemical() != null) {
+//        Get gun ammunition
+        BasePhial gunPhial = null;
+        if (ammunitionHandler.getChemical() != null) {
             for (BasePhial phial : ItemRegistration.CHEMICAL_PHIALS) {
-                if (fIAmmunitionCapability.getChemical().equals(phial.getChemical())) {
-                    basePhial = phial;
-
+                if (ammunitionHandler.getChemical().equals(phial.getChemical())) {
+                    gunPhial = phial;
                 }
             }
         }
-        if (!Objects.equals(fIAmmunitionCapability.getPotionKey(), "")) {
+        if (!Objects.equals(ammunitionHandler.getPotionKey(), "")) {
             for (BasePhial phial : ItemRegistration.POTION_PHIALS) {
-                if (fIAmmunitionCapability.getPotionKey().equals(phial.getPotionLocation())) {
-                    basePhial = phial;
-
+                if (ammunitionHandler.getPotionKey().equals(phial.getPotionLocation())) {
+                    gunPhial = phial;
                 }
             }
         }
 
-        phialSwapStack = basePhial != null
-                ? new ItemStack(basePhial, 1)
+        ItemStack phialSwapStack = gunPhial != null
+                ? new ItemStack(gunPhial, 1)
                 : new ItemStack(ForgeRegistries.ITEMS.getValue(ItemRegistration.PHIAL.getId()), 1);
 
         packetPhials.sort(new ItemStackComparator());
-        Squirtgun.PACKET_HANDLER.sendToPlayer(new SendReloadPhialsListS2PPacket(packetPhials), player);
+        Squirtgun.PACKET_HANDLER.sendToPlayer(new SendReloadPhialsListS2PPacket(packetPhials, phialSwapStack), player);
 
     }
 

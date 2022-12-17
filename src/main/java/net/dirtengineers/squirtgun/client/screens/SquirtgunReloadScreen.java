@@ -45,17 +45,17 @@ import java.util.Objects;
  */
 public class SquirtgunReloadScreen {
 
-
     public SquirtgunReloadScreen() {}
 
     public static ItemStack phialSwapStack = ItemStack.EMPTY;
 
     public static List<ItemStack> phials = new LinkedList<>();
 
+    public static boolean phialsListIsDirty;
+
     public static int offhandLocationIndex = -1;
 
     public static IAmmunitionCapability ammunitionHandler;
-
 
     public static class ItemStackComparator implements Comparator<ItemStack> {
 
@@ -95,26 +95,53 @@ public class SquirtgunReloadScreen {
         }
 
         @Override
+        public void tick() {
+            if(phialsListIsDirty) {
+                UpdateLayout();
+                phialsListIsDirty = false;
+            }
+        }
+
+        private void UpdateLayout() {
+            clearWidgets();
+            calculateBGSizeAndPosition();
+            makeSwapStackButton();
+            fillPhialTable();
+            if(phialSelected) {
+                makeCancelbutton();
+                makeAgreebutton();
+            }
+        }
+
+        @Override
         protected void init() {
             if (player != null) {
                 offhandLocationIndex = player.getInventory().items.size() + 1;
                 ammunitionHandler = player.getItemInHand(player.getUsedItemHand()).getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO).orElse(null);
-
-                /*
-                Request server to update Phials list
-                */
-                Squirtgun.PACKET_HANDLER.sendToServer(new GetReloadPhialsListC2SPacket(player.getItemInHand(player.getUsedItemHand())));
+                updatePhialsListFromServer();
             }
             if(ammunitionHandler == null) {
                 super.onClose();
             }
-
-
-            centerX = width / 2;
             super.init();
-            calculateBGSizeAndPosition();
-            UpdateLayout();
+
+            //initial BG dimensions
+            centerX = width / 2;
+            bgHeight = phialTableOffsetY + (positionShift * 2) + buttonSize;
+            bgWidth = positionShift * maxButtonColumns + buttonSize + 6;
+            bgLeft = centerX - (int) (positionShift * (maxButtonColumns * 0.5)) - positionShift;
+            bgTop = this.height / 2 - (bgHeight / 2);
+
             phialSelected = false;
+            clearWidgets();
+        }
+
+        private void updatePhialsListFromServer() {
+            /*
+                Request server to update Phials list
+            */
+            phialsListIsDirty = true;
+            Squirtgun.PACKET_HANDLER.sendToServer(new GetReloadPhialsListC2SPacket(player.getItemInHand(player.getUsedItemHand())));
         }
 
         private void calculateBGSizeAndPosition() {
@@ -123,20 +150,8 @@ public class SquirtgunReloadScreen {
             if (phials.size() % maxButtonColumns != 0) {
                 rows++;
             }
-            bgHeight += (positionShift * (rows + 1)) + 16;
-            bgWidth = positionShift * maxButtonColumns + buttonSize + 6;
+            bgHeight += (positionShift * (rows + 1)) + buttonSize;
             bgTop = this.height / 2 - (bgHeight / 2);
-            bgLeft = centerX - (int) (positionShift * (maxButtonColumns * 0.5)) - positionShift;
-        }
-
-        private void UpdateLayout() {
-            clearWidgets();
-            makeSwapStackButton();
-            fillPhialTable();
-            if(phialSelected) {
-                makeCancelbutton();
-                makeAgreebutton();
-            }
         }
 
         @Override
@@ -293,7 +308,7 @@ public class SquirtgunReloadScreen {
                 if (pButton.getTargetStack().getItem() instanceof BasePhial) {
                     phialSwapStack = pButton.getTargetStack().copy();
                     phialSelected = true;
-                    UpdateLayout();
+                    updatePhialsListFromServer();
                 }
             }
         }
