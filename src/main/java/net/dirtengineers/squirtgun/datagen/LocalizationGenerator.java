@@ -42,6 +42,7 @@ public class LocalizationGenerator extends LanguageProvider {
 
     private void addManualTranslations(){
         //ITEMS
+        this.add(String.format("itemGroup.%s", Constants.squirtgunTabName), "Squirtgun");
         this.add(String.format("item.squirtgun.%s", Constants.gunItemName), "Squirtgun");
         this.add(String.format("item.squirtgun.%s", Constants.phialItemName), "Empty Phial");
         this.add(String.format("item.squirtgun.%s", Constants.brassBlendItemName), "Brass Blend");

@@ -21,6 +21,7 @@ public class Constants {
     public static final String phialCapItemName = "phial_cap";
     public static final String quartzShardItemName = "quartz_shard";
     public static final String actuatorItemName = "actuator";
+    public static final String squirtgunTabName = "squirtguntab";
 
     // sound events
     public static final String SlugHitSoundName = "squirt_slug_hit";
@@ -79,7 +80,6 @@ public class Constants {
 
     //Text style
     public static final Style HOVER_TEXT_STYLE = Style.EMPTY.withFont(Style.DEFAULT_FONT).withColor(ChatFormatting.YELLOW);
-    public static final Style LOADED_PHIAL_TEXT_STYLE = Style.EMPTY.withFont(Style.DEFAULT_FONT).withBold(true).withColor(ChatFormatting.RED);
     public static final Style MOD_ID_TEXT_STYLE = Style.EMPTY.withFont(Style.DEFAULT_FONT).withItalic(true).withColor(ChatFormatting.BLUE);
     public static final Style DISPLAY_ITEM_TEXT_STYLE = Style.EMPTY.withColor(ChatFormatting.WHITE);
     public static final Style RECIPE_ITEM_REQUIRED_TEXT_STYLE = Style.EMPTY.withUnderlined(true).withColor(ChatFormatting.YELLOW);

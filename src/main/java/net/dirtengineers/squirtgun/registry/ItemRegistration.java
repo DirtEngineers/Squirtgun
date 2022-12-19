@@ -31,7 +31,7 @@ import static com.smashingmods.chemlib.registry.ItemRegistry.getElements;
 
 
 public class ItemRegistration {
-    public static final CreativeModeTab SQUIRTGUN_TAB = new CreativeModeTab("squirtguntab") {
+    public static final CreativeModeTab SQUIRTGUN_TAB = new CreativeModeTab(Constants.squirtgunTabName) {
         public ItemStack makeIcon() {
             return new ItemStack(SQUIRTGUN.get());
         }
