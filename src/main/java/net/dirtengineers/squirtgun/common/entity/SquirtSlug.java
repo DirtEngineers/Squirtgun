@@ -57,6 +57,7 @@ public class SquirtSlug extends AbstractArrow implements IEntityAdditionalSpawnD
         this.potion = null;
         this.chemical = pChemical;
         this.fluid = CHEMICAL_FLUIDS.get(chemical);
+        setGlowingTag(true);
         setEffects();
     }
 
@@ -65,6 +66,7 @@ public class SquirtSlug extends AbstractArrow implements IEntityAdditionalSpawnD
         this.chemical = null;
         this.fluid = null;
         this.potion = ForgeRegistries.POTIONS.getValue(new ResourceLocation(pPotionKey));
+        setGlowingTag(true);
         setEffects();
     }
 

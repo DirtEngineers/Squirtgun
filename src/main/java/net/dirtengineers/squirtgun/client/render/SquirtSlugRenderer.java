@@ -12,7 +12,7 @@ public class SquirtSlugRenderer extends ArrowRenderer<SquirtSlug> {
         super(pContext);
     }
 
-    public static final ResourceLocation SQUIRT_SLUG_TEXTURE = new ResourceLocation( Squirtgun.MOD_ID, Constants.slugTextureLocation);
+    public static final ResourceLocation SQUIRT_SLUG_TEXTURE = new ResourceLocation(Squirtgun.MOD_ID, Constants.slugTextureLocation);
 
     @Override
     public ResourceLocation getTextureLocation(SquirtSlug pEntity) {

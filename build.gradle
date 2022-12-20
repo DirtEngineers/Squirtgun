@@ -97,7 +97,7 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    implementation fg.deobf("smashingmods:chemlib:${minecraft_version}-${chemlib_version}")
+    implementation fg.deobf("smashingmods:chemlib:${minecraft_version}-${chemlib_version}")//1.19.2-2.0.14-DONTPUBLISH
 
     implementation fg.deobf("smashingmods:alchemistry:${minecraft_version}-${alchemistry_version}")
 
