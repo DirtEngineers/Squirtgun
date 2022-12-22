@@ -1,0 +1,13 @@
+{
+  "name": "Loading/Reloading",
+  "icon": "squirtgun:squirtgunitem",
+  "category": "squirtgun:gun",
+  "sortnum": 2,
+  "pages":
+  [
+    {
+      "type": "text",
+      "text": "Use the keybind \"$(k:squirtgun.text.open_gui)\" to open the loading screen.  Select a phial from the list and click the check mark to load it or the \"X\" to cancel.$(br)The list is made from phials in your inventory."
+    }
+  ]
+}

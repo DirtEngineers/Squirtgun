@@ -1,0 +1,18 @@
+{
+  "name": "The Gun",
+  "icon": "squirtgun:squirtgunitem",
+  "category": "squirtgun:gun",
+  "sortnum": 0,
+  "pages":
+  [
+    {
+      "type": "text",
+      "text": "The Squirt Gun uses phials made in $(l)Dr. Clark's Fluid Encapsulation Matrix from fluids and potions to fire a slug."
+    },
+    {
+      "type": "crafting",
+      "recipe": "squirtgun:squirtgunitem",
+      "text": "The squirt gun is fun and easy to use. To get started, make some phials in $(l)Dr. Clark's Fluid Encapsulation Matrix, load one up, and take aim!"
+    }
+  ]
+}
