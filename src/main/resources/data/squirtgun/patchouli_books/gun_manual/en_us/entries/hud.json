@@ -1,0 +1,13 @@
+{
+  "name": "HUD operation",
+  "icon": "squirtgun:squirtgunitem",
+  "category": "squirtgun:gun",
+  "sortnum": 3,
+  "pages":
+  [
+    {
+      "type": "text",
+      "text": "Use the keybind \"$(k:squirtgun.gun_display_ammo_status)\" to toggle the HUD display.  Display roates between on, off, and fade afer 10 seconds."
+    }
+  ]
+}

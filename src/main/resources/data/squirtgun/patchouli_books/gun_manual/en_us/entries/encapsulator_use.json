@@ -1,0 +1,13 @@
+{
+  "name": "Using the Encapsulator",
+  "icon": "squirtgun:encapsulator_block",
+  "category": "squirtgun:encapsulator",
+  "sortnum": 1,
+  "pages":
+  [
+    {
+      "type": "text",
+      "text": "Put an empty phial in the top slot or load them in with a hopper.$(br)You can put a potion in the bottom slot OR you can put a bucket of fluid in there.$(br)You can also load the fluid into the storage tank.  You can even pump it in.$(br)You can let it select what to make just by inserting the ingredients or you can hit the recipe select button and make your choice from there.$(br)You can even lock that recipe in."
+    }
+  ]
+}
