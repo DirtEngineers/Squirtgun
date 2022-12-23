@@ -79,11 +79,11 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity implements
     }
 
     public void updateRecipe() {
-        if (this.level != null && !this.level.isClientSide() && !this.getInputHandler().isEmpty() && !this.isRecipeLocked()) {
-            RecipeRegistration.getPhialRecipe(this::test, this.level).ifPresent((recipe) -> {
-                if (this.currentRecipe == null || !this.currentRecipe.equals(recipe)) {
-                    this.setProgress(0);
-                    this.setRecipe(recipe.copy());
+        if (level != null && !level.isClientSide() && !getInputHandler().isEmpty() && !isRecipeLocked()) {
+            RecipeRegistration.getPhialRecipe(this::test, level).ifPresent(recipe -> {
+                if (currentRecipe == null || !currentRecipe.equals(recipe)) {
+                    setProgress(0);
+                    setRecipe((AbstractPhialRecipe) recipe.copy());
                 }
             });
         }
@@ -96,8 +96,8 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity implements
         }
         if(recipe instanceof ChemicalPhialRecipe) {
             inputStacks.add(new ItemStack(FluidRegistry.getBuckets().filter(
-                    BucketItem -> BucketItem.getFluid().getFluidType()
-                            == getFluidStorage().getFluidStack().getFluid().getFluidType()).findFirst().orElse((BucketItem) Items.BUCKET), 1));
+                    BucketItem -> BucketItem.getFluid()
+                            == getFluidStorage().getFluidStack().getFluid()).findFirst().orElse((BucketItem) Items.BUCKET), 1));
         }
         return recipe.matchInputs(inputStacks);
     }
@@ -108,7 +108,7 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity implements
             setProgress(0);
             return false;
         } else {
-            AbstractPhialRecipe tempRecipe = currentRecipe.copy();
+            AbstractPhialRecipe tempRecipe = (AbstractPhialRecipe) Objects.requireNonNull(getRecipe()).copy();
             ItemStack primaryOutput = getOutputHandler().getStackInSlot(PHIAL_OUTPUT_SLOT).copy();
             ItemStack secondaryOutput = getOutputHandler().getStackInSlot(EMPTY_CONTAINER_OUTPUT_SLOT).copy();
             return getEnergyHandler().getEnergyStored() >= getEnergyPerTick()
@@ -212,8 +212,10 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity implements
     }
 
     @Override
-    public <R extends AbstractProcessingRecipe> void setRecipe(@Nullable R r) {
-        this.currentRecipe = (AbstractPhialRecipe) r;
+    public <R extends AbstractProcessingRecipe> void setRecipe(@Nullable R pRecipe) {
+        if (pRecipe instanceof AbstractPhialRecipe recipe) {
+            this.currentRecipe = recipe;
+        }
     }
 
     @Override
@@ -225,8 +227,9 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity implements
         return this.maxProgress;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public AbstractProcessingRecipe getRecipe() {
+    public AbstractPhialRecipe getRecipe() {
         return currentRecipe;
     }
 

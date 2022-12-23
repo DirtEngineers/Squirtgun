@@ -21,7 +21,7 @@ public class BlockEntityRegistration {
     }
 
     static{
-        BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, Squirtgun.MOD_ID);
+        BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, Squirtgun.MOD_ID);
         FLUID_ENCAPSULATOR_BLOCK_ENTITY = BLOCK_ENTITY_TYPES.register(
                 Constants.encapsulatorBlockEntityName,
                 () -> BlockEntityType.Builder.of(

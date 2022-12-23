@@ -11,13 +11,17 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.jetbrains.annotations.Nullable;
 
-public class PotionPhialRecipeSerializer<T extends PotionPhialRecipe> implements RecipeSerializer<T> {
+import javax.annotation.Nonnull;
+
+public class PotionPhialRecipeSerializer<T extends PotionPhialRecipe> extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<T> {
     private final PotionPhialRecipeSerializer.IFactory<T> factory;
     public PotionPhialRecipeSerializer(PotionPhialRecipeSerializer.IFactory<T> pFactory) { this.factory = pFactory; }
 
-    public T fromJson(ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {
+    @Nonnull
+    public T fromJson(@Nonnull ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {
         String group = pSerializedRecipe.get("group").getAsString();
         ItemStack input1 = ShapedRecipe.itemStackFromJson(pSerializedRecipe.getAsJsonObject("input1"));
         Potion input2 =  Util.toPotion(pSerializedRecipe.getAsJsonObject("input2").get("potion").getAsString());
@@ -25,7 +29,7 @@ public class PotionPhialRecipeSerializer<T extends PotionPhialRecipe> implements
         return this.factory.create(pRecipeId, group, input1, input2, output1);
     }
 
-    public @Nullable T fromNetwork(ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
+    public @Nullable T fromNetwork(@Nonnull ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
         String group = pBuffer.readUtf(32767);
         ItemStack input1 = pBuffer.readItem();
         Potion input2 = PotionUtils.getPotion(pBuffer.readItem());

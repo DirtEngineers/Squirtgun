@@ -17,9 +17,9 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -88,7 +88,7 @@ public class SquirtgunReloadScreen {
         boolean phialSelected;
 
         public ScreenRender() {
-            super(MutableComponent.create(new TranslatableContents(Constants.gunFunctionality)));
+            super(new TextComponent(Constants.gunFunctionality));
         }
 
         @Override
@@ -158,14 +158,14 @@ public class SquirtgunReloadScreen {
             renderBackground(pPoseStack);
             super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
 
-            drawCenteredString(
-                    pPoseStack
-                    , Minecraft.getInstance().font
-                    , MutableComponent.create(new TranslatableContents(Constants.gunFunctionality)).setStyle(Style.EMPTY.withFont(Style.DEFAULT_FONT)
-                            .withColor(ChatFormatting.WHITE)).withStyle(ChatFormatting.BOLD)
-                    , centerX
-                    , bgTop + titleOffsetY
-                    , 0xFFFFFF);
+            drawCenteredString(pPoseStack,
+                    Minecraft.getInstance().font,
+                    new TranslatableComponent(Constants.gunFunctionality)
+                            .setStyle(Style.EMPTY.withFont(Style.DEFAULT_FONT)
+                            .withColor(ChatFormatting.WHITE)).withStyle(ChatFormatting.BOLD),
+                    centerX,
+                    bgTop + titleOffsetY,
+                    0xFFFFFF);
 
             this.children().forEach(e -> {
                 if (e instanceof PhialReloadScreenButton btn) {
@@ -208,7 +208,7 @@ public class SquirtgunReloadScreen {
             if (player != null && phialSelected) {
                 if(SquirtgunItem.canLoadPhial(player, phialSwapStack.copy())) {
                     Squirtgun.PACKET_HANDLER.sendToServer(new GunReloadC2SPacket(phialSwapStack.copy()));
-                    player.playSound(SoundEventRegistration.PHIAL_SWAP.get());
+                    player.playSound(SoundEventRegistration.PHIAL_SWAP.get(), 1.0f, 1.0f);
                 }
             }
             super.onClose();
@@ -257,14 +257,13 @@ public class SquirtgunReloadScreen {
         private PhialReloadScreenButton makePhialButton(ItemStack pPhialStack, boolean isSwapStack, int pX, int pY) {
             boolean isSameAsSwapStack = ItemStackComparator.getItemPath(pPhialStack)
                     .compareToIgnoreCase(ItemStackComparator.getItemPath(phialSwapStack)) == 0;
-            PhialReloadScreenButton btn = new PhialReloadScreenButton(
-                    pX
-                    , pY
-                    , buttonSize
-                    , buttonSize
-                    , MutableComponent.create(new TranslatableContents(pPhialStack.getItem().getDescriptionId())).withStyle(Style.EMPTY.withFont(Style.DEFAULT_FONT))
-                    , pButton -> this.swapPhials((PhialReloadScreenButton) pButton)
-            );
+            PhialReloadScreenButton btn = new PhialReloadScreenButton(pX,
+                    pY,
+                    buttonSize,
+                    buttonSize,
+                    new TranslatableComponent(pPhialStack.getItem().getDescriptionId())
+                            .withStyle(Style.EMPTY.withFont(Style.DEFAULT_FONT)),
+                    pButton -> this.swapPhials((PhialReloadScreenButton) pButton));
             btn.setTargetStack(pPhialStack);
             btn.active = !isSwapStack;
             btn.setDisplayLoadedMessage(isSameAsSwapStack && !isSwapStack);
@@ -272,27 +271,25 @@ public class SquirtgunReloadScreen {
         }
 
         private void makeCancelbutton() {
-            actionButton = new ActionButton(
-                    centerX + 4
-                    , phialTableBottom
-                    , 18
-                    , 18
-                    , MutableComponent.create(new TranslatableContents(Constants.gunGuiCancelButtonMessage)).withStyle(Style.EMPTY.withFont(Style.DEFAULT_FONT))
-                    , b -> super.onClose()
-                    , ActionButton.ActionType.CANCEL);
+            actionButton = new ActionButton(centerX + 4,
+                    phialTableBottom,
+                    18,
+                    18,
+                    new TranslatableComponent(Constants.gunGuiCancelButtonMessage).withStyle(Style.EMPTY.withFont(Style.DEFAULT_FONT)),
+                    b -> super.onClose(),
+                    ActionButton.ActionType.CANCEL);
             actionButton.setActive(phialSelected);
             addRenderableWidget(actionButton);
         }
 
         private void makeAgreebutton() {
-            actionButton = new ActionButton(
-                    centerX - 24
-                    , phialTableBottom
-                    , 18
-                    , 18
-                    , MutableComponent.create(new TranslatableContents(Constants.gunGuiAgreeButtonMessage)).withStyle(Style.EMPTY.withFont(Style.DEFAULT_FONT))
-                    , b -> this.onClose()
-                    , ActionButton.ActionType.AGREE);
+            actionButton = new ActionButton(centerX - 24,
+                    phialTableBottom,
+                    18,
+                    18,
+                    new TranslatableComponent(Constants.gunGuiAgreeButtonMessage).withStyle(Style.EMPTY.withFont(Style.DEFAULT_FONT)),
+                    b -> this.onClose(),
+                    ActionButton.ActionType.AGREE);
             actionButton.setActive(phialSelected);
             addRenderableWidget(actionButton);
         }

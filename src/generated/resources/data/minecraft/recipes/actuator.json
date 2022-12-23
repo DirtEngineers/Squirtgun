@@ -1,25 +1,25 @@
 {
   "type": "minecraft:crafting_shaped",
   "group": "squirtgun",
+  "pattern": [
+    "B B",
+    "GRI",
+    "B B"
+  ],
   "key": {
     "B": {
       "item": "squirtgun:brass_ingot"
-    },
-    "G": {
-      "item": "chemlib:graphite_dust"
     },
     "I": {
       "item": "minecraft:gold_ingot"
     },
     "R": {
       "item": "minecraft:redstone"
+    },
+    "G": {
+      "item": "chemlib:graphite_dust"
     }
   },
-  "pattern": [
-    "B B",
-    "GRI",
-    "B B"
-  ],
   "result": {
     "item": "squirtgun:actuator"
   }

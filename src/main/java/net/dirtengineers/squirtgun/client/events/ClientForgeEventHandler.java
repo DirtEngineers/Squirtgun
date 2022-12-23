@@ -9,7 +9,7 @@ import net.dirtengineers.squirtgun.common.item.SquirtgunItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ComputeFovModifierEvent;
+import net.minecraftforge.client.event.FOVModifierEvent;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -19,10 +19,10 @@ import static net.dirtengineers.squirtgun.client.Keybinds.GUN_AMMO_STATUS_DISPLA
 @Mod.EventBusSubscriber(modid = Squirtgun.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientForgeEventHandler {
     @SubscribeEvent
-    public static void onComputeFovModifierEvent(ComputeFovModifierEvent event) {
-        if (event.getPlayer().isUsingItem() && event.getPlayer().getUseItem().getItem() instanceof SquirtgunItem) {
+    public static void onComputeFovModifierEvent(FOVModifierEvent pEvent) {
+        if (pEvent.getEntity().isUsingItem() && pEvent.getEntity().getUseItem().getItem() instanceof SquirtgunItem) {
             float fovModifier = 1f;
-            int ticksUsingItem = event.getPlayer().getTicksUsingItem();
+            int ticksUsingItem = pEvent.getEntity().getTicksUsingItem();
             float deltaTicks = (float) ticksUsingItem / 20.0F;
             if (deltaTicks > 1.0F) {
                 deltaTicks = 1.0F;
@@ -30,12 +30,12 @@ public class ClientForgeEventHandler {
                 deltaTicks *= deltaTicks;
             }
             fovModifier *= 1.0F - deltaTicks * 0.15F;
-            event.setNewFovModifier(fovModifier);
+            pEvent.setNewfov(fovModifier);
         }
     }
 
     @SubscribeEvent
-    public static void onKeyInput(InputEvent.Key event) {
+    public static void onKeyInput(InputEvent.KeyInputEvent event) {
 
         Player player = Minecraft.getInstance().player;
         if (player != null) {

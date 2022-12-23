@@ -13,8 +13,8 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,21 +31,25 @@ public class PotionPhialRecipe extends AbstractPhialRecipe {
     }
 
     @Override
+    @Nonnull
     public RecipeSerializer<?> getSerializer() {
         return RecipeRegistration.POTION_PHIAL_SERIALIZER.get();
     }
 
     @Override
+    @Nonnull
     public RecipeType<?> getType() {
-        return RecipeRegistration.POTION_PHIAL_TYPE.get();
+        return RecipeRegistration.POTION_PHIAL_TYPE;
     }
 
     @Override
-    public ItemStack assemble(Inventory pContainer) {
+    @Nonnull
+    public ItemStack assemble(@Nonnull Inventory pContainer) {
         return outputPhial.copy();
     }
 
     @Override
+    @Nonnull
     public NonNullList<Ingredient> getIngredients() {
         return NonNullList.of(Ingredient.of(inputPhial.getItem(), PotionUtils.setPotion(new ItemStack(Items.POTION), potion).getItem()));
     }
@@ -57,15 +61,17 @@ public class PotionPhialRecipe extends AbstractPhialRecipe {
 
     //TODO: resolve this
     @Override
-    public int compareTo(@NotNull AbstractProcessingRecipe abstractProcessingRecipe) {
+    public int compareTo(@Nonnull AbstractProcessingRecipe abstractProcessingRecipe) {
         return getId().compareNamespaced(abstractProcessingRecipe.getId());
     }
 
+    @Nonnull
     public PotionPhialRecipe copy() {
         return new PotionPhialRecipe(getId(), getGroup(), inputPhial, potion, outputPhial);
     }
 
     @Override
+    @Nonnull
     public List<ItemStack> getInput() {
         LinkedList<ItemStack> outList = new LinkedList<>();
         outList.add(inputPhial);
@@ -74,11 +80,13 @@ public class PotionPhialRecipe extends AbstractPhialRecipe {
     }
 
     @Override
+    @Nonnull
     public ItemStack getResultItem() {
         return outputPhial;
     }
 
     @Override
+    @Nonnull
     public List<ItemStack> getOutput() { return List.of(outputPhial); }
 
     public ItemStack getPhialInput() {

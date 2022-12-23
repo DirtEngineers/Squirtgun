@@ -1,18 +1,18 @@
 {
   "type": "minecraft:crafting_shaped",
   "group": "squirtgun",
-  "key": {
-    "X": {
-      "item": "squirtgun:brass_block"
-    }
-  },
   "pattern": [
     "   ",
     " X ",
     "   "
   ],
+  "key": {
+    "X": {
+      "item": "squirtgun:brass_block"
+    }
+  },
   "result": {
-    "count": 9,
-    "item": "squirtgun:brass_ingot"
+    "item": "squirtgun:brass_ingot",
+    "count": 9
   }
 }

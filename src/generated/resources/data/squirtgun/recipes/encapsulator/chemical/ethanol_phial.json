@@ -5,8 +5,8 @@
     "item": "squirtgun:phial"
   },
   "input2": {
-    "amount": "1000",
-    "fluid": "chemlib:ethanol_fluid"
+    "fluid": "chemlib:ethanol_fluid",
+    "amount": "1000"
   },
   "result": {
     "item": "squirtgun:ethanol_phial"

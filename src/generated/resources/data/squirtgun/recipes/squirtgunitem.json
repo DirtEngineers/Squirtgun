@@ -1,7 +1,15 @@
 {
   "type": "minecraft:crafting_shaped",
   "group": "squirtgun",
+  "pattern": [
+    "VP ",
+    "ABB",
+    "BV "
+  ],
   "key": {
+    "V": {
+      "item": "chemlib:polyvinyl_chloride_plate"
+    },
     "A": {
       "item": "squirtgun:actuator"
     },
@@ -10,16 +18,8 @@
     },
     "P": {
       "item": "squirtgun:phial"
-    },
-    "V": {
-      "item": "chemlib:polyvinyl_chloride_plate"
     }
   },
-  "pattern": [
-    "VP ",
-    "ABB",
-    "BV "
-  ],
   "result": {
     "item": "squirtgun:squirtgunitem"
   }

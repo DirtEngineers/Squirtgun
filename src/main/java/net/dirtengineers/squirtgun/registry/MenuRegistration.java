@@ -17,6 +17,7 @@ public class MenuRegistration {
 
     MenuRegistration(){}
 
+    @SuppressWarnings("SameParameterValue")
     private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenuType(IContainerFactory<T> factory, String name) {
         return MENU_TYPES.register(name, () -> IForgeMenuType.create(factory));
     }
@@ -26,7 +27,7 @@ public class MenuRegistration {
     }
 
     static {
-        MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, Squirtgun.MOD_ID);
+        MENU_TYPES = DeferredRegister.create(ForgeRegistries.CONTAINERS, Squirtgun.MOD_ID);
         ENCAPSULATOR_MENU = registerMenuType(EncapsulatorMenu::new, "encapsulator_menu");
     }
 }

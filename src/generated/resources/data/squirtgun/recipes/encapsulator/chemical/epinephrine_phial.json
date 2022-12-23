@@ -5,8 +5,8 @@
     "item": "squirtgun:phial"
   },
   "input2": {
-    "amount": "1000",
-    "fluid": "chemlib:epinephrine_fluid"
+    "fluid": "chemlib:epinephrine_fluid",
+    "amount": "1000"
   },
   "result": {
     "item": "squirtgun:epinephrine_phial"

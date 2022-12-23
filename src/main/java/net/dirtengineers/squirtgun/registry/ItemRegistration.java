@@ -16,10 +16,12 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegisterEvent;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.*;
@@ -28,9 +30,9 @@ import static com.smashingmods.chemlib.api.MatterState.LIQUID;
 import static com.smashingmods.chemlib.registry.ItemRegistry.getCompounds;
 import static com.smashingmods.chemlib.registry.ItemRegistry.getElements;
 
-
-
+@Mod.EventBusSubscriber( bus = Mod.EventBusSubscriber.Bus.MOD )
 public class ItemRegistration {
+
     public static final CreativeModeTab SQUIRTGUN_TAB = new CreativeModeTab(Constants.squirtgunTabName) {
         public ItemStack makeIcon() {
             return new ItemStack(SQUIRTGUN.get());
@@ -38,83 +40,50 @@ public class ItemRegistration {
     };
 
     //Properties
-    public static final Item.Properties ITEM_PROPERTIES_NO_TAB;
-    public static final Item.Properties ITEM_PROPERTIES_WITH_TAB;
-    public static final Item.Properties ITEM_PROPERTIES_WITH_TAB_STACK_TO_ONE;
-    public static final DeferredRegister<Item> ITEMS;
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Squirtgun.MOD_ID);
+    public static final Item.Properties ITEM_PROPERTIES_NO_TAB = new Item.Properties().rarity(Rarity.COMMON).stacksTo(1);
+    public static final Item.Properties ITEM_PROPERTIES_WITH_TAB = new Item.Properties().tab(SQUIRTGUN_TAB).rarity(Rarity.COMMON).stacksTo(64);
+    public static final Item.Properties ITEM_PROPERTIES_WITH_TAB_STACK_TO_ONE = new Item.Properties().tab(SQUIRTGUN_TAB).rarity(Rarity.COMMON).stacksTo(1);
 
     //Items
-    public static final RegistryObject<Item> PHIAL;
-    public static final RegistryObject<Item> SQUIRTSLUG;
-    public static final RegistryObject<Item> SQUIRTGUN;
-    public static final RegistryObject<Item> BRASS_BLEND;
-    public static final RegistryObject<Item> BRASS_NUGGET;
-    public static final RegistryObject<Item> BRASS_INGOT;
-    public static final RegistryObject<Item> PHIAL_CAP;
-    public static final RegistryObject<Item> FUSED_QUARTZ_SHARD;
-    public static final RegistryObject<Item> GUN_ACTUATOR;
+    public static final RegistryObject<Item> PHIAL = ITEMS.register(Constants.phialItemName, () -> new EmptyPhialItem(ITEM_PROPERTIES_WITH_TAB));
+    public static final RegistryObject<Item> SQUIRTSLUG = ITEMS.register(Constants.slugItemName, () -> new GenericSlug(ITEM_PROPERTIES_NO_TAB));
+    public static final RegistryObject<Item> SQUIRTGUN = ITEMS.register(Constants.gunItemName, () -> new SquirtgunItem(ITEM_PROPERTIES_WITH_TAB_STACK_TO_ONE));
+    public static final RegistryObject<Item> BRASS_BLEND = ITEMS.register(Constants.brassBlendItemName, () -> new BrassBlendItem(ITEM_PROPERTIES_WITH_TAB));
+    public static final RegistryObject<Item> BRASS_NUGGET = ITEMS.register(Constants.brassNuggetItemName, () -> new BrassNuggetItem(ITEM_PROPERTIES_WITH_TAB));
+    public static final RegistryObject<Item> BRASS_INGOT = ITEMS.register(Constants.brassIngotItemName, () -> new BrassIngotItem(ITEM_PROPERTIES_WITH_TAB));
+    public static final RegistryObject<Item> PHIAL_CAP = ITEMS.register(Constants.phialCapItemName, () -> new PhialCapItem(ITEM_PROPERTIES_WITH_TAB));
+    public static final RegistryObject<Item> FUSED_QUARTZ_SHARD = ITEMS.register(Constants.quartzShardItemName, () -> new FusedQuartzShard(ITEM_PROPERTIES_WITH_TAB));
+    public static final RegistryObject<Item> GUN_ACTUATOR = ITEMS.register(Constants.actuatorItemName, () -> new Actuator(ITEM_PROPERTIES_WITH_TAB));
 
     //Collections
-    public static Map<Chemical, Fluid> CHEMICAL_FLUIDS;
-    public static List<Chemical> ammunitionChemicals;
-    public static List<ChemicalPhial> CHEMICAL_PHIALS;
-    public static List<PotionPhial> POTION_PHIALS;
+    public static Map<Chemical, Fluid> CHEMICAL_FLUIDS = new HashMap<>();
+    public static List<Chemical> ammunitionChemicals = new ArrayList<>();
+    public static List<ChemicalPhial> CHEMICAL_PHIALS = new ArrayList<>();
+    public static List<PotionPhial> POTION_PHIALS = new ArrayList<>();
 
     public static void buildChemical_Fluids() {
         for (Chemical chemical : ItemRegistration.ammunitionChemicals)
-            if (chemical != null && chemical.getFluidTypeReference().isPresent()) {
-                String location = String.valueOf(chemical.getFluidTypeReference().get());
+            if (chemical != null && chemical.getFluidReference().isPresent()) {
+                ResourceLocation location = chemical.getFluidReference().get().getRegistryName();
                 //TODO: Make a list chemicals to NOT append "_fluid" to.
                 // preferably in the CompoundRegistration
-                if (!Objects.equals(location, Constants.EMPTY_FLUID_NAME)
-                        && !Objects.equals(chemical.getChemicalName(), "water")
-                        && !Objects.equals(chemical.getChemicalName(), "milk")
-                        && !Objects.equals(chemical.getChemicalName(), "lava")) {
-                    location += "_fluid";
-                }
-                ItemRegistration.CHEMICAL_FLUIDS.put(chemical, ForgeRegistries.FLUIDS.getValue(new ResourceLocation(location)));
+                ItemRegistration.CHEMICAL_FLUIDS.put(chemical, ForgeRegistries.FLUIDS.getValue(Objects.requireNonNull(location)));
             }
     }
 
-    public static void registerPhialsAndSlugs(RegisterEvent pEvent) {
-        if (pEvent.getRegistryKey() == ForgeRegistries.Keys.ITEMS) {
-            ItemRegistration.SetAmmunitionChemicals();
-            ItemRegistration.buildPhials(pEvent);
-        }
-    }
-
-    private static void SetAmmunitionChemicals() {
+    @SubscribeEvent
+    public static void registerPhialsAndSlugs(RegistryEvent.Register<Item> pEvent) {
         ItemRegistration.ammunitionChemicals.addAll(getCompounds().stream().filter(compound -> compound.getMatterState() == LIQUID).toList());
         ItemRegistration.ammunitionChemicals.addAll(getElements().stream().filter(element -> element.getMatterState() == LIQUID).toList());
-    }
 
-    private static void buildPhials(RegisterEvent pEvent) {
-        ResourceLocation phialLocation;
         for (Chemical chemical : ItemRegistration.ammunitionChemicals) {
-            phialLocation =
-                    new ResourceLocation(
-                            Squirtgun.MOD_ID,
-                            String.format("%s_phial", chemical.getChemicalName()));
-
-            pEvent.register(
-                    ForgeRegistries.Keys.ITEMS,
-                    phialLocation,
-                    () -> new ChemicalPhial(chemical, BasePhial.CAPACITY_UPGRADE.BASE));
-            CHEMICAL_PHIALS.add((ChemicalPhial) ForgeRegistries.ITEMS.getValue(phialLocation));
+            pEvent.getRegistry().register(new ChemicalPhial(chemical, BasePhial.CAPACITY_UPGRADE.BASE).setRegistryName(Squirtgun.MOD_ID, String.format("%s_phial", chemical.getChemicalName())));
         }
 
-        for(Map.Entry<ResourceKey<Potion>, Potion> potion : ForgeRegistries.POTIONS.getEntries().stream().toList()) {
+        for (Map.Entry<ResourceKey<Potion>, Potion> potion : ForgeRegistries.POTIONS.getEntries().stream().toList()) {
             if (potion.getValue().getEffects().size() != 0) {
-                phialLocation =
-                        new ResourceLocation(
-                                Squirtgun.MOD_ID,
-                                String.format("%s_phial", potion.getKey().location().getPath()));
-
-                pEvent.register(
-                        ForgeRegistries.Keys.ITEMS,
-                        phialLocation,
-                        () -> new PotionPhial(potion.getKey().location().toString(), BasePhial.CAPACITY_UPGRADE.BASE));
-                POTION_PHIALS.add((PotionPhial) ForgeRegistries.ITEMS.getValue(phialLocation));
+                pEvent.getRegistry().register(new PotionPhial(potion.getKey().location().toString(), BasePhial.CAPACITY_UPGRADE.BASE).setRegistryName(Squirtgun.MOD_ID, String.format("%s_phial", Objects.requireNonNull(potion.getValue().getRegistryName()).getPath())));
             }
         }
     }
@@ -126,26 +95,5 @@ public class ItemRegistration {
     public static void register(IEventBus eventbus) {
         BlockRegistration.BLOCKS.getEntries().forEach(ItemRegistration::fromBlock);
         ITEMS.register(eventbus);
-    }
-
-    static {
-        ITEM_PROPERTIES_WITH_TAB = new Item.Properties().tab(SQUIRTGUN_TAB).rarity(Rarity.COMMON).stacksTo(64);
-        ITEM_PROPERTIES_WITH_TAB_STACK_TO_ONE = new Item.Properties().tab(SQUIRTGUN_TAB).rarity(Rarity.COMMON).stacksTo(1);
-        ITEM_PROPERTIES_NO_TAB = new Item.Properties().rarity(Rarity.COMMON).stacksTo(1);
-        ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Squirtgun.MOD_ID);
-        PHIAL = ITEMS.register(Constants.phialItemName, () -> new EmptyPhialItem(ITEM_PROPERTIES_WITH_TAB));
-        SQUIRTSLUG = ITEMS.register(Constants.slugItemName, () -> new GenericSlug(ITEM_PROPERTIES_NO_TAB));
-        SQUIRTGUN = ITEMS.register(Constants.gunItemName, () -> new SquirtgunItem(ITEM_PROPERTIES_WITH_TAB_STACK_TO_ONE));
-        BRASS_BLEND = ITEMS.register(Constants.brassBlendItemName, () -> new BrassBlendItem(ITEM_PROPERTIES_WITH_TAB));
-        PHIAL_CAP = ITEMS.register(Constants.phialCapItemName, () -> new PhialCapItem(ITEM_PROPERTIES_WITH_TAB));
-        BRASS_NUGGET = ITEMS.register(Constants.brassNuggetItemName, () -> new BrassNuggetItem(ITEM_PROPERTIES_WITH_TAB));
-        BRASS_INGOT = ITEMS.register(Constants.brassIngotItemName, () -> new BrassIngotItem(ITEM_PROPERTIES_WITH_TAB));
-        FUSED_QUARTZ_SHARD = ITEMS.register(Constants.quartzShardItemName, () -> new FusedQuartzShard(ITEM_PROPERTIES_WITH_TAB));
-        GUN_ACTUATOR = ITEMS.register(Constants.actuatorItemName, () -> new Actuator(ITEM_PROPERTIES_WITH_TAB));
-
-        CHEMICAL_PHIALS = new ArrayList<>();
-        POTION_PHIALS = new ArrayList<>();
-        CHEMICAL_FLUIDS = new HashMap<>();
-        ammunitionChemicals = new ArrayList<>();
     }
 }

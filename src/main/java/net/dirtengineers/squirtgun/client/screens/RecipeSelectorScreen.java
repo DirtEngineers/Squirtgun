@@ -23,9 +23,8 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.contents.LiteralContents;
-import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -38,7 +37,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class RecipeSelectorScreen<P extends AbstractProcessingScreen<?>, B extends AbstractFluidBlockEntity, R extends AbstractProcessingRecipe> extends Screen {
+public class RecipeSelectorScreen<P extends AbstractProcessingScreen<?>, B extends AbstractFluidBlockEntity, R extends AbstractPhialRecipe> extends Screen {
     private int leftPos;
     private int topPos;
     private int recipeBoxLeftPos;
@@ -53,12 +52,12 @@ public class RecipeSelectorScreen<P extends AbstractProcessingScreen<?>, B exten
     private int startIndex;
     private final ResourceLocation bgLocation = new ResourceLocation(Squirtgun.MOD_ID, "textures/gui/recipe_select_gui.png");
 
-    public RecipeSelectorScreen(AbstractProcessingScreen<?> pParentScreen, AbstractFluidBlockEntity pBlockEntity, LinkedList<AbstractPhialRecipe> pRecipes) {
-        super(MutableComponent.create(new LiteralContents("")));
-        this.parentScreen = (P) pParentScreen;
-        this.blockEntity = (B) pBlockEntity;
-        this.recipes = (LinkedList<R>) pRecipes;
-        this.searchBox = new EditBox(Minecraft.getInstance().font, 0, 0, 92, 12, MutableComponent.create(new LiteralContents("")));
+    public RecipeSelectorScreen(P pParentScreen, B pBlockEntity, LinkedList<R> pRecipes) {
+        super(new TextComponent(""));
+        this.parentScreen = pParentScreen;
+        this.blockEntity = pBlockEntity;
+        this.recipes = pRecipes;
+        this.searchBox = new EditBox(Minecraft.getInstance().font, 0, 0, 92, 12, new TextComponent(""));
         if (!((EncapsulatorBlockEntity)this.blockEntity).getSearchText().isEmpty()) {
             this.searchBox.setValue(((EncapsulatorBlockEntity)this.blockEntity).getSearchText());
             this.searchRecipeList(((EncapsulatorBlockEntity)this.blockEntity).getSearchText());
@@ -76,7 +75,7 @@ public class RecipeSelectorScreen<P extends AbstractProcessingScreen<?>, B exten
         if (this.searchBox.getValue().isEmpty()) {
         ((EncapsulatorBlockEntity)this.blockEntity).setSearchText("");
             this.resetDisplayedRecipes();
-            this.searchBox.setSuggestion(MutableComponent.create(new TranslatableContents(Constants.guiSearch)).getString());
+            this.searchBox.setSuggestion(new TranslatableComponent(Constants.guiSearch).getString());
         } else {
             if (this.displayedRecipes.size() < 30) {
                 this.mouseScrolled(0.0, 0.0, 0.0);
@@ -158,7 +157,7 @@ public class RecipeSelectorScreen<P extends AbstractProcessingScreen<?>, B exten
             int yStart = this.recipeBoxTopPos + firstDisplayedIndex / 5 * 18 + 3;
             this.renderFloatingItem(target, xStart, yStart);
             if (pMouseX >= xStart - 1 && pMouseX <= xStart + 16 && pMouseY >= yStart - 1 && pMouseY <= yStart + 16) {
-                List<Component> components = TextUtility.getRecipeItemTooltipComponent(target, MutableComponent.create(new TranslatableContents(Constants.guiSelectRecipe)));
+                List<Component> components = TextUtility.getRecipeItemTooltipComponent(target, new TranslatableComponent(Constants.guiSelectRecipe));
                 this.renderTooltip(pPoseStack, components, Optional.empty(), pMouseX, pMouseY);
             }
         }
@@ -189,7 +188,7 @@ public class RecipeSelectorScreen<P extends AbstractProcessingScreen<?>, B exten
                 if (pIndex < pInputSize) {
                     ItemStack itemStack = RecipeDisplayUtil.getRecipeInputByIndex(recipe, pIndex);
                     if (pMouseX >= pX - 1 && pMouseX < pX + 17 && pMouseY >= pY - 1 && pMouseY < pY + 17 && !itemStack.isEmpty()) {
-                        List<Component> components = TextUtility.getRecipeItemTooltipComponent(itemStack, MutableComponent.create(new TranslatableContents(Constants.recipeRequiredInput)));
+                        List<Component> components = TextUtility.getRecipeItemTooltipComponent(itemStack, new TranslatableComponent(Constants.recipeRequiredInput));
                         this.renderTooltip(pPoseStack, components, Optional.empty(), pMouseX, pMouseY);
                     }
                 }
@@ -197,7 +196,7 @@ public class RecipeSelectorScreen<P extends AbstractProcessingScreen<?>, B exten
             ItemStack target = RecipeDisplayUtil.getTarget(recipe);
             this.renderFloatingItem(target, this.leftPos + 21, this.topPos + 30);
             if (pMouseX >= this.leftPos + 17 && pMouseX < this.leftPos + 41 && pMouseY >= this.topPos + 27 && pMouseY <= this.topPos + 50) {
-                List<Component> components = TextUtility.getRecipeItemTooltipComponent(target, MutableComponent.create(new TranslatableContents(Constants.currentSelectedRecipe)));
+                List<Component> components = TextUtility.getRecipeItemTooltipComponent(target, new TranslatableComponent(Constants.currentSelectedRecipe));
                 this.renderTooltip(pPoseStack, components, Optional.empty(), pMouseX, pMouseY);
             }
         } else {

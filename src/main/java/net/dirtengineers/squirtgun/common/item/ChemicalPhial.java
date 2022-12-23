@@ -18,6 +18,7 @@ public class ChemicalPhial extends BasePhial {
         capacityUpgrade = pCapacityUpgrade;
         applyUpgrades();
         shotsAvailable = maxShots;
+        ItemRegistration.CHEMICAL_PHIALS.add(this);
     }
 
     @Override

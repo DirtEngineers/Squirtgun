@@ -1,10 +1,10 @@
 {
   "type": "minecraft:blasting",
-  "cookingtime": 100,
-  "experience": 0.5,
   "group": "squirtgun",
   "ingredient": {
     "item": "minecraft:quartz"
   },
-  "result": "squirtgun:quartz_shard"
+  "result": "squirtgun:quartz_shard",
+  "experience": 0.5,
+  "cookingtime": 100
 }

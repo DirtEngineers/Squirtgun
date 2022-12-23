@@ -23,6 +23,7 @@ public class PotionPhial extends BasePhial {
         capacityUpgrade = pCapacityUpgrade;
         applyUpgrades();
         shotsAvailable = maxShots;
+        ItemRegistration.POTION_PHIALS.add(this);
     }
 
     @Override

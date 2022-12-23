@@ -5,8 +5,8 @@
     "item": "squirtgun:phial"
   },
   "input2": {
-    "amount": "1000",
-    "fluid": "minecraft:water"
+    "fluid": "minecraft:water",
+    "amount": "1000"
   },
   "result": {
     "item": "squirtgun:water_phial"

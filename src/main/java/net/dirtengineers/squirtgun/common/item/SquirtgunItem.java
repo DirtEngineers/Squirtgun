@@ -11,6 +11,7 @@ import net.dirtengineers.squirtgun.registry.SoundEventRegistration;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
@@ -30,7 +31,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
-
 
 public class SquirtgunItem extends BowItem {
 
@@ -61,9 +61,9 @@ public class SquirtgunItem extends BowItem {
         Style firstLine = pTooltipComponents.get(0).getStyle();
         pTooltipComponents.clear();
         lines = TextUtility.padStrings(lines);
-        pTooltipComponents.add(Component.literal(lines.get(0)).withStyle(firstLine));
-        pTooltipComponents.add(Component.literal(lines.get(1)).withStyle(Constants.HOVER_TEXT_STYLE));
-        pTooltipComponents.add(Component.literal(lines.get(2)).withStyle(Constants.HOVER_TEXT_STYLE));
+        pTooltipComponents.add(new TextComponent(lines.get(0)).withStyle(firstLine));
+        pTooltipComponents.add(new TextComponent(lines.get(1)).withStyle(Constants.HOVER_TEXT_STYLE));
+        pTooltipComponents.add(new TextComponent(lines.get(2)).withStyle(Constants.HOVER_TEXT_STYLE));
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
     }
 
@@ -100,7 +100,7 @@ public class SquirtgunItem extends BowItem {
     public void releaseUsing(ItemStack pStack, Level pLevel, LivingEntity pEntityLiving, int pTimeLeft) {
         if (pEntityLiving instanceof Player player) {
 
-            boolean flag = player.getAbilities().instabuild || EnchantmentHelper.getTagEnchantmentLevel(Enchantments.INFINITY_ARROWS, pStack) > 0;
+            boolean flag = player.getAbilities().instabuild || EnchantmentHelper.getItemEnchantmentLevel(Enchantments.INFINITY_ARROWS, pStack) > 0;
 
             boolean hasAmmo = pStack.getCapability(SquirtgunCapabilities.SQUIRTGUN_AMMO, null).orElse(null).hasAmmunition();
             net.minecraftforge.common.ForgeHooks.getProjectile(pEntityLiving, pStack, hasAmmo ? new ItemStack(ItemRegistration.SQUIRTSLUG.get()) : ItemStack.EMPTY);

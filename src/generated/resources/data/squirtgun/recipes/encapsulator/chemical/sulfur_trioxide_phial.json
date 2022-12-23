@@ -5,8 +5,8 @@
     "item": "squirtgun:phial"
   },
   "input2": {
-    "amount": "1000",
-    "fluid": "chemlib:sulfur_trioxide_fluid"
+    "fluid": "chemlib:sulfur_trioxide_fluid",
+    "amount": "1000"
   },
   "result": {
     "item": "squirtgun:sulfur_trioxide_phial"

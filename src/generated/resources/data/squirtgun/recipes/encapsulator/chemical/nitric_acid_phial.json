@@ -5,8 +5,8 @@
     "item": "squirtgun:phial"
   },
   "input2": {
-    "amount": "1000",
-    "fluid": "chemlib:nitric_acid_fluid"
+    "fluid": "chemlib:nitric_acid_fluid",
+    "amount": "1000"
   },
   "result": {
     "item": "squirtgun:nitric_acid_phial"

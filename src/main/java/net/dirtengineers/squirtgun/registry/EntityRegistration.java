@@ -10,7 +10,6 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-
 public class EntityRegistration {
 
     public static final DeferredRegister<EntityType<?>> SG_ENTITIES;
@@ -21,7 +20,7 @@ public class EntityRegistration {
     }
 
     static{
-        SG_ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES,  Squirtgun.MOD_ID);
+        SG_ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, Squirtgun.MOD_ID);
         SQUIRT_SLUG =
                 SG_ENTITIES.register(Constants.slugEntityEntityName,
                         () -> EntityType.Builder.of((EntityType.EntityFactory<SquirtSlug>) SquirtSlug::new,

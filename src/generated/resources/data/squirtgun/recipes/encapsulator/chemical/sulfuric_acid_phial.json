@@ -5,8 +5,8 @@
     "item": "squirtgun:phial"
   },
   "input2": {
-    "amount": "1000",
-    "fluid": "chemlib:sulfuric_acid_fluid"
+    "fluid": "chemlib:sulfuric_acid_fluid",
+    "amount": "1000"
   },
   "result": {
     "item": "squirtgun:sulfuric_acid_phial"

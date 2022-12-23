@@ -28,7 +28,7 @@ public class ChemicalPhialRecipeProvider {
     private void register() {
         ItemRegistration.buildChemical_Fluids();
         for(ChemicalPhial phial : ItemRegistration.CHEMICAL_PHIALS) {
-            if (phial.getChemical().getFluidTypeReference().isPresent()) {
+            if (phial.getChemical().getFluidReference().isPresent()) {
                 this.buildPhialRecipe(
                         new ItemStack(ForgeRegistries.ITEMS.getValue(ItemRegistration.PHIAL.getId()), 1),
                         new FluidStack(ItemRegistration.CHEMICAL_FLUIDS.get(phial.getChemical()), 1000),

@@ -1,20 +1,20 @@
 {
+  "rewards": {
+    "recipes": [
+      "squirtgun:water_breathing_phial"
+    ]
+  },
   "criteria": {
     "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
       "conditions": {
         "recipe": "squirtgun:encapsulator/potion/water_breathing_phial"
-      },
-      "trigger": "minecraft:recipe_unlocked"
+      }
     }
   },
   "requirements": [
     [
       "has_the_recipe"
     ]
-  ],
-  "rewards": {
-    "recipes": [
-      "squirtgun:water_breathing_phial"
-    ]
-  }
+  ]
 }

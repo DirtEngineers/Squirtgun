@@ -23,8 +23,7 @@ import net.dirtengineers.squirtgun.common.recipe.AbstractPhialRecipe;
 import net.dirtengineers.squirtgun.registry.RecipeRegistration;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -38,7 +37,7 @@ public class EncapsulatorScreen extends AbstractProcessingScreen<EncapsulatorMen
     private final EncapsulatorBlockEntity blockEntity;
     private final LockButton lockButton = new LockButton(this);
     private final PauseButton pauseButton = new PauseButton(this);
-    private final RecipeSelectorScreen<AbstractProcessingScreen<?>, AbstractFluidBlockEntity, AbstractProcessingRecipe> recipeSelectorScreen;
+    private final RecipeSelectorScreen<AbstractProcessingScreen<?>, AbstractFluidBlockEntity, AbstractPhialRecipe> recipeSelectorScreen;
     private final RecipeSelectorButton recipeSelector;
 
     public EncapsulatorScreen(EncapsulatorMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
@@ -48,10 +47,9 @@ public class EncapsulatorScreen extends AbstractProcessingScreen<EncapsulatorMen
         this.displayData.add(new FluidDisplayData((AbstractFluidBlockEntity) pMenu.getBlockEntity(), 48, 12, 16, 54));
         this.blockEntity = (EncapsulatorBlockEntity) pMenu.getBlockEntity();
         this.recipeSelectorScreen = new RecipeSelectorScreen<>(
-                this
-                , blockEntity
-                , RecipeRegistration.getPhialRecipes(pMenu.getLevel())
-        );
+                this,
+                blockEntity,
+                RecipeRegistration.getAllPhialRecipes(pMenu.getLevel()));
         this.recipeSelector = new RecipeSelectorButton(this, recipeSelectorScreen);
     }
 
@@ -91,7 +89,7 @@ public class EncapsulatorScreen extends AbstractProcessingScreen<EncapsulatorMen
 
     @Override
     protected void renderLabels(PoseStack pPoseStack, int pMouseX, int pMouseY) {
-        Component title = MutableComponent.create(new TranslatableContents(Constants.encapsulatorMenuScreenTitle));
+        Component title = new TranslatableComponent(Constants.encapsulatorMenuScreenTitle);
         drawString(pPoseStack, this.font, title, this.imageWidth / 2 - this.font.width(title) / 2, -10, -1);
     }
 
@@ -107,7 +105,7 @@ public class EncapsulatorScreen extends AbstractProcessingScreen<EncapsulatorMen
 
             if (pMouseX >= recipeLeftPos - 3 && pMouseX < recipeLeftPos + 11 && pMouseY >= recipeTopPos - 4 && pMouseY < recipeTopPos + 20) {
                 renderTooltip(pPoseStack
-                        , TextUtility.getRecipeItemTooltipComponent(currentOutput, MutableComponent.create(new TranslatableContents(Constants.currentSelectedRecipe)))
+                        , TextUtility.getRecipeItemTooltipComponent(currentOutput, new TranslatableComponent(Constants.currentSelectedRecipe))
                         , Optional.empty()
                         , pMouseX
                         , pMouseY);
@@ -122,13 +120,12 @@ public class EncapsulatorScreen extends AbstractProcessingScreen<EncapsulatorMen
                             RecipeDisplayUtil.getRecipeInputByIndex(currentRecipe, index);
 
                     if (handler.getStackInSlot(index).isEmpty()) {
-//                        FakeItemRenderer_OLD.renderFakeItem(itemStack, xOrigin, y, 16, 0.35F);
 
                         renderFloatingItem(itemStack, xOrigin, y);
                         itemRenderer.renderGuiItemDecorations(font, itemStack, xOrigin, y);
 
                         if (pMouseX >= xOrigin - 2 && pMouseX < xOrigin + 16 && pMouseY >= y - 1 && pMouseY < y + 17) {
-                            List<Component> components = TextUtility.getRecipeItemTooltipComponent(itemStack, MutableComponent.create(new TranslatableContents(Constants.recipeRequiredInput)));
+                            List<Component> components = TextUtility.getRecipeItemTooltipComponent(itemStack, new TranslatableComponent(Constants.recipeRequiredInput));
                             this.renderTooltip(pPoseStack, components, Optional.empty(), pMouseX, pMouseY);
                         }
                     }

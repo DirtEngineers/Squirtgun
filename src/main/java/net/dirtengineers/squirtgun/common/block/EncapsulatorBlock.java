@@ -4,8 +4,7 @@ import net.dirtengineers.squirtgun.Config;
 import net.dirtengineers.squirtgun.Constants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -51,7 +50,7 @@ public class EncapsulatorBlock extends AbstractMachineBlock {
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
         super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
-        pTooltip.add(MutableComponent.create(new TranslatableContents(Constants.encapsulatorEnergyRequirementTooltipKey, Config.Common.encapsulatorEnergyPerTick.get())));
+        pTooltip.add(new TranslatableComponent(Constants.encapsulatorEnergyRequirementTooltipKey, Config.Common.encapsulatorEnergyPerTick.get()));
     }
 
     @Override
@@ -64,7 +63,7 @@ public class EncapsulatorBlock extends AbstractMachineBlock {
                 interactionSuccessful = ((EncapsulatorBlockEntity)blockEntity).onBlockActivated(pLevel, pPos, pPlayer, pHand);
             }
             if (!interactionSuccessful) {
-                NetworkHooks.openScreen((ServerPlayer)pPlayer, (EncapsulatorBlockEntity)blockEntity, pPos);
+                NetworkHooks.openGui((ServerPlayer)pPlayer, (EncapsulatorBlockEntity)blockEntity, pPos);
             }
             return InteractionResult.CONSUME;
         } else {

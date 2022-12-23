@@ -8,15 +8,14 @@ import net.dirtengineers.squirtgun.util.FakeItemRenderer_OLD;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.contents.LiteralContents;
-import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -30,7 +29,7 @@ public class PhialReloadScreenButton extends Button {
     }
 
     @Override
-    public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+    public void renderButton(@Nonnull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
@@ -56,12 +55,12 @@ public class PhialReloadScreenButton extends Button {
     public List<Component> getTooltip() {
         List<Component> components = new ArrayList<>();
         if (!active || displayLoadedMessage) {
-            components.add(MutableComponent.create(new TranslatableContents(Constants.gunGuiPhialLoaded)).withStyle(Constants.HOVER_TEXT_STYLE));
+            components.add(new TranslatableComponent(Constants.gunGuiPhialLoaded).withStyle(Constants.HOVER_TEXT_STYLE));
         }
         TextUtility.getTooltipComponents(this.targetStack, components, false);
 
         String namespace = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(this.targetStack.getItem())).getNamespace();
-        components.add(MutableComponent.create(new LiteralContents(StringUtils.capitalize(namespace))).withStyle(Constants.MOD_ID_TEXT_STYLE));
+        components.add(new TranslatableComponent(StringUtils.capitalize(namespace)).withStyle(Constants.MOD_ID_TEXT_STYLE));
 
         return components;
     }

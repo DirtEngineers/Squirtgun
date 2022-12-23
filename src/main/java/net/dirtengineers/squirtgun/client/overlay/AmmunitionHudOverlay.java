@@ -8,9 +8,10 @@ import net.dirtengineers.squirtgun.common.item.SquirtgunItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import net.minecraftforge.client.gui.IIngameOverlay;
 
 import java.util.Objects;
 
@@ -25,7 +26,7 @@ public class AmmunitionHudOverlay {
         fadeTicks = 0;
     }
 
-    public static final IGuiOverlay HUD_AMMUNITION = (gui, poseStack, partialTick, width, height) -> {
+    public static final IIngameOverlay HUD_AMMUNITION = (gui, poseStack, partialTick, width, height) -> {
         if(AmmunitionHudOverlay.displaySetting == Constants.HUD_DISPLAY_SETTING.FADE) {
             fadeTicks ++;
             if(fadeTicks >= maxFadeTicks) {
@@ -50,7 +51,7 @@ public class AmmunitionHudOverlay {
                         ammoName = TextUtility.getFriendlyPotionName(ammunitionHandler.getPotionKey());
                     }
                     TextUtility.drawCenteredStringNoShadow(poseStack, font, ammoName, x, y - font.lineHeight);
-                        Component status = Component.literal(ammunitionHandler.getAmmoStatus()).withStyle(Constants.HOVER_TEXT_STYLE);
+                        Component status = new TextComponent(ammunitionHandler.getAmmoStatus()).withStyle(Constants.HOVER_TEXT_STYLE);
                         TextUtility.drawCenteredStringNoShadow(poseStack, font, status, x, y);
                 }
             }

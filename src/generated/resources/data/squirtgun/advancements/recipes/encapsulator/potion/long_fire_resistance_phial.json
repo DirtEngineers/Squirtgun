@@ -1,20 +1,20 @@
 {
+  "rewards": {
+    "recipes": [
+      "squirtgun:long_fire_resistance_phial"
+    ]
+  },
   "criteria": {
     "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
       "conditions": {
         "recipe": "squirtgun:encapsulator/potion/long_fire_resistance_phial"
-      },
-      "trigger": "minecraft:recipe_unlocked"
+      }
     }
   },
   "requirements": [
     [
       "has_the_recipe"
     ]
-  ],
-  "rewards": {
-    "recipes": [
-      "squirtgun:long_fire_resistance_phial"
-    ]
-  }
+  ]
 }

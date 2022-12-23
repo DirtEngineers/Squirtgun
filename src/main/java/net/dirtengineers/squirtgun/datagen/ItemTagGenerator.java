@@ -11,9 +11,10 @@ import net.minecraftforge.common.data.ForgeRegistryTagsProvider;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
 import java.util.Objects;
 
-public class ItemTagGenerator  extends ForgeRegistryTagsProvider<Item> {
+public class ItemTagGenerator extends ForgeRegistryTagsProvider<Item> {
     public ItemTagGenerator(DataGenerator generator, @Nullable ExistingFileHelper existingFileHelper) {
         super(generator, ForgeRegistries.ITEMS, Squirtgun.MOD_ID, existingFileHelper);
     }
@@ -35,5 +36,11 @@ public class ItemTagGenerator  extends ForgeRegistryTagsProvider<Item> {
         key = Objects.requireNonNull(ForgeRegistries.ITEMS.tags())
                 .createTagKey(new ResourceLocation("forge", String.format("%s/%s", "glass/silica", ItemRegistration.FUSED_QUARTZ_SHARD.get())));
         this.tag(key).add(ItemRegistration.FUSED_QUARTZ_SHARD.get());
+    }
+
+    @Override
+    @Nonnull
+    public String getName() {
+        return Squirtgun.MOD_ID + ":tags";
     }
 }

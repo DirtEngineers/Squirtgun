@@ -1,9 +1,7 @@
 package net.dirtengineers.squirtgun.client.capabilities.squirtgun;
 
 import com.smashingmods.chemlib.api.Chemical;
-import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 
-@AutoRegisterCapability
 public interface IAmmunitionCapability {
 
     void setShotsAvailable(int pShots);

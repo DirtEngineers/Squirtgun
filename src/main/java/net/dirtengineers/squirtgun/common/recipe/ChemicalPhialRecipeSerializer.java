@@ -11,16 +11,19 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
 import java.util.Objects;
 
-public class ChemicalPhialRecipeSerializer<T extends ChemicalPhialRecipe> implements RecipeSerializer<T> {
+public class ChemicalPhialRecipeSerializer<T extends ChemicalPhialRecipe> extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<T> {
     private final IFactory<T> factory;
 
     public ChemicalPhialRecipeSerializer(IFactory<T> pFactory) { this.factory = pFactory; }
 
-    public T fromJson(ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {
+    @Nonnull
+    public T fromJson(@Nonnull ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {
         String group = pSerializedRecipe.has("group") ? pSerializedRecipe.get("group").getAsString() : "fluid_encapsulator";
         if (!pSerializedRecipe.has("input1")) {
             throw new JsonSyntaxException("Missing input1, expected to find an object.");
@@ -47,7 +50,7 @@ public class ChemicalPhialRecipeSerializer<T extends ChemicalPhialRecipe> implem
         }
     }
 
-    public @Nullable T fromNetwork(ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
+    public @Nullable T fromNetwork(@Nonnull ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
         String group = pBuffer.readUtf(32767);
         ItemStack input1 = pBuffer.readItem();
         FluidStack input2 = pBuffer.readFluidStack();

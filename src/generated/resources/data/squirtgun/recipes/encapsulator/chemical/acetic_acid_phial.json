@@ -5,8 +5,8 @@
     "item": "squirtgun:phial"
   },
   "input2": {
-    "amount": "1000",
-    "fluid": "chemlib:acetic_acid_fluid"
+    "fluid": "chemlib:acetic_acid_fluid",
+    "amount": "1000"
   },
   "result": {
     "item": "squirtgun:acetic_acid_phial"

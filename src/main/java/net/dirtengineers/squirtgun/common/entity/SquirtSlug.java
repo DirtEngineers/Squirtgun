@@ -27,7 +27,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -196,15 +195,14 @@ public class SquirtSlug extends AbstractArrow implements IEntityAdditionalSpawnD
     }
 
     private void updateColor() {
-        int pValue;
-        pValue = this.fluid != null ? IClientFluidTypeExtensions.of(this.fluid).getTintColor() : -1;
-        if (pValue == -1) {
-            pValue = this.chemical != null ? this.chemical.getColor() : -1;
+        int value = fluid != null ? fluid.getAttributes().getColor() : -1;
+        if (value == -1) {
+            value = chemical != null ? chemical.getColor() : -1;
         }
-        if(pValue == -1) {
-            pValue = this.potion != null ? this.potion.getEffects().get(0).getEffect().getColor() : -1;
+        if(value == -1) {
+            value = this.potion != null ? this.potion.getEffects().get(0).getEffect().getColor() : -1;
         }
-        this.entityData.set(ID_EFFECT_COLOR, pValue);
+        this.entityData.set(ID_EFFECT_COLOR, value);
     }
 
     public int getColor() {
@@ -221,7 +219,7 @@ public class SquirtSlug extends AbstractArrow implements IEntityAdditionalSpawnD
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         if (this.fluid != null) {
-            pCompound.putString("Fluid", fluid.getFluidType().toString());
+            pCompound.putString("Fluid", fluid.toString());
         }
         if (!this.effects.isEmpty()) {
             ListTag listtag = new ListTag();
@@ -248,12 +246,16 @@ public class SquirtSlug extends AbstractArrow implements IEntityAdditionalSpawnD
     }
 
     @Override
-    public void writeSpawnData(FriendlyByteBuf buffer) {
-        buffer.writeResourceLocation(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey((Item) this.chemical)));
+    public void writeSpawnData(FriendlyByteBuf pBuffer) {
+        if (chemical != null) {
+            pBuffer.writeResourceLocation(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey((Item) chemical)));
+        }
     }
 
     @Override
-    public void readSpawnData(FriendlyByteBuf additionalData) {
-        this.chemical = (Chemical) ForgeRegistries.ITEMS.getValue(additionalData.readResourceLocation());
+    public void readSpawnData(FriendlyByteBuf pBuffer) {
+        if (pBuffer.isReadable()) {
+            this.chemical = (Chemical) ForgeRegistries.ITEMS.getValue(pBuffer.readResourceLocation());
+        }
     }
 }

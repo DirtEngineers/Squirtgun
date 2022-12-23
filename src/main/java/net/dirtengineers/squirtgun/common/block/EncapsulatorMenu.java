@@ -62,6 +62,6 @@ public class EncapsulatorMenu extends AbstractProcessingMenu {
 
     public void resetDisplayedRecipes() {
         this.displayedRecipes.clear();
-        this.displayedRecipes.addAll(RecipeRegistration.getPhialRecipes(this.level));
+        this.displayedRecipes.addAll(RecipeRegistration.getAllPhialRecipes(this.level));
     }
 }

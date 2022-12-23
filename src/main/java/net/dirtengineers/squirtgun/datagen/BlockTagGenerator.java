@@ -24,4 +24,9 @@ public class BlockTagGenerator extends ForgeRegistryTagsProvider<Block> {
             this.tag(BlockTags.NEEDS_STONE_TOOL).add(blockRegistryObject.get());
         }
     }
+
+    @Override
+    public String getName() {
+        return "";
+    }
 }

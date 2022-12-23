@@ -5,8 +5,8 @@
     "item": "squirtgun:phial"
   },
   "input2": {
-    "amount": "1000",
-    "fluid": "chemlib:mercury_fluid"
+    "fluid": "chemlib:mercury_fluid",
+    "amount": "1000"
   },
   "result": {
     "item": "squirtgun:mercury_phial"

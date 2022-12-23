@@ -14,14 +14,20 @@ plugins {
     id 'maven-publish'
     id 'com.matthewprenger.cursegradle' version '1.4.0'
 }
+
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
+apply plugin: 'maven-publish'
 
 version = "$minecraft_version-$mod_version"
 group = 'net.dirtengineers'
 archivesBaseName = 'squirtgun'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+java {
+    withSourcesJar()
+}
 
 minecraft {
     mappings channel: 'parchment', version: "$parchment_version-$minecraft_version"
@@ -75,7 +81,7 @@ minecraft {
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
 
-            args '--mod', 'squirtgun', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            args '--mod', "$archivesBaseName", '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {
                 squirtgun {
@@ -97,21 +103,20 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    implementation fg.deobf("smashingmods:chemlib:${minecraft_version}-${chemlib_version}")//1.19.2-2.0.14-DONTPUBLISH
-
+    implementation fg.deobf("smashingmods:chemlib:${minecraft_version}-${chemlib_version}")
+    implementation fg.deobf("smashingmods:alchemylib:${minecraft_version}-${alchemylib_version}")
     implementation fg.deobf("smashingmods:alchemistry:${minecraft_version}-${alchemistry_version}")
 
-    implementation fg.deobf("smashingmods:alchemylib:${minecraft_version}-${alchemylib_version}")
+    implementation fg.deobf("mezz.jei:jei-${jei_version}:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
 
-    implementation fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
-    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
-    runtimeOnly fg.deobf("curse.maven:mekanism-268560:4020942")
+    runtimeOnly fg.deobf("curse.maven:mekanism-268560:3743835")
 }
 
 jar {
     manifest {
         attributes([
-                "Specification-Title"     : "squirtgun",
+                "Specification-Title"     : "$archivesBaseName",
                 "Specification-Vendor"    : "dirtengineers",
                 "Specification-Version"   : "1",
                 "Implementation-Title"    : project.name,
@@ -122,21 +127,70 @@ jar {
     }
 }
 
+artifacts {
+    archives jar
+    archives sourcesJar
+}
+
+def secrets = new Properties()
+file('secrets.properties').withInputStream {
+    stream -> secrets.load(stream)
+}
+
+fileTree("secrets").matching {
+    include "**/*.properties"
+}.each {
+    File file ->
+        file.withInputStream {
+            stream -> secrets.load(stream)
+        }
+}
+
 jar.finalizedBy('reobfJar')
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifact jar
+            afterEvaluate {
+                artifact project.jar
+                artifact project.sourcesJar
+            }
+            setGroupId 'smashingmods'
+            setArtifactId 'alchemistry'
         }
     }
     repositories {
         maven {
-            url "file://${project.projectDir}/mcmodsrepo"
+            url "https://maven.tamaized.com/releases"
+            credentials {
+                username secrets.getProperty("maven_username")
+                password secrets.getProperty("maven_password")
+            }
+        }
+    }
+}
+
+curseforge {
+    apiKey = secrets.getProperty("apiKey")
+    project {
+        id = '293425'
+        releaseType = 'beta'
+        changelogType = 'markdown'
+        changelog = file("changelog.md")
+        addGameVersion 'Forge'
+        addGameVersion 'Java 17'
+        addGameVersion '1.18.2'
+        mainArtifact(jar) {
+            displayName = "Alchemistry - $project.version"
+            relations {
+                requiredDependency 'chemlib'
+                optionalDependency 'jei'
+                optionalDependency 'ctm'
+            }
         }
     }
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+    options.encoding = 'UTF-8'
 }

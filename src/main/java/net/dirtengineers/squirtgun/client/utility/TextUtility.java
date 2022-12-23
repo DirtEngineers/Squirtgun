@@ -13,8 +13,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.contents.LiteralContents;
-import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.Item;
@@ -37,7 +37,7 @@ public class TextUtility {
         getTooltipComponents(pItemStack, components, true);
 
         String namespace = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(pItemStack.getItem())).getNamespace();
-        components.add(MutableComponent.create(new LiteralContents(StringUtils.capitalize(namespace))).withStyle(Constants.MOD_ID_TEXT_STYLE));
+        components.add(new TextComponent(StringUtils.capitalize(namespace)).withStyle(Constants.MOD_ID_TEXT_STYLE));
         return components;
     }
 
@@ -58,7 +58,7 @@ public class TextUtility {
                     if (pItemStackItem instanceof Chemical chemical) {
                         getChemicalComponents(chemical, pComponents);
                     } else {
-                        pComponents.add(MutableComponent.create(new LiteralContents(String.format("%dx %s", pItemStack.getCount(), pItemStackItem.getDescription().getString()))));
+                        pComponents.add(new TextComponent(String.format("%dx %s", pItemStack.getCount(), pItemStackItem.getDescription().getString())));
                     }
                 }
             }
@@ -67,59 +67,50 @@ public class TextUtility {
 
     private static void getPotionPhialComponents(PotionPhial pPhial, ItemStack pItemStack, List<Component> pComponents, boolean showStackCount) {
         String potionName = new ResourceLocation(Objects.requireNonNull(Objects.requireNonNull(pPhial.getPotionStack().getTag()).get("Potion")).getAsString()).getPath();
-        String description = MutableComponent.create(
-                new TranslatableContents(
-                        String.format("item.minecraft.potion.effect.%s",
-                                StringUtils.removeStart(StringUtils.removeStart(potionName, "strong_"), "long_"))
-                )).withStyle(Constants.DISPLAY_ITEM_TEXT_STYLE).getString();
-        if (showStackCount)
-            pComponents.add(MutableComponent.create(new LiteralContents(String.format("%dx %s", pItemStack.getCount(), description))));
-        else pComponents.add(MutableComponent.create(new LiteralContents(String.format("%s", description))));
+
+        String description = new TextComponent(
+                String.format("item.minecraft.potion.effect.%s", StringUtils.removeStart(StringUtils.removeStart(potionName, "strong_"), "long_"))
+        ).withStyle(Constants.DISPLAY_ITEM_TEXT_STYLE).getString();
+
+        if (showStackCount) {
+            pComponents.add(new TextComponent(String.format("%dx %s", pItemStack.getCount(), description)));
+        } else {
+            pComponents.add(new TextComponent(String.format("%s", description)));
+        }
         pPhial.addEffectsToTooltip(pComponents);
     }
 
     private static void getChemicalPhialComponents(ChemicalPhial pPhial, ItemStack pItemStack, List<Component> pComponents, boolean showStackCount) {
-        if (showStackCount)
-            pComponents.add(MutableComponent.create(new LiteralContents(String.format("%dx %s", pItemStack.getCount(), pPhial.getDescription().getString()))));
-        else pComponents.add(MutableComponent.create(new LiteralContents(String.format("%s", pPhial.getDescription().getString()))));
+        if (showStackCount) {
+            pComponents.add(new TextComponent(String.format("%dx %s", pItemStack.getCount(), pPhial.getDescription().getString())));
+        } else {
+            pComponents.add(new TextComponent(String.format("%s", pPhial.getDescription().getString())));
+        }
         pPhial.addEffectsToTooltip(pComponents);
     }
 
     private static void getPotionComponents(ItemStack pItemStack, List<Component> pComponents) {
         String potionName = new ResourceLocation(Objects.requireNonNull(Objects.requireNonNull(pItemStack.getTag()).get("Potion")).getAsString()).getPath();
-        String description = MutableComponent.create(
-                new TranslatableContents(
-                        String.format("item.minecraft.potion.effect.%s",
-                                StringUtils.removeStart(StringUtils.removeStart(potionName, "strong_"), "long_"))
-                )).withStyle(Constants.DISPLAY_ITEM_TEXT_STYLE).getString();
-        pComponents.add(MutableComponent.create(new LiteralContents(String.format("%dx %s", pItemStack.getCount(), description))));
+        String description = new TextComponent(
+                    String.format("item.minecraft.potion.effect.%s", StringUtils.removeStart(StringUtils.removeStart(potionName, "strong_"), "long_"))
+                ).withStyle(Constants.DISPLAY_ITEM_TEXT_STYLE).getString();
+
+        pComponents.add(new TextComponent(String.format("%dx %s", pItemStack.getCount(), description)));
         PotionUtils.addPotionTooltip(pItemStack, pComponents, 1.0F);
     }
 
     private static void getChemicalComponents(Chemical pChemical, List<Component> pComponents) {
         String abbreviation = pChemical.getAbbreviation();
-        if (pChemical instanceof ElementItem element) {
-            pComponents.add(MutableComponent.create(new LiteralContents(String.format("%s (%d)", abbreviation, element.getAtomicNumber()))).withStyle(ChatFormatting.DARK_AQUA));
-            pComponents.add(MutableComponent.create(new LiteralContents(element.getGroupName())).withStyle(ChatFormatting.GRAY));
-        } else {
-            label21:
-            {
-                if (pChemical instanceof ChemicalItem chemicalItem) {
-                    if (!chemicalItem.getItemType().equals(ChemicalItemType.COMPOUND)) {
-                        Chemical var9 = chemicalItem.getChemical();
-                        if (var9 instanceof ElementItem element) {
-                            pComponents.add(MutableComponent.create(new LiteralContents(String.format("%s (%d)", chemicalItem.getAbbreviation(), element.getAtomicNumber()))).withStyle(ChatFormatting.DARK_AQUA));
-                            pComponents.add(MutableComponent.create(new LiteralContents(element.getGroupName())).withStyle(ChatFormatting.GRAY));
-                        }
 
-                        pComponents.add(MutableComponent.create(new LiteralContents(chemicalItem.getAbbreviation())).withStyle(ChatFormatting.DARK_AQUA));
-                        break label21;
-                    }
-                }
-                if (pChemical instanceof CompoundItem) {
-                    pComponents.add(MutableComponent.create(new LiteralContents(abbreviation)).withStyle(ChatFormatting.DARK_AQUA));
-                }
-            }
+        if (pChemical instanceof ElementItem element) {
+            pComponents.add(new TextComponent(String.format("%s (%d)", abbreviation, element.getAtomicNumber())).withStyle(ChatFormatting.DARK_AQUA));
+            pComponents.add(new TextComponent(element.getGroupName()).withStyle(ChatFormatting.GRAY));
+        } else if (pChemical instanceof ChemicalItem chemicalItem && !chemicalItem.getItemType().equals(ChemicalItemType.COMPOUND)) {
+            ElementItem element = (ElementItem) chemicalItem.getChemical();
+            pComponents.add(new TextComponent(String.format("%s (%d)", chemicalItem.getAbbreviation(), element.getAtomicNumber())).withStyle(ChatFormatting.DARK_AQUA));
+            pComponents.add(new TextComponent(element.getGroupName()).withStyle(ChatFormatting.GRAY));
+        } else if (pChemical instanceof CompoundItem) {
+            pComponents.add(new TextComponent(abbreviation).withStyle(ChatFormatting.DARK_AQUA));
         }
     }
 
@@ -149,18 +140,16 @@ public class TextUtility {
     }
 
     public static Component getFriendlyChemicalName(Chemical pChemical) {
-        return MutableComponent.create(
-                        new TranslatableContents(pChemical != null ?
+        return new TranslatableComponent(pChemical != null ?
                                 String.format("item.%s.%s", pChemical.getClass().getModule().getName(), pChemical.asItem())
-                                : Constants.emptyFluidNameKey))
+                                : Constants.emptyFluidNameKey)
                 .withStyle(Constants.HOVER_TEXT_STYLE);
     }
 
     public static Component getFriendlyPotionName(String pPotionKey) {
-        return MutableComponent.create(
-                        new TranslatableContents(!Objects.equals(pPotionKey, "") ?
+        return new TranslatableComponent(!Objects.equals(pPotionKey, "") ?
                                 pPotionKey
-                                : Constants.emptyFluidNameKey))
+                                : Constants.emptyFluidNameKey)
                 .withStyle(Constants.HOVER_TEXT_STYLE);
     }
 
