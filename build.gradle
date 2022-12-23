@@ -167,8 +167,8 @@ publishing {
                 artifact project.jar
                 artifact project.sourcesJar
             }
-            setGroupId 'smashingmods'
-            setArtifactId 'alchemistry'
+            setGroupId 'dirtengineers'
+            setArtifactId 'squirtgun'
         }
     }
     repositories {
@@ -185,7 +185,7 @@ publishing {
 curseforge {
     apiKey = secrets.getProperty("apiKey")
     project {
-        id = '293425'
+        id = '716274'
         releaseType = 'beta'
         changelogType = 'markdown'
         changelog = file("changelog.md")
@@ -193,11 +193,13 @@ curseforge {
         addGameVersion 'Java 17'
         addGameVersion '1.18.2'
         mainArtifact(jar) {
-            displayName = "Alchemistry - $project.version"
+            displayName = "Squirtgun - $project.version"
             relations {
                 requiredDependency 'chemlib'
+                requiredDependency 'alchemylib'
+                requiredDependency 'alchemistry'
                 optionalDependency 'jei'
-                optionalDependency 'ctm'
+                optionalDependency 'patchouli'
             }
         }
     }
