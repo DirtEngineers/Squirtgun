@@ -74,8 +74,14 @@ public class EncapsulatorBlockEntity extends AbstractFluidBlockEntity implements
 //                        Objects.requireNonNull(ForgeRegistries.FLUIDS.getValue(new ResourceLocation("chemlib:nitric_acid_fluid")))
 //                        , getFluidStorage().getCapacity()));
     }
+
+    @Override
     public void tick() {
-        super.tick();
+        if (!isProcessingPaused()
+                && (!getInputHandler().getStackInSlot(0).isEmpty()
+                || !getInputHandler().getStackInSlot(1).isEmpty())) {
+            super.tick();
+        }
     }
 
     public void updateRecipe() {
