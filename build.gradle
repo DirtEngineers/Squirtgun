@@ -38,6 +38,8 @@ minecraft {
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
             property 'forge.enabledGameTestNamespaces', 'squirtgun'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             jvmArgs '-XX:+AllowEnhancedClassRedefinition'
 
             mods {
@@ -53,6 +55,8 @@ minecraft {
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
             property 'forge.enabledGameTestNamespaces', 'squirtgun'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             args 'nogui'
             mods {
                 squirtgun {
@@ -67,6 +71,8 @@ minecraft {
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
             property 'forge.enabledGameTestNamespaces', 'squirtgun'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             mods {
                 squirtgun {
@@ -80,6 +86,8 @@ minecraft {
 
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             args '--mod', "$archivesBaseName", '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
@@ -98,6 +106,7 @@ repositories {
     maven { url "https://www.cursemaven.com" }
     maven { url "https://maven.tamaized.com/releases" }
     maven { url "https://dvs1.progwml6.com/files/maven/" }
+    maven { url 'https://maven.blamejared.com' }
 }
 
 dependencies {
@@ -109,6 +118,9 @@ dependencies {
 
     implementation fg.deobf("mezz.jei:jei-${jei_version}:api")
     runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
+
+    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${minecraft_version}-${patchouli_version}:api")
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${minecraft_version}-${patchouli_version}")
 
     runtimeOnly fg.deobf("curse.maven:mekanism-268560:3743835")
 }

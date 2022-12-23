@@ -7,7 +7,7 @@
   [
     {
       "type": "text",
-      "text": "Use the keybind \"$(k:squirtgun.gun_display_ammo_status)\" to toggle the HUD display.  Display roates between on, off, and fade afer 10 seconds."
+      "text": "Use the keybind \"$(k:squirtgun.gun_display_ammo_status)\" to toggle the HUD display.  Display rotates between on, off, and fade afer 10 seconds."
     }
   ]
 }
