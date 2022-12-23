@@ -105,17 +105,9 @@ public class SquirtSlug extends AbstractArrow implements IEntityAdditionalSpawnD
     protected void doPostHurtEffects(LivingEntity pLiving) {
         super.doPostHurtEffects(pLiving);
         Entity entity = this.getEffectSource();
-        if(chemical != null) {
-            pLiving.removeAllEffects();
-        } else {
+        if (!this.effects.isEmpty()) {
             for(MobEffectInstance mobeffectinstance : this.effects) {
-                pLiving.addEffect(
-                        new MobEffectInstance(mobeffectinstance.getEffect(),
-                                Math.max(mobeffectinstance.getDuration() / 8, 1),
-                                mobeffectinstance.getAmplifier(),
-                                mobeffectinstance.isAmbient(),
-                                mobeffectinstance.isVisible()),
-                        entity);
+                pLiving.addEffect(mobeffectinstance, entity);
             }
         }
     }
